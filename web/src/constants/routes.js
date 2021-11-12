@@ -64,6 +64,10 @@ export const outerRoutesEmployee = [
     path: '/relocation-docket/:id',
     Component: lazy(() => import('components/RelocationDocket/RelocationDocket')),
   },
+  {
+    path: '/grn-barcode/',
+    Component: lazy(() => import('components/GRN/barcodeContainer')),
+  },
 ];
 export const outerRoutesClient = [
   {
@@ -76,6 +80,7 @@ export const outerRoutesClient = [
     Component: lazy(() => import('components/OutwardsDocket/outward-docket')),
   },
 ];
+
 export const extraRoutesEmployee = [
   {
     path: '/edit-profile/',
@@ -92,6 +97,10 @@ export const extraRoutesEmployee = [
   {
     path: '/create-allotment/',
     Component: lazy(() => import('forms/allotment.form')),
+  },
+  {
+    path: '/grn-barcode/',
+    Component: lazy(() => import('components/GRN/barcodeContainer')),
   },
 ];
 export const employeeRoutes = [
