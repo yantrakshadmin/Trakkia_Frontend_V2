@@ -8,13 +8,13 @@ export const publicRoutes = [
     path: '/confirm-password/:uname',
   },
   {
-    Component: lazy(() => import('../components/SignUp/sign-up-client.component')),
-    path: '/sign-up/client/',
+    Component: lazy(() => import('../components/SignUp/sign-up.component')),
+    path: '/sign-up',
   },
-  {
-    Component: lazy(() => import('../components/SignUp/sign-up-employee.component')),
-    path: '/sign-up/employee/',
-  },
+  // {
+  //   Component: lazy(() => import('../components/SignUp/sign-up-employee.component')),
+  //   path: '/sign-up/employee/',
+  // },
   {
     path: '*',
     Component: lazy(() => import('screens/404.screen')),

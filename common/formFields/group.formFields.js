@@ -1,4 +1,4 @@
-import {FORM_ELEMENT_TYPES} from '../../web/src/constants/formFields.constant';
+import { FORM_ELEMENT_TYPES } from '../../web/src/constants/formFields.constant';
 
 export const groupModelChoices = [
   'Demand',
@@ -58,7 +58,7 @@ export const groupModelChoicesGrouped = {
 export const groupFormFields = [
   {
     key: 'name',
-    rules: [{required: true, message: 'Please enter Group Name!'}],
+    rules: [{ required: true, message: 'Please enter Group Name!' }],
     kwargs: {
       placeholder: 'Enter',
     },
@@ -68,7 +68,7 @@ export const groupFormFields = [
   },
   {
     key: 'emp',
-    rules: [{required: true, message: 'Please select emp!'}],
+    rules: [{ required: true, message: 'Please select emp!' }],
     kwargs: {
       placeholder: 'Select',
       showSearch: true,
@@ -81,11 +81,11 @@ export const groupFormFields = [
     colSpan: 6,
   },
   {
-    //key: 'solution_palletized_box',
+    // key: 'solution_palletized_box',
     type: FORM_ELEMENT_TYPES.SWITCH,
     others: {
       defaultValue: false,
-      formOptions: {noStyle: true},
+      formOptions: { noStyle: true },
     },
     customLabel: 'Palletized Box Solution',
     colSpan: 4,

@@ -53,7 +53,14 @@ const RootRouter = ({user}) => {
         );
 
       default:
-        return null;
+        return (
+          <Router>
+            {publicRoutes.map((Route, index) => {
+              return <Route.Component path={Route.path} key={index.toString()} />;
+            })}
+            <NotFound404Screen default />
+          </Router>
+        );
     }
   }
 };

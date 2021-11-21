@@ -36,6 +36,13 @@ export const createClient = ({username, email, password, first_name, last_name})
     secure: false,
   });
 
+export const createCompany = (data) =>
+  loadAPI('/create-company/', {
+    method: 'POST',
+    data,
+    secure: false,
+  });
+
 export const retrieveClients = () =>
   loadAPI('/clients/', {
     method: 'GET',

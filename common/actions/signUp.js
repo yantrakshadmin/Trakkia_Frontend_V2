@@ -1,5 +1,5 @@
 import {SIGN_UP_START, SIGN_UP_FAILURE, SIGN_UP_SUCCESS} from './index';
-import {createEmployee, createClient} from '../api/auth';
+import {createEmployee, createClient, createCompany} from '../api/auth';
 
 export const signUpStart = () => ({
   type: SIGN_UP_START,
@@ -10,8 +10,8 @@ export const signUpFailure = () => ({
 });
 
 export const signUpSuccess = (user) => ({
-  type: SIGN_UP_SUCCESS,
   payload: {...user, type: 'public'},
+  type: SIGN_UP_SUCCESS,
 });
 
 export const signUpEmployeeStartAsync = ({
@@ -48,7 +48,6 @@ export const signUpClientStartAsync = ({
   last_name,
 }) => async (dispatch) => {
   dispatch(signUpStart());
-  console.log({username, email, password, first_name, last_name});
   const res = await createClient({
     username,
     email,
@@ -62,5 +61,16 @@ export const signUpClientStartAsync = ({
     return dispatch(signUpSuccess(data));
   }
   console.log(error);
+  dispatch(signUpFailure(error));
+};
+
+
+export const signUpCompany = (company) => async (dispatch) => {
+  dispatch(signUpStart());
+  const res = await createCompany(company);
+  const {data, error } = res;
+  if (data) {
+    return dispatch(signUpSuccess(data));
+  }
   dispatch(signUpFailure(error));
 };
