@@ -12,10 +12,32 @@ export const signUpFormFields = [
     customLabel: 'Name',
   },
   {
+    key: 'username',
+    rules: [{ required: true, message: 'Please enter Username!' }],
+    kwargs: {
+      placeholder: 'User Name',
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    others: null,
+    customLabel: 'User Name',
+  },
+  {
+    key: 'password',
+    rules: [{ required: true, message: 'Please enter password!' }],
+    kwargs: {
+      placeholder: 'Password',
+      type:'password'
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    customLabel: 'Password',
+  },
+  {
     key: 'type',
     rules: [{ required: true, message: 'Select Type!' }],
     kwargs: {
       placeholder: 'Select',
+      mode:'multiple',
+
     },
     type: FORM_ELEMENT_TYPES.SELECT,
     others: {
