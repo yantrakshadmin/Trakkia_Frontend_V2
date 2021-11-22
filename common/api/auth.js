@@ -1545,3 +1545,15 @@ export const editUser = (id,data) => loadAPI(`/emp-profile/${id}/`, {
   data,
 });
     
+export const retrieveEmployeeList = (id) =>
+  loadAPI(`/employees/${id}/`, {
+    method: 'GET',
+    secure: true,
+  });
+
+export const deleteEmployee = (id) =>
+    loadAPI(`/emp-profile/${id}/`, {
+      method: 'DELETE',
+      secure: true,
+  });
+  
