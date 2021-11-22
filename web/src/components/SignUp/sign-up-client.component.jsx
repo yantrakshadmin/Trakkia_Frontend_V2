@@ -4,7 +4,6 @@ import {connect} from 'react-redux';
 import {signUpClientStartAsync} from 'common/actions/signUp';
 import {redirectTo} from '@reach/router';
 
-import './sign-up.styles.scss';
 
 const {Text} = Typography;
 
@@ -41,15 +40,12 @@ const SignUp = ({user, signUpClientStartAsync}) => {
   };
 
   return (
-    <div className="container">
-      <Card style={{boxShadow: '2px 2px 2px grey', borderRadius: '5px'}}>
+    <div className="">
         <Typography>
-          {/* <Title level={3} style={{fontFamily: 'Arial, Helvetica, sans-serif'}}>
-            Register as a Client
-          </Title> */}
           <Text strong style={{fontSize: '25px'}}>
             Register as a Client
           </Text>
+        </Typography>
           <Divider />
           <Form
             className="signin"
@@ -160,8 +156,6 @@ const SignUp = ({user, signUpClientStartAsync}) => {
               </Button>
             </Form.Item>
           </Form>
-        </Typography>
-      </Card>
     </div>
   );
 };

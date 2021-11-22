@@ -1,20 +1,19 @@
-import {userAuthenticated} from '../actions/signIn';
-import {ACCESS_TOKEN, REFRESH_TOKEN} from '../constants/storage';
+import { userAuthenticated } from '../actions/signIn';
+import { ACCESS_TOKEN, REFRESH_TOKEN } from '../constants/storage';
 
-import {getStorage} from './shared';
+import { getStorage } from './shared';
 
-import {getUserMeta as getUserMetaAPI} from '../api/auth';
+import { getUserMeta as getUserMetaAPI } from '../api/auth';
 
 export const getUserMeta = async (dispatch) => {
   const storage = getStorage();
   if (!(await storage.get(ACCESS_TOKEN, null))) return false;
 
   try {
-    const {data: meta} = await getUserMetaAPI();
-
+    const { data: meta } = await getUserMetaAPI();
     if (meta) {
-      const {category: type, name, email, username, id, dp,active} = meta;
-      dispatch(userAuthenticated({name, type, email, username, id, dp, active}));
+      const { company_type:companyType, name, email, username, id, is_admin:isAdmin, company_id:companyId } = meta;
+      dispatch(userAuthenticated({ name, email, username, id, companyType, isAdmin, type : 'employee', active:true, companyId }));
       return false;
     }
 

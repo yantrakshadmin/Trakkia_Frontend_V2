@@ -1530,3 +1530,18 @@ export const confirmPassword = (src) =>
     data: src,
     secure: false,
   });
+
+export const createUser = (data) => loadAPI('/create-employee/', {
+  method: 'POST',
+  data,
+});;
+
+export const retrieveUser = (id) => loadAPI(`/emp-profile/${id}/`, {
+  method: 'GET',
+});
+
+export const editUser = (id,data) => loadAPI(`/emp-profile/${id}/`, {
+  method: 'POST',
+  data,
+});
+    

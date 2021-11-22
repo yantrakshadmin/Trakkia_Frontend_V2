@@ -1,8 +1,8 @@
-import {lazy} from 'react';
+import { lazy } from 'react';
 
 export const publicRoutes = [
-  {Component: lazy(() => import('../components/SignInMaster/sign-in-master.component')), path: '/'},
-  {Component: lazy(() => import('../components/forgetPassword')), path: '/forgot-password'},
+  { Component: lazy(() => import('../components/SignInMaster/sign-in-master.component')), path: '/' },
+  { Component: lazy(() => import('../components/forgetPassword')), path: '/forgot-password' },
   {
     Component: lazy(() => import('../components/confirmPassword')),
     path: '/confirm-password/:uname',
@@ -73,7 +73,7 @@ export const outerRoutesClient = [
   {
     path: '/return-docket/',
     Component: lazy(() => import('components/ReturnDocket/ReturnDocket')),
-    props: {isClient: true},
+    props: { isClient: true },
   },
   {
     path: '/outward-docket/:id',
@@ -210,7 +210,7 @@ export const employeeRoutes = [
     icon: ['fas', 'sign-out-alt'],
     path: '/outward-docket/',
     Component: lazy(() => import('screens/employee/outwardDocket.screen')),
-    props: {isEmployee: true},
+    props: { isEmployee: true },
   },
   {
     name: 'Return Dockets',
@@ -223,7 +223,7 @@ export const employeeRoutes = [
     icon: ['fas', 'money-check-alt'],
     path: '/relocation/',
     Component: lazy(() => import('screens/employee/Relocation.screen')),
-    props: {isEmployee: true},
+    props: { isEmployee: true },
   },
   {
     name: 'GRN',
@@ -235,13 +235,13 @@ export const employeeRoutes = [
         name: 'GRN',
         path: '/grn/grns',
         Component: lazy(() => import('screens/employee/GRN.screen')),
-        props: {isEmployee: true},
+        props: { isEmployee: true },
       },
       {
         name: 'Regenerate Barcodes',
         path: '/grn/regenerate-grn',
         Component: lazy(() => import('screens/employee/GRNStuff/RegenerateGRN.screen')),
-        props: {isEmployee: true},
+        props: { isEmployee: true },
       },
     ],
   },
@@ -315,19 +315,19 @@ export const employeeRoutes = [
         name: 'Warehouse Adjustments',
         path: '/adjustments-inventory/adjustments/',
         Component: lazy(() => import('screens/employee/adjustmentInventory.screen')),
-        props: {isEmployee: true},
+        props: { isEmployee: true },
       },
       {
         name: 'Sender Client Adjustments',
         path: '/adjustments-inventory/sc-adjustments/',
         Component: lazy(() => import('screens/employee/adjustmentSCInventory.screen')),
-        props: {isEmployee: true},
+        props: { isEmployee: true },
       },
       {
         name: 'Receiver Client Adjustments',
         path: '/adjustments-inventory/rc-adjustments/',
         Component: lazy(() => import('screens/employee/adjustmentRCInventory.screen')),
-        props: {isEmployee: true},
+        props: { isEmployee: true },
       },
     ],
   },
@@ -336,7 +336,7 @@ export const employeeRoutes = [
     icon: ['fas', 'money-check-alt'],
     path: '/expense/',
     Component: lazy(() => import('screens/employee/Expense.screen')),
-    props: {isEmployee: true},
+    props: { isEmployee: true },
   },
   {
     name: 'Reports',
@@ -396,7 +396,7 @@ export const employeeRoutes = [
     icon: ['fas', 'money-check-alt'],
     path: '/roles/',
     Component: lazy(() => import('screens/employee/Roles.screen')),
-    props: {isEmployee: true},
+    props: { isEmployee: true },
   },
 ];
 
@@ -432,7 +432,7 @@ export const clientRoutes = [
     icon: ['fas', 'notes-medical'],
     path: '/material-request/',
     Component: lazy(() => import('screens/client/MaterialRequest.screen')),
-    props: {isEmployee: false},
+    props: { isEmployee: false },
   },
   {
     name: 'Volume Plan',
@@ -450,7 +450,7 @@ export const clientRoutes = [
     name: 'Outward Docket',
     icon: ['fas', 'sign-out-alt'],
     path: '/outward-docket/',
-    props: {isEmployee: false},
+    props: { isEmployee: false },
     Component: lazy(() => import('screens/client/outwardDocket.screen')),
   },
   {
@@ -504,3 +504,21 @@ export const clientRoutes = [
     ],
   },
 ];
+
+export const superUserRoutes = [
+  {
+    name: 'Manage Resources',
+    icon: ['fas', 'user-friends'],
+    path: '/manage/',
+    isSubMenu: true,
+    subMenu: [
+      {
+        name: 'Users',
+        path: '/manage/users/',
+        Component: lazy(() => import('screens/superUser/users.screen')),
+      }
+    ],
+  },
+ ];
+export const extraRoutesSuperUser = [ ];
+export const outerRoutesSuperUser = [ ];
