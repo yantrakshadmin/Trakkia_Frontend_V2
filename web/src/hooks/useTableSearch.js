@@ -1,6 +1,6 @@
 import {useState, useEffect} from 'react';
 
-export const useTableSearch = ({searchVal, retrieve, reqData, retrieveParams}) => {
+export const useTableSearch = ({searchVal, retrieve, reqData, retrieveParams, usePaginated}) => {
   const [filteredData, setFilteredData] = useState([]);
   const [origData, setOrigData] = useState(null);
   const [searchIndex, setSearchIndex] = useState([]);
@@ -36,7 +36,7 @@ export const useTableSearch = ({searchVal, retrieve, reqData, retrieveParams}) =
         setFilteredData(reqData);
       }
       if (fullData) {
-        const searchInd = fullData.map((d) => {
+        const searchInd = (usePaginated?(fullData?.results||[]):fullData).map((d) => {
           const allValues = crawl(d);
           return {allValues: allValues.toString()};
         });

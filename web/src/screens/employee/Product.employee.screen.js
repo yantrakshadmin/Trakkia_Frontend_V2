@@ -23,17 +23,21 @@ const ProductEmployeeScreen = ({currentPage}) => {
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
     retrieve: retrieveProducts,
+    usePaginated:true
   });
+
 
   useEffect(() => {
     if (filteredData) {
+      const {results} = filteredData
       const csvd = [];
-      filteredData.forEach((d) => {
+      (results||[]).forEach((d) => {
         delete d.owner;
         csvd.push(d);
       });
       setCsvData(csvd);
     }
+    console.log(filteredData, 'data');
   }, [filteredData]);
 
   const columns = [
@@ -46,7 +50,7 @@ const ProductEmployeeScreen = ({currentPage}) => {
       title: 'Name',
       key: 'name',
       dataIndex: 'name',
-      filters: GetUniqueValue(filteredData || [], 'name'),
+      filters: GetUniqueValue(filteredData?.results || [], 'name'),
       onFilter: (value, record) => record.name === value,
     },
     ...productColumns,
@@ -116,7 +120,7 @@ const ProductEmployeeScreen = ({currentPage}) => {
     {
       name: 'All Products',
       key: 'allProducts',
-      data: filteredData,
+      data: filteredData?.results||[],
       columns,
       loading,
     },

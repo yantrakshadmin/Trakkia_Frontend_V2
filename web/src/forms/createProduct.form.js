@@ -20,6 +20,7 @@ export const ProductForm = ({id, onCancel, onDone}) => {
     close: onCancel,
     id,
     document: true,
+    useViewTypeAndCompanyId: true
   });
 
   const preProcess = (data) => {
