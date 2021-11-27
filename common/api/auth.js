@@ -59,8 +59,8 @@ export const createProduct = (req) =>
     },
   });
 
-export const retrieveProducts = () =>
-  loadAPI('/products/', {
+export const retrieveProducts = ({companyId,viewType, page, pageSize}) =>
+  loadAPI(`/products/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
   });

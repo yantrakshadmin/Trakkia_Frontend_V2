@@ -1,37 +1,38 @@
-import React, {useState, useEffect} from 'react';
-import {connect} from 'react-redux';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
 import productColumns from 'common/columns/Products.column';
-import {Popconfirm, Button, Input} from 'antd';
-import {deleteProduct, retrieveProducts} from 'common/api/auth';
-import {useTableSearch} from 'hooks/useTableSearch';
-import {ProductForm} from '../../forms/createProduct.form';
+import { Popconfirm, Button, Input } from 'antd';
+import { deleteProduct, retrieveProducts } from 'common/api/auth';
+import { useTableSearch } from 'hooks/useTableSearch';
+import { GetUniqueValue } from 'common/helpers/getUniqueValues';
+import NoPermissionAlert from 'components/NoPermissionAlert';
+import { ProductForm } from '../../forms/createProduct.form';
 import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
-import {deleteHOC} from '../../hocs/deleteHoc';
+import { deleteHOC } from '../../hocs/deleteHoc';
 import Delete from '../../icons/Delete';
 import Edit from '../../icons/Edit';
 import Document from '../../icons/Document';
-import {GetUniqueValue} from 'common/helpers/getUniqueValues';
-import NoPermissionAlert from 'components/NoPermissionAlert';
 
-const {Search} = Input;
+const { Search } = Input;
 
-const ProductEmployeeScreen = ({currentPage}) => {
+const ProductEmployeeScreen = ({ currentPage }) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [csvData, setCsvData] = useState(null);
-
-  const {filteredData, loading, reload, hasPermission} = useTableSearch({
+  // const companyId = 5;
+  // const viewType = 'Pool Operator';
+  const { filteredData, loading, reload, hasPermission, paginationData } = useTableSearch({
     searchVal,
-    retrieve: retrieveProducts,
-    usePaginated:true
+    retrieve:retrieveProducts,
+    usePaginated:true,
+    useCompanyIdAndViewType: true,
   });
 
 
   useEffect(() => {
     if (filteredData) {
-      const {results} = filteredData
       const csvd = [];
-      (results||[]).forEach((d) => {
+      (filteredData||[]).forEach((d) => {
         delete d.owner;
         csvd.push(d);
       });
@@ -59,9 +60,9 @@ const ProductEmployeeScreen = ({currentPage}) => {
       key: 'operation',
       width: '7vw',
       render: (text, record) => (
-        <div className="row align-center justify-evenly">
+        <div className='row align-center justify-evenly'>
           {/* eslint-disable-next-line react/jsx-no-target-blank */}
-          <a href={record.document} target="_blank">
+          <a href={record.document} target='_blank'>
             <Button
               style={{
                 backgroundColor: 'transparent',
@@ -120,7 +121,7 @@ const ProductEmployeeScreen = ({currentPage}) => {
     {
       name: 'All Products',
       key: 'allProducts',
-      data: filteredData?.results||[],
+      data: filteredData||[],
       columns,
       loading,
     },
@@ -130,23 +131,24 @@ const ProductEmployeeScreen = ({currentPage}) => {
 
   return (
     <NoPermissionAlert hasPermission={hasPermission}>
-      <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-        <div style={{width: '15vw', display: 'flex', alignItems: 'flex-end'}}>
-          <Search onChange={(e) => setSearchVal(e.target.value)} placeholder="Search" enterButton />
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ width: '15vw', display: 'flex', alignItems: 'flex-end' }}>
+          <Search onChange={(e) => setSearchVal(e.target.value)} placeholder='Search' enterButton />
         </div>
       </div>
       <br />
       <TableWithTabHOC
+        totalRows={paginationData?.count}
         rowKey={(record) => record.id}
         refresh={reload}
         tabs={tabs}
-        size="small"
-        title="Products"
+        size='small'
+        title='Products'
         editingId={editingId}
         cancelEditing={cancelEditing}
         modalBody={ProductForm}
         modalWidth={45}
-        expandParams={{loading}}
+        expandParams={{ loading }}
         csvdata={csvData}
         csvname={`Products${searchVal}.csv`}
       />
@@ -155,7 +157,7 @@ const ProductEmployeeScreen = ({currentPage}) => {
 };
 
 const mapStateToProps = (state) => {
-  return {currentPage: state.page.currentPage};
+  return { currentPage: state.page.currentPage };
 };
 
 export default connect(mapStateToProps)(ProductEmployeeScreen);

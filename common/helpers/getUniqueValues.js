@@ -2,9 +2,7 @@ import {getFullName} from 'common/columns/demandModule.column';
 import moment from 'moment';
 
 export const GetUniqueValue = (arr, key) => {
-  console.log(arr,';thisss');
   const newArr = [...new Set((arr||[]).map((item) => item[key]))];
-  console.log(newArr,';thisss');
   return newArr.map((item) => ({ text: item, value: item }));
 };
 

@@ -23,6 +23,8 @@ const KitEmployeeScreen = ({currentPage}) => {
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
     retrieve: retrieveKits,
+    usePaginated:true,
+    useCompanyIdAndViewType: true,
   });
 
   useEffect(() => {
