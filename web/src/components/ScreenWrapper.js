@@ -3,6 +3,7 @@ import {Layout, Menu, Divider, Dropdown, Avatar, Typography} from 'antd';
 import {Link} from '@reach/router';
 import {useDispatch} from 'react-redux';
 import {signOutUser} from 'common/actions/signIn';
+import {changeView} from 'common/actions/changeView';
 import {connect} from 'react-redux';
 
 import {changePage} from 'common/actions/changePage';
@@ -26,11 +27,18 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
 
   const menu = (
     <Menu>
-      <Menu.Item key="0">
+      <SubMenu key="0" title="ViewType">
+        {user.companyType.map((type) => 
+          <Menu.Item onClick={() => {dispatch(changeView(type))}} key={type}>
+            <Text style={{color: (user.viewType == type ? '#1890ff' : '')}}>{type}</Text>
+          </Menu.Item>
+        )}
+      </SubMenu>
+      <Menu.Item key="1">
         <Link to={`/${user.type}/edit-profile/`}>Edit Profile</Link>
       </Menu.Item>
       <Menu.Divider />
-      <Menu.Item key="1" onClick={() => onSignOut()}>
+      <Menu.Item key="2" onClick={() => onSignOut()}>
         <Text type="danger">Log Out</Text>
       </Menu.Item>
     </Menu>
