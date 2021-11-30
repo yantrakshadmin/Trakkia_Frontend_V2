@@ -10,6 +10,7 @@ const defaultAPIResponse = {
 };
 
 export const useAPI = (url, opts={}) => {
+
   const { defaultData, ...options } = opts;
   const [response, setResponse] = useState(defaultAPIResponse);
   const [refresh, setRefresh] = useState(0);

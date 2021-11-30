@@ -10,10 +10,17 @@ import formItem from '../hocs/formItem.hoc';
 
 import _ from 'lodash';
 import {filterActive} from 'common/helpers/mrHelper';
+import { useSelector } from 'react-redux';
 
 export const KitForm = ({id, onCancel, onDone}) => {
-  const {data: clients} = useAPI('/clients/', {});
-  const {data: products} = useAPI('/products/', {});
+
+  const { user } = useSelector(s => s);
+  const {userMeta} = user;
+  const { viewType,companyId } = userMeta
+
+  const {data: clients} = useAPI('/company-list/', {});
+  console.log(clients)
+  const {data: products} = useAPI(`/products/?company=${companyId}&view=${viewType}`, {});
 
   const {form, submit, loading} = useHandleForm({
     create: createKit,
@@ -78,10 +85,11 @@ export const KitForm = ({id, onCancel, onDone}) => {
                     option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                 },
                 others: {
-                  selectOptions: filterActive(_, clients) || [],
-                  key: 'user',
-                  customTitle: 'client_name',
-                  dataKeys: ['client_shipping_address'],
+                  // selectOptions: filterActive(_, clients) || [],
+                  selectOptions: clients?.results || [],
+                  key: 'id',
+                  customTitle: 'name',
+                  dataKeys: ['phone' , 'email'],
                 },
               })}
             </div>
@@ -118,7 +126,8 @@ export const KitForm = ({id, onCancel, onDone}) => {
                                 option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                             },
                             others: {
-                              selectOptions: filterActive(_, products) || [],
+                              // selectOptions: filterActive(_, products) || [],
+                              selectOptions: products?.results || [],
                               key: 'id',
                               dataKeys: ['name', 'description', 'category'],
                               customTitle: 'short_code',

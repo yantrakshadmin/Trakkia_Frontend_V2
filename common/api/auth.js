@@ -145,8 +145,8 @@ export const editKit = (
     },
   });
 
-export const retrieveKits = () =>
-  loadAPI('/kits/', {
+export const retrieveKits = ({companyId,viewType, page, pageSize}) =>
+  loadAPI(`/kits/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
   });
@@ -315,8 +315,8 @@ export const retrieveVendor = (id) =>
     secure: true,
   });
 
-export const retrieveVendors = () =>
-  loadAPI(`/vendors/`, {
+export const retrieveVendors = ({companyId,viewType, page, pageSize}) =>
+  loadAPI(`/vendors/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
   });
@@ -353,8 +353,8 @@ export const retrieveWarehouse = (id) =>
     secure: true,
   });
 
-export const retrieveWarehouses = () =>
-  loadAPI('/warehouse/', {
+export const retrieveWarehouses = ({companyId,viewType, page, pageSize}) =>
+  loadAPI(`/warehouse/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
   });
@@ -480,8 +480,8 @@ export const retreiveFlow = (id) =>
     secure: true,
   });
 
-export const retreiveFlows = () =>
-  loadAPI(`/flows/`, {
+export const retreiveFlows = ({companyId,viewType, page, pageSize}) =>
+  loadAPI(`/flows/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
   });
@@ -1531,10 +1531,24 @@ export const confirmPassword = (src) =>
     secure: false,
   });
 
+// CompanyInt
+
+export const createCompanyInt = (data) => loadAPI('/create-company-int/', {
+  method: 'POST',
+  data,
+});
+
+
+export const retrieveCompanyList = () =>
+  loadAPI(`/company-list/`, {
+    method: 'GET',
+    secure: true,
+  });
+
 export const createUser = (data) => loadAPI('/create-employee/', {
   method: 'POST',
   data,
-});;
+});
 
 export const retrieveUser = (id) => loadAPI(`/emp-profile/${id}/`, {
   method: 'GET',

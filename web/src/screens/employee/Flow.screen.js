@@ -23,7 +23,11 @@ const FlowEmployeeScreen = ({currentPage}) => {
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
     retrieve: retreiveFlows,
+    usePaginated: false,
+    useCompanyIdAndViewType: true
   });
+
+  console.log(filteredData)
 
   useEffect(() => {
     if (filteredData) {
@@ -70,9 +74,9 @@ const FlowEmployeeScreen = ({currentPage}) => {
     {
       title: 'Sender Client',
       key: 'sender_client',
-      filters: GetUniqueValueNested(filteredData || [], 'sender_client', 'client_name'),
-      onFilter: (value, record) => record.sender_client.client_name === value,
-      render: (text, record) => record.sender_client.client_name,
+      filters: GetUniqueValueNested(filteredData || [], 'sender_client', 'name'),
+      onFilter: (value, record) => record.sender_client.name === value,
+      render: (text, record) => record.sender_client.name,
     },
     {
       title: 'Receiver Client',
@@ -156,9 +160,9 @@ const FlowEmployeeScreen = ({currentPage}) => {
         cancelEditing={cancelEditing}
         modalBody={FlowForm}
         modalWidth={50}
-        expandHandleKey="kits"
-        expandParams={{loading}}
-        ExpandBody={KitsTable}
+        // expandHandleKey="kits"
+        // expandParams={{loading}}
+        // ExpandBody={KitsTable}
         csvdata={csvData}
         csvname={`Flows${searchVal}.csv`}
       />

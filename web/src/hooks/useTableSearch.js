@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-export const useTableSearch = ({ searchVal, retrieve, reqData, retrieveParams, usePaginated, useCompanyIdAndViewType, pageSize=10 }) => {
+export const useTableSearch = ({ searchVal, retrieve, reqData, retrieveParams, usePaginated = true, useCompanyIdAndViewType, pageSize=10 }) => {
   const [filteredData, setFilteredData] = useState([]);
   const [paginationData, setPaginationData] = useState({count:0,next:null, previous:null, results:[]});
   const [origData, setOrigData] = useState(null);
