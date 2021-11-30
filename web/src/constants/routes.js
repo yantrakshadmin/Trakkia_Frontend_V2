@@ -166,15 +166,20 @@ export const employeeRoutes = [
         Component: lazy(() => import('screens/employee/Flow.screen')),
       },
       {
-        name: 'Sender Clients',
-        path: '/master/clients/',
-        Component: lazy(() => import('screens/employee/Client.screen')),
+        name: 'Clients',
+        path: '/clients/',
+        Component: lazy(() => import('screens/superUser/clients.screen')),
       },
-      {
-        name: 'Receiver Clients',
-        path: '/master/receiver-clients/',
-        Component: lazy(() => import('screens/employee/ReceiverClient.screen')),
-      },
+      // {
+      //   name: 'Sender Clients',
+      //   path: '/master/clients/',
+      //   Component: lazy(() => import('screens/employee/Client.screen')),
+      // },
+      // {
+      //   name: 'Receiver Clients',
+      //   path: '/master/receiver-clients/',
+      //   Component: lazy(() => import('screens/employee/ReceiverClient.screen')),
+      // },
       {
         name: 'Warehouses',
         path: '/master/warehouses/',

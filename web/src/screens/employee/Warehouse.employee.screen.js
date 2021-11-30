@@ -22,6 +22,8 @@ const WarehouseEmployeeScreen = ({currentPage}) => {
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
     retrieve: retrieveWarehouses,
+    usePaginated: true,
+    useCompanyIdAndViewType: true
   });
 
   useEffect(() => {

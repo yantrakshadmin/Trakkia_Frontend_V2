@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Col, Row, Button, Divider, Spin, Alert} from 'antd';
+import {Form, Col, Row, Button, Divider, Spin, Alert, notification} from 'antd';
 import {flowFormFields} from 'common/formFields/flow.formFields';
 import {flowKitsFormFields} from 'common/formFields/flowKit.formFields';
 import {useAPI} from 'common/hooks/api';
@@ -10,12 +10,19 @@ import formItem from '../hocs/formItem.hoc';
 
 import _ from 'lodash';
 import {filterActive} from 'common/helpers/mrHelper';
+import { useSelector } from 'react-redux';
 
 export const FlowForm = ({id, onCancel, onDone}) => {
-  const {data: receiverClients, loading: rcLoading} = useAPI('/receiverclients/', {});
-  const {data: clients, loading: cLoading} = useAPI('/clients/', {});
-  const {data: kits, loading: kLoading} = useAPI('/kits/', {});
-  const {data: flows, loading: fLoading} = useAPI('/flows/', {});
+
+  const { user } = useSelector(s => s);
+  const {userMeta} = user;
+  const { viewType,companyId } = userMeta
+
+  const {data: clients, loading: cLoading} = useAPI('/company-list/', {});
+  const {data: kits, loading: kLoading} = useAPI(`/kits/?company=${companyId}&view=${viewType}`, {});
+  const {data: flows, loading: fLoading} = useAPI(`/flows/?company=${companyId}&view=${viewType}`, {});
+
+  console.log(clients)
 
   const [showAllKits, setShowAllKits] = useState(true);
 
@@ -103,6 +110,12 @@ export const FlowForm = ({id, onCancel, onDone}) => {
   };
 
   const preProcess = (data) => {
+
+    if(data.sender_client == data.receiver_client){
+      notification.error({message: "Sender Client and Receiver Client cannot be same"})
+      return
+    }
+
     const {kits} = data;
     const newKits = kits.map((kitty) => ({
       kit: Number(kitty.kit),
@@ -116,7 +129,7 @@ export const FlowForm = ({id, onCancel, onDone}) => {
   };
 
   return (
-    <Spin spinning={loading || rcLoading || cLoading || fLoading || kLoading}>
+    <Spin spinning={loading || cLoading || fLoading || kLoading}>
       {!formValid ? (
         <Alert message="Flow with these details already exists!" type="warning" />
       ) : null}
@@ -157,10 +170,11 @@ export const FlowForm = ({id, onCancel, onDone}) => {
                     option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                 },
                 others: {
-                  selectOptions: filterActive(_, clients) || [],
-                  key: 'user',
-                  customTitle: 'client_name',
-                  dataKeys: ['client_shipping_address'],
+                  // selectOptions: filterActive(_, clients) || [],
+                  selectOptions: clients?.results || [],
+                  key: 'id',
+                  customTitle: 'name',
+                  dataKeys: ['address'],
                 },
                 form,
               })}
@@ -177,10 +191,11 @@ export const FlowForm = ({id, onCancel, onDone}) => {
                     option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                 },
                 others: {
-                  selectOptions: filterActive(_, receiverClients) || [],
+                  // selectOptions: filterActive(_, clients) || [],
+                  selectOptions: clients?.results || [],
                   key: 'id',
                   customTitle: 'name',
-                  dataKeys: ['city', 'address'],
+                  dataKeys: ['email', 'address'],
                 },
                 form,
               })}
@@ -216,7 +231,8 @@ export const FlowForm = ({id, onCancel, onDone}) => {
                             },
                             form,
                             others: {
-                              selectOptions: (showAllKits ? kits : filterActive(_, kits)) || [],
+                              // selectOptions: (showAllKits ? kits : filterActive(_, kits)) || [],
+                              selectOptions: (showAllKits ? kits : kits?.results) || [],
                               key: 'id',
                               dataKeys: ['components_per_kit', 'kit_info', 'kit_name'],
                               customTitle: 'kit_name',

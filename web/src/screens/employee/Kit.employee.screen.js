@@ -10,7 +10,7 @@ import ProductTable from '../../components/ProductsTable';
 import {deleteHOC} from '../../hocs/deleteHoc';
 import Delete from '../../icons/Delete';
 import Edit from '../../icons/Edit';
-import {GetUniqueValueNested} from 'common/helpers/getUniqueValues';
+import {GetUniqueValue, GetUniqueValueNested} from 'common/helpers/getUniqueValues';
 import NoPermissionAlert from 'components/NoPermissionAlert';
 
 const {Search} = Input;
@@ -35,15 +35,15 @@ const KitEmployeeScreen = ({currentPage}) => {
         delete temp.products;
         delete temp.owner;
         csvd.push(temp);
-        d.products.forEach((prod) => {
-          csvd.push({
-            ShortCode: prod.product.short_code,
-            Name: prod.product.name,
-            Quantity: prod.quantity,
-            Category: prod.product.category,
-            PricePerUnit: prod.product.priceperunit,
-          });
-        });
+        // d.products.forEach((prod) => {
+        //   csvd.push({
+        //     ShortCode: prod.product.short_code,
+        //     Name: prod.product.name,
+        //     Quantity: prod.quantity,
+        //     Category: prod.product.category,
+        //     PricePerUnit: prod.product.priceperunit,
+        //   });
+        // });
       });
       setCsvData(csvd);
     }
@@ -69,9 +69,9 @@ const KitEmployeeScreen = ({currentPage}) => {
     {
       title: 'Kit Client',
       key: 'kit_client',
-      filters: GetUniqueValueNested(filteredData || [], 'kit_client', 'client_name'),
-      onFilter: (value, record) => record.kit_client.client_name === value,
-      render: (text, record) => record.kit_client.client_name,
+      filters: GetUniqueValue(filteredData || [], 'kit_client'),
+      onFilter: (value, record) => record.kit_client === value,
+      render: (text, record) => record.kit_client,
     },
     {
       title: 'Action',
@@ -149,9 +149,9 @@ const KitEmployeeScreen = ({currentPage}) => {
         cancelEditing={cancelEditing}
         modalBody={KitForm}
         modalWidth={45}
-        expandHandleKey="products"
-        expandParams={{loading}}
-        ExpandBody={ProductTable}
+        // expandHandleKey="products"
+        // expandParams={{loading}}
+        // ExpandBody={ProductTable}
         csvdata={csvData}
         csvname={`Kits${searchVal}.csv`}
       />

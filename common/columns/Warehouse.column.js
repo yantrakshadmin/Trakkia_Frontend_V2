@@ -42,16 +42,16 @@ export default [
     sorter: (a, b) => ifNotStrReturnA(a.state).localeCompare(ifNotStrReturnA(b.state)),
     showSorterTooltip: false,
   },
-  {
-    title: 'PAN',
-    key: 'pan',
-    dataIndex: 'pan',
-  },
-  {
-    title: 'GST',
-    key: 'gst',
-    dataIndex: 'gst',
-  },
+  // {
+  //   title: 'PAN',
+  //   key: 'pan',
+  //   dataIndex: 'pan',
+  // },
+  // {
+  //   title: 'GST',
+  //   key: 'gst',
+  //   dataIndex: 'gst',
+  // },
   {
     title: 'Status',
     key: 'active',
