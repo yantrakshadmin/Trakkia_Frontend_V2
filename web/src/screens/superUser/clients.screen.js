@@ -43,11 +43,11 @@ const ClientsScreen = ({ currentPage, user }) => {
   const columns1 = [
 
     ...companyColumns,
-    {
-      title: 'Action',
-      key: 'operation',
-      fixed: 'right',
-      width: '12vw',
+    // {
+    //   title: 'Action',
+    //   key: 'operation',
+    //   fixed: 'right',
+    //   width: '12vw',
       // render: (text, record) => (
       //   <div className='row align-center justify-evenly'>
       //     <Button
@@ -86,7 +86,7 @@ const ClientsScreen = ({ currentPage, user }) => {
       //     </Popconfirm>
       //   </div>
       // ),
-    },
+    // },
 
   ]
 
@@ -111,51 +111,51 @@ const ClientsScreen = ({ currentPage, user }) => {
       onFilter: (value, record) => record.email === value,
     },
     ...receiverColumns,
-    {
-      title: 'Action',
-      key: 'operation',
-      width: '7vw',
-      render: (text, record) => (
-        <div className="row align-center justify-evenly">
-          <Button
-            // disabled
-            style={{
-              backgroundColor: 'transparent',
-              border: 'none',
-              boxShadow: 'none',
-              padding: '1px',
-            }}
-            onClick={(e) => {
-              setEditingId(record.id);
-              e.stopPropagation();
-            }}>
-            <Edit />
-          </Button>
-          {/* <Popconfirm
-            // disabled
-            title='Confirm Delete'
-            onConfirm={deleteHOC({
-              record,
-              reload,
-              api: deleteReceiverClient,
-              success: 'Deleted Receiver Client successfully',
-              failure: 'Error in deleting receiver client',
-            })}>
-            <Button
-              // disabled
-              style={{
-                backgroundColor: 'transparent',
-                boxShadow: 'none',
-                border: 'none',
-                padding: '1px',
-              }}
-              onClick={(e) => e.stopPropagation()}>
-              <Delete />
-            </Button>
-          </Popconfirm> */}
-        </div>
-      ),
-    },
+  //   {
+  //     title: 'Action',
+  //     key: 'operation',
+  //     width: '7vw',
+  //     render: (text, record) => (
+  //       <div className="row align-center justify-evenly">
+  //         <Button
+  //           // disabled
+  //           style={{
+  //             backgroundColor: 'transparent',
+  //             border: 'none',
+  //             boxShadow: 'none',
+  //             padding: '1px',
+  //           }}
+  //           onClick={(e) => {
+  //             setEditingId(record.id);
+  //             e.stopPropagation();
+  //           }}>
+  //           <Edit />
+  //         </Button>
+  //         {/* <Popconfirm
+  //           // disabled
+  //           title='Confirm Delete'
+  //           onConfirm={deleteHOC({
+  //             record,
+  //             reload,
+  //             api: deleteReceiverClient,
+  //             success: 'Deleted Receiver Client successfully',
+  //             failure: 'Error in deleting receiver client',
+  //           })}>
+  //           <Button
+  //             // disabled
+  //             style={{
+  //               backgroundColor: 'transparent',
+  //               boxShadow: 'none',
+  //               border: 'none',
+  //               padding: '1px',
+  //             }}
+  //             onClick={(e) => e.stopPropagation()}>
+  //             <Delete />
+  //           </Button>
+  //         </Popconfirm> */}
+  //       </div>
+  //     ),
+  //   },
   ];
 
   const columns3 = [
@@ -220,11 +220,11 @@ const ClientsScreen = ({ currentPage, user }) => {
     //   key: 'client_gst',
     //   dataIndex: 'client_gst',
     // },
-    {
-      title: 'Action',
-      key: 'operation',
-      fixed: 'right',
-      width: '7vw',
+    // {
+    //   title: 'Action',
+    //   key: 'operation',
+    //   fixed: 'right',
+    //   width: '7vw',
     //   render: (text, record) => (
     //     <div className="row align-center justify-evenly">
     //       <a href={record.annexure} target="_blank" rel="noreferrer">
@@ -256,7 +256,7 @@ const ClientsScreen = ({ currentPage, user }) => {
     //       </Button>
     //     </div>
     //   ),
-    },
+    // },
   ];
 
 
