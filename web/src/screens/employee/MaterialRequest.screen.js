@@ -1,43 +1,39 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import materialEmployeecolumns from 'common/columns/materialEmployee.column';
-import {Link} from '@reach/router';
+import { Link } from '@reach/router';
 import {
   Button,
-  Col,
   Input,
   Modal,
   notification,
-  Popconfirm,
   Popover,
-  Row,
   Space,
   Typography,
 } from 'antd';
-import {connect} from 'react-redux';
-import {useTableSearch} from 'hooks/useTableSearch';
-import {deleteAddMr, retrieveEmployeeMrsEfficient} from 'common/api/auth';
+import { connect } from 'react-redux';
+import { useTableSearch } from 'hooks/useTableSearch';
+import { deleteAddMr, retrieveEmployeeMrsEfficient } from 'common/api/auth';
 import moment from 'moment';
-import {ALLOTMENT_DOCKET_PASSWORD} from 'common/constants/passwords';
-import {EyeInvisibleOutlined, EyeTwoTone} from '@ant-design/icons';
-import {loadAPI} from 'common/helpers/api';
-import {useAPI} from 'common/hooks/api';
-import {mergeArray, statusCheck} from 'common/helpers/mrHelper';
+import { ALLOTMENT_DOCKET_PASSWORD ,DEFAULT_PASSWORD } from 'common/constants/passwords';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { loadAPI } from 'common/helpers/api';
+import { useAPI } from 'common/hooks/api';
+import { mergeArray, statusCheck } from 'common/helpers/mrHelper';
+import NoPermissionAlert from 'components/NoPermissionAlert';
 import ExpandTable from '../../components/MaterialRequestsTable';
 import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
-import {AddMaterialRequestForm} from '../../forms/addMaterialRequest.form';
+import { AddMaterialRequestForm } from '../../forms/addMaterialRequest.form';
 import Edit from '../../icons/Edit';
-import {deleteHOC} from '../../hocs/deleteHoc';
+import { deleteHOC } from '../../hocs/deleteHoc';
 import Delete from '../../icons/Delete';
-import {ActionsPopover} from '../../components/ActionsPopover';
-import {MRRejectionForm} from '../../forms/MRRejection.form';
+import { ActionsPopover } from '../../components/ActionsPopover';
+import { MRRejectionForm } from '../../forms/MRRejection.form';
 import DeleteWithPassword from '../../components/DeleteWithPassword';
-import {DEFAULT_PASSWORD} from 'common/constants/passwords';
-import NoPermissionAlert from 'components/NoPermissionAlert';
 
-const {Search} = Input;
-const {Title} = Typography;
+const { Search } = Input;
+const { Title } = Typography;
 
-const ReceiverClientEmployeeScreen = ({currentPage}) => {
+const ReceiverClientEmployeeScreen = ({ currentPage }) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [csvData, setCsvData] = useState(null);
@@ -46,29 +42,28 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
   const [rejectionVisible, setRejectionVisible] = useState(false);
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [popoverEditVisible, setPopoverEditVisible] = useState(false);
-  const {filteredData, loading, reload, hasPermission} = useTableSearch({
+  const { filteredData, loading, reload, hasPermission } = useTableSearch({
     searchVal,
     retrieve: retrieveEmployeeMrsEfficient,
+    useCompanyIdAndViewType: true
   });
 
-  const {data: mrStatusData} = useAPI('list-mrstatus/');
-
-  const [userData, setUserData] = useState({password: ''});
+  const [userData, setUserData] = useState({ password: '' });
 
   const PasswordPopUp = (
-    <Space direction="vertical">
+    <Space direction='vertical'>
       <Input.Password
         value={userData.password}
         onChange={(e) => {
-          setUserData({...userData, password: e.target.value});
+          setUserData({ ...userData, password: e.target.value });
         }}
-        placeholder="input password"
+        placeholder='input password'
         iconRender={(show) => (show ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
       />
       <Button
         onClick={() => {
           if (userData.password === ALLOTMENT_DOCKET_PASSWORD) {
-            setUserData({password: ''});
+            setUserData({ password: '' });
             if (editingId) {
               setPopoverEditVisible(false);
             } else {
@@ -87,7 +82,7 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
   );
   const getFilterOptions = () => {
     const arr = [...new Set((filteredData || []).map((item) => item.owner))];
-    return arr.map((item) => ({text: item, value: item}));
+    return arr.map((item) => ({ text: item, value: item }));
   };
   useEffect(() => {
     if (filteredData) {
@@ -109,13 +104,13 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
       //   });
       // });
       setFilterOptions(getFilterOptions());
-      //setCsvData(csvd);
+      // setCsvData(csvd);
     }
   }, [filteredData]);
 
   const columns = [
     ...materialEmployeecolumns,
-      {
+    {
       title: 'Linked',
       key: 'linked',
       filters: filterOptions || [],
@@ -165,7 +160,7 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
         if (record.is_allocated && !record.is_rejected)
           return (
             <Button
-              type="primary"
+              type='primary'
               style={{
                 backgroundColor: '#00FF00',
                 outline: 'none',
@@ -179,7 +174,7 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
         if (!record.is_allocated && !record.is_rejected) {
           return (
             <Button
-              type="primary"
+              type='primary'
               style={{
                 backgroundColor: 'red',
                 outline: 'none',
@@ -196,8 +191,8 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
         if (!record.is_allocated && record.is_rejected) {
           return (
             <Popover
-              content={
-                <div style={{width: '20rem'}}>
+              content={(
+                <div style={{ width: '20rem' }}>
                   <text>
                     <b>Reason : </b>
                     {record.reason}
@@ -210,8 +205,8 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
                     </text>
                   ) : null}
                 </div>
-              }>
-              <Button type="primary" danger>
+              )}>
+              <Button type='primary' danger>
                 Rejected
               </Button>
             </Popover>
@@ -239,21 +234,21 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
       width: '10vw',
       render: (text, record) => (
         <ActionsPopover
-          triggerTitle="Options"
+          triggerTitle='Options'
           buttonList={[
             {
               Component: () => (
                 <Button
-                  type="primary"
+                  type='primary'
                   disabled={record.is_allocated || record.is_rejected}
                   onClick={async (e) => {
                     const response = await loadAPI('reate-mrstatus/', {
                       method: 'Post',
-                      data: {mr: record.id},
+                      data: { mr: record.id },
                     });
                     e.stopPropagation();
                   }}>
-                  <Link to="../create-allotment/" state={{id: record.id}} key={record.id}>
+                  <Link to='../create-allotment/' state={{ id: record.id }} key={record.id}>
                     Create Allotment Docket
                   </Link>
                 </Button>
@@ -262,8 +257,8 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
             {
               Component: () => (
                 <Button
-                  className="mx-2"
-                  type="primary"
+                  className='mx-2'
+                  type='primary'
                   disabled={record.is_allocated || record.is_rejected}
                   onClick={(e) => {
                     setEditingId(record.id);
@@ -315,30 +310,21 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
       key: 'operation',
       width: '9vw',
       render: (text, record) => (
-        <div className="row justify-evenly">
-          <Popover
-            content={PasswordPopUp}
-            title="Verify"
-            trigger="click"
-            visible={popoverEditVisible && record.id === editingId}
-            onVisibleChange={(e) => {
-              setPopoverEditVisible(e);
+        <div className='row justify-evenly'>
+          <Button
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              boxShadow: 'none',
+              padding: '1px',
+            }}
+            onClick={(e) => {
+              setEditingId(record.id);
+              setPopoverEditVisible(true);
+              e.stopPropagation();
             }}>
-            <Button
-              style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                boxShadow: 'none',
-                padding: '1px',
-              }}
-              onClick={(e) => {
-                setEditingId(record.id);
-                setPopoverEditVisible(true);
-                e.stopPropagation();
-              }}>
-              <Edit />
-            </Button>
-          </Popover>
+            <Edit />
+          </Button>
           <DeleteWithPassword
             password={DEFAULT_PASSWORD}
             deleteHOC={deleteHOC({
@@ -379,7 +365,7 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
     {
       name: 'All Material Requests',
       key: 'allMaterialRequests',
-      data: mergeArray(filteredData || [], mrStatusData || []),
+      data: mergeArray(filteredData || []),
       columns,
       loading,
     },
@@ -394,34 +380,10 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
     <NoPermissionAlert hasPermission={hasPermission}>
       <Modal
         maskClosable={false}
-        visible={materialReqVisible}
-        destroyOnClose
-        style={{minWidth: `80vw`}}
-        title="Add Material Request"
-        onCancel={(e) => {
-          setMaterialReqVisible(false);
-          cancelEditing();
-          e.stopPropagation();
-        }}
-        footer={null}>
-        <AddMaterialRequestForm
-          id={editingId}
-          onDone={() => {
-            reload();
-            setMaterialReqVisible(false);
-          }}
-          onCancel={() => {
-            reload();
-            setMaterialReqVisible(false);
-          }}
-        />
-      </Modal>
-      <Modal
-        maskClosable={false}
         visible={rejectionVisible}
         destroyOnClose
-        style={{minWidth: `80vw`}}
-        title="Reject Material Request"
+        style={{ minWidth: `80vw` }}
+        title='Reject Material Request'
         onCancel={(e) => {
           setRejectionVisible(false);
           cancelEditing();
@@ -438,49 +400,29 @@ const ReceiverClientEmployeeScreen = ({currentPage}) => {
           }}
         />
       </Modal>
-      <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-        <div style={{width: '15vw', display: 'flex', alignItems: 'flex-end'}}>
-          <Search onChange={(e) => setSearchVal(e.target.value)} placeholder="Search" enterButton />
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ width: '15vw', display: 'flex', alignItems: 'flex-end' }}>
+          <Search onChange={(e) => setSearchVal(e.target.value)} placeholder='Search' aria-label='search' enterButton />
         </div>
       </div>
       <br />
-      <Row justify="space-between">
-        <Col>
-          <Title level={3}>Material Requests</Title>
-        </Col>
-        <Col>
-          <Popover
-            content={PasswordPopUp}
-            title="Verify"
-            trigger="click"
-            visible={popoverVisible}
-            onVisibleChange={(e) => {
-              setPopoverVisible(e);
-            }}>
-            <Button type="primary">Add Material Request</Button>
-          </Popover>
-        </Col>
-      </Row>
       <TableWithTabHOC
         rowKey={(record) => record.id}
         refresh={reload}
         tabs={tabs}
-        size="middle"
-        title=""
-        //editingId={editingId}
-        //cancelEditing={cancelEditing}
+        size='middle'
+        title='Material Requests'
+        editingId={editingId}
+        cancelEditing={cancelEditing}
         ExpandBody={ExpandTable}
-        hideRightButton
-        //expandParams={{loading}}
-        //csvdata={csvData}
-        //csvname={`MRs${searchVal}.csv`}
+        modalBody={AddMaterialRequestForm}
       />
     </NoPermissionAlert>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {currentPage: state.page.currentPage};
+  return { currentPage: state.page.currentPage };
 };
 
 export default connect(mapStateToProps)(ReceiverClientEmployeeScreen);

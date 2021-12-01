@@ -504,10 +504,10 @@ export const deleteFlow = (id) =>
     secure: true,
   });
 
-export const createMr = ({delivery_required_on, flows, client_id}) =>
+export const createMr = ({delivery_required_on, flows, client_id, raised_for}) =>
   loadAPI('/create-mrequets/', {
     method: 'POST',
-    data: {delivery_required_on, flows, client_id},
+    data: {delivery_required_on, flows, client_id, raised_for},
     secure: true,
   });
 
@@ -518,10 +518,10 @@ export const editMr = (id, {delivery_required_on, flows}) =>
     secure: true,
   });
 
-export const editAddMr = (id, {delivery_required_on, flows, client_id}) =>
-  loadAPI(`/admin-mredit/${id}/`, {
+export const editAddMr = (id, {delivery_required_on, flows, client_id,raised_for }) =>
+  loadAPI(`/mr-edit/${id}/`, {
     method: 'PATCH',
-    data: {delivery_required_on, flows, client_id},
+    data: {delivery_required_on, flows, client_id,raised_for },
     secure: true,
   });
 
@@ -532,7 +532,7 @@ export const retrieveMr = (id) =>
   });
 
 export const retrieveAddMr = (id) =>
-  loadAPI(`/admin-mredit/${id}/`, {
+  loadAPI(`/mr-edit/${id}/`, {
     method: 'GET',
     secure: true,
   });
@@ -618,8 +618,8 @@ export const retrieveEmployeeMrs = () =>
     secure: true,
   });
 
-export const retrieveEmployeeMrsEfficient = () =>
-  loadAPI('/allmrequest-table/', {
+export const retrieveEmployeeMrsEfficient = ({companyId,viewType, page, pageSize}) =>
+  loadAPI(`/mrequest-table/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
   });

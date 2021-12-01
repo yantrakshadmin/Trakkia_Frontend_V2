@@ -18,10 +18,10 @@ import {filterActive} from 'common/helpers/mrHelper';
 export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
   const [flowId, setFlowId] = useState(null);
   const [selectedClient, setSelectedClient] = useState({name: 'Select Client', id: null});
-  const {data: flows, loading: loadingF} = useAPI(`/c-flows/?id=${selectedClient.id}`, {});
+  const {data: flows, loading: loadingF} = useAPI(`/company-flows/?id=${selectedClient.id}`, {});
   const [selectedKits, setSelectedKits] = useState([]);
   //const {data: kits} = useControlledSelect(flowId);
-  const {data: clients} = useAPI('/clients/', {});
+  const {data: clients} = useAPI('/company-list/', {});
 
   useEffect(() => {
     if (flows && !loadingF && id) {
@@ -48,9 +48,8 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
     edit: editAddMr,
     retrieve: async () => {
       const result = await retrieveAddMr(id);
-      console.log(result.data, 'ret');
-      setSelectedClient({id: result.data.owner});
-      return {...result, data: {...result.data, client_id: result.data.owner}};
+      setSelectedClient({id: result.data.raised_for});
+      return {...result, data: {...result.data, client_id: result.data.raised_for}};
     },
     success: 'Material Request created/edited successfully.',
     failure: 'Error in creating/editing material request.',
@@ -68,7 +67,7 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
       quantity: Number(flo.quantity),
     }));
     data.flows = newFlows;
-    submit(data);
+    submit({...data, raised_for:data.client_id});
   };
 
   const [disableAdd, setDisableAdd] = useState(false);
@@ -78,8 +77,8 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
       if (data) {
         if (data[0]) {
           if (data[0].name[0] === 'client_id') {
-            const sc = _.find(clients, (item) => item.user === data[0].value);
-            setSelectedClient({name: sc.client_name, id: sc.user});
+            const sc = _.find(clients?.results, (item) => item.id === data[0].value);
+            setSelectedClient({name: sc.name, id: sc.id});
           }
         }
 
@@ -126,14 +125,17 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
         {formItem({
           key: 'client_id',
           kwargs: {
+            showSearch: true,
             placeholder: 'Select',
-            disabled: id ? true : false,
+            filterOption: (input, option) =>
+              option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
           },
           others: {
-            selectOptions: clients || [],
-            key: 'user',
-            customTitle: 'client_name',
-            dataKeys: ['client_shipping_address'],
+            // selectOptions: filterActive(_, clients) || [],
+            selectOptions: (clients?.results || []).filter(item => item.type.map(t => t.company_type).includes('Pool Operator')) ,
+            key: 'id',
+            customTitle: 'name',
+            dataKeys: ['phone' , 'email'],
           },
           type: FORM_ELEMENT_TYPES.SELECT,
           customLabel: 'Client',
