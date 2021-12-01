@@ -232,7 +232,7 @@ export const FlowForm = ({id, onCancel, onDone}) => {
                             form,
                             others: {
                               // selectOptions: (showAllKits ? kits : filterActive(_, kits)) || [],
-                              selectOptions: (showAllKits ? kits : kits?.results) || [],
+                              selectOptions: (showAllKits ? kits?.results : kits?.results) || [],
                               key: 'id',
                               dataKeys: ['components_per_kit', 'kit_info', 'kit_name'],
                               customTitle: 'kit_name',
