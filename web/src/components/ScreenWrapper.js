@@ -25,11 +25,19 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
     navigate('../');
   };
 
+  const changeUserView = async (type) => {
+
+    await dispatch(changeView(type))
+
+    window.location.reload('/')
+
+  }
+
   const menu = (
     <Menu>
       <SubMenu key="0" title="ViewType">
         {user.companyType.map((type) => 
-          <Menu.Item onClick={() => {dispatch(changeView(type))}} key={type}>
+          <Menu.Item onClick={() => changeUserView(type)} key={type}>
             <Text style={{color: (user.viewType == type ? '#1890ff' : '')}}>{type}</Text>
           </Menu.Item>
         )}

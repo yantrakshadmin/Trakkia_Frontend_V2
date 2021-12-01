@@ -260,7 +260,7 @@ const ClientsScreen = ({ currentPage, user }) => {
   ];
 
 
-  const tabs = [
+  const tabs = (viewType === 'Pool Operator') ? [
     {
       name: 'Company',
       key: 'company',
@@ -282,7 +282,16 @@ const ClientsScreen = ({ currentPage, user }) => {
       columns: columns2,
       loading,
     },
-  ];
+  ] : 
+  [
+    {
+      name: 'Company',
+      key: 'company',
+      data: filteredData || [],
+      columns: columns1,
+      loading,
+    },
+  ]
 
   const cancelEditing = () => setEditingId(null);
 
