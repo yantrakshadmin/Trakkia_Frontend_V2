@@ -48,8 +48,8 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
     edit: editAddMr,
     retrieve: async () => {
       const result = await retrieveAddMr(id);
-      setSelectedClient({id: result.data.owner});
-      return {...result, data: {...result.data, client_id: result.data.owner}};
+      setSelectedClient({id: result.data.raised_for});
+      return {...result, data: {...result.data, client_id: result.data.raised_for}};
     },
     success: 'Material Request created/edited successfully.',
     failure: 'Error in creating/editing material request.',
@@ -78,7 +78,6 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
         if (data[0]) {
           if (data[0].name[0] === 'client_id') {
             const sc = _.find(clients?.results, (item) => item.id === data[0].value);
-            console.log(sc, data[0].value)
             setSelectedClient({name: sc.name, id: sc.id});
           }
         }
@@ -133,7 +132,7 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
           },
           others: {
             // selectOptions: filterActive(_, clients) || [],
-            selectOptions: clients?.results || [],
+            selectOptions: (clients?.results || []).filter(item => item.type.map(t => t.company_type).includes('Pool Operator')) ,
             key: 'id',
             customTitle: 'name',
             dataKeys: ['phone' , 'email'],

@@ -14,7 +14,6 @@ export const useTableSearch = ({ searchVal, retrieve, reqData, retrieveParams, u
   const {userMeta} = user;
   const { viewType,companyId } = userMeta
   const { currentPage } = page;
-  console.log(page,'this')
   useEffect(() => {
     setLoading(true);
     const crawl = (d, allValues) => {

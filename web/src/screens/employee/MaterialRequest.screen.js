@@ -3,13 +3,10 @@ import materialEmployeecolumns from 'common/columns/materialEmployee.column';
 import { Link } from '@reach/router';
 import {
   Button,
-  Col,
   Input,
   Modal,
   notification,
-  Popconfirm,
   Popover,
-  Row,
   Space,
   Typography,
 } from 'antd';
@@ -50,8 +47,6 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
     retrieve: retrieveEmployeeMrsEfficient,
     useCompanyIdAndViewType: true
   });
-  console.log(filteredData, '----')
-  // const { data: mrStatusData } = useAPI('list-mrstatus/');
 
   const [userData, setUserData] = useState({ password: '' });
 
@@ -316,29 +311,20 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
       width: '9vw',
       render: (text, record) => (
         <div className='row justify-evenly'>
-          <Popover
-            content={PasswordPopUp}
-            title='Verify'
-            trigger='click'
-            visible={popoverEditVisible && record.id === editingId}
-            onVisibleChange={(e) => {
-              setPopoverEditVisible(e);
+          <Button
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              boxShadow: 'none',
+              padding: '1px',
+            }}
+            onClick={(e) => {
+              setEditingId(record.id);
+              setPopoverEditVisible(true);
+              e.stopPropagation();
             }}>
-            <Button
-              style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                boxShadow: 'none',
-                padding: '1px',
-              }}
-              onClick={(e) => {
-                setEditingId(record.id);
-                setPopoverEditVisible(true);
-                e.stopPropagation();
-              }}>
-              <Edit />
-            </Button>
-          </Popover>
+            <Edit />
+          </Button>
           <DeleteWithPassword
             password={DEFAULT_PASSWORD}
             deleteHOC={deleteHOC({
@@ -394,30 +380,6 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
     <NoPermissionAlert hasPermission={hasPermission}>
       <Modal
         maskClosable={false}
-        visible={materialReqVisible}
-        destroyOnClose
-        style={{ minWidth: `80vw` }}
-        title='Add Material Request'
-        onCancel={(e) => {
-          setMaterialReqVisible(false);
-          cancelEditing();
-          e.stopPropagation();
-        }}
-        footer={null}>
-        <AddMaterialRequestForm
-          id={editingId}
-          onDone={() => {
-            reload();
-            setMaterialReqVisible(false);
-          }}
-          onCancel={() => {
-            reload();
-            setMaterialReqVisible(false);
-          }}
-        />
-      </Modal>
-      <Modal
-        maskClosable={false}
         visible={rejectionVisible}
         destroyOnClose
         style={{ minWidth: `80vw` }}
@@ -440,7 +402,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
       </Modal>
       <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
         <div style={{ width: '15vw', display: 'flex', alignItems: 'flex-end' }}>
-          <Search onChange={(e) => setSearchVal(e.target.value)} placeholder='Search' enterButton />
+          <Search onChange={(e) => setSearchVal(e.target.value)} placeholder='Search' aria-label='search' enterButton />
         </div>
       </div>
       <br />

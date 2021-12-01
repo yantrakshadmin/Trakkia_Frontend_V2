@@ -519,7 +519,7 @@ export const editMr = (id, {delivery_required_on, flows}) =>
   });
 
 export const editAddMr = (id, {delivery_required_on, flows, client_id,raised_for }) =>
-  loadAPI(`/admin-mredit/${id}/`, {
+  loadAPI(`/mr-edit/${id}/`, {
     method: 'PATCH',
     data: {delivery_required_on, flows, client_id,raised_for },
     secure: true,
@@ -532,7 +532,7 @@ export const retrieveMr = (id) =>
   });
 
 export const retrieveAddMr = (id) =>
-  loadAPI(`/admin-mredit/${id}/`, {
+  loadAPI(`/mr-edit/${id}/`, {
     method: 'GET',
     secure: true,
   });
