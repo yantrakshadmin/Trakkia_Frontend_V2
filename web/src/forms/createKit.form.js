@@ -19,7 +19,6 @@ export const KitForm = ({id, onCancel, onDone}) => {
   const { viewType,companyId } = userMeta
 
   const {data: clients} = useAPI('/company-list/', {});
-  console.log(clients)
   const {data: products} = useAPI(`/products/?company=${companyId}&view=${viewType}`, {});
 
   const {form, submit, loading} = useHandleForm({
@@ -35,7 +34,7 @@ export const KitForm = ({id, onCancel, onDone}) => {
 
   const preProcess = useCallback(
     (data) => {
-      const {products} = data;
+      const { products } = data;
       const newProducts = products.map((prod) => ({
         product: Number(prod.product),
         quantity: Number(prod.quantity),
