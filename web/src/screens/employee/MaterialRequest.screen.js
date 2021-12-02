@@ -10,7 +10,7 @@ import {
   Space,
   Typography,
 } from 'antd';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import { useTableSearch } from 'hooks/useTableSearch';
 import { deleteAddMr, retrieveEmployeeMrsEfficient } from 'common/api/auth';
 import moment from 'moment';
@@ -34,6 +34,11 @@ const { Search } = Input;
 const { Title } = Typography;
 
 const ReceiverClientEmployeeScreen = ({ currentPage }) => {
+   
+  const { user } = useSelector(s => s);
+  const {userMeta} = user;
+  const { viewType } = userMeta
+
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [csvData, setCsvData] = useState(null);
@@ -228,10 +233,10 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
         return moment(record.created_at).format('DD/MM/YYYY, h:mm:ss a');
       },
     },
-    {
+    ...(viewType === 'Pool Operator' ? [{
       title: 'Options',
       key: 'options',
-      width: '10vw',
+      width: (viewType === 'Pool Operator') ? '10vw' : '0',
       render: (text, record) => (
         <ActionsPopover
           triggerTitle='Options'
@@ -272,7 +277,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
           ]}
         />
       ),
-    },
+    }] : []),
     //     {
     //       title:'Request Status',
     //       key:'is_rejected',
@@ -416,6 +421,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
         cancelEditing={cancelEditing}
         ExpandBody={ExpandTable}
         modalBody={AddMaterialRequestForm}
+        modalWidth="80"
       />
     </NoPermissionAlert>
   );
