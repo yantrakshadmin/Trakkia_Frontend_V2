@@ -68,6 +68,12 @@ export const outerRoutesEmployee = [
     path: '/grn-barcode/',
     Component: lazy(() => import('components/GRN/barcodeContainer')),
   },
+  {
+    name: 'Purchase Order Print',
+    path: '/purchase-order/:id',
+    Component: lazy(() => import('screens/employee/GRNStuff/PurchaseOrderPrint')),
+    props: {isEmployee: true},
+  },
 ];
 export const outerRoutesClient = [
   {
@@ -236,6 +242,12 @@ export const employeeRoutes = [
     path: '/grn/',
     isSubMenu: true,
     subMenu: [
+      {
+        name: 'Purchase Order',
+        path: '/grn/purchase-orders',
+        Component: lazy(() => import('screens/employee/PurchaseOrders')),
+        props: {isEmployee: true},   
+      },
       {
         name: 'GRN',
         path: '/grn/grns',
