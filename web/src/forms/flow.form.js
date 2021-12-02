@@ -19,6 +19,7 @@ export const FlowForm = ({id, onCancel, onDone}) => {
   const { viewType,companyId } = userMeta
 
   const {data: clients, loading: cLoading} = useAPI('/company-list/', {});
+  if(clients) clients.results = clients.results.filter((client) => client.id !== companyId)
   const {data: kits, loading: kLoading} = useAPI(`/kits/?company=${companyId}&view=${viewType}`, {});
   const {data: flows, loading: fLoading} = useAPI(`/flows/?company=${companyId}&view=${viewType}`, {});
 

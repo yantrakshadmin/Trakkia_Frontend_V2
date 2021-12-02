@@ -268,21 +268,23 @@ const ClientsScreen = ({ currentPage, user }) => {
       columns: columns1,
       loading,
     },
-    {
-      name: 'Sender Client',
-      key: 'sender_client',
-			data: sender_clients || [],
-			columns: columns3,
-      loading,
-    },
-    {
-      name: 'Receiver Client',
-      key: 'receiver_client',
-      data: receiver_clients || [],
-      columns: columns2,
-      loading,
-    },
-  ];
+    ...(viewType === 'Pool Operator') ? [
+      {
+        name: 'Sender Client',
+        key: 'sender_client',
+        data: sender_clients || [],
+        columns: columns3,
+        loading,
+      },
+      {
+        name: 'Receiver Client',
+        key: 'receiver_client',
+        data: receiver_clients || [],
+        columns: columns2,
+        loading,
+      },
+    ] : []
+  ]
 
   const cancelEditing = () => setEditingId(null);
 

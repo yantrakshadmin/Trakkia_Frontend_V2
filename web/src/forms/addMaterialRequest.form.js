@@ -14,14 +14,21 @@ import {FORM_ELEMENT_TYPES} from '../constants/formFields.constant';
 
 import _ from 'lodash';
 import {filterActive} from 'common/helpers/mrHelper';
+import { useSelector } from 'react-redux';
 
 export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
+
+  const { user } = useSelector(s => s);
+  const {userMeta} = user;
+  const { companyId } = userMeta
+
   const [flowId, setFlowId] = useState(null);
   const [selectedClient, setSelectedClient] = useState({name: 'Select Client', id: null});
   const {data: flows, loading: loadingF} = useAPI(`/company-flows/?id=${selectedClient.id}`, {});
   const [selectedKits, setSelectedKits] = useState([]);
   //const {data: kits} = useControlledSelect(flowId);
   const {data: clients} = useAPI('/company-list/', {});
+  if(clients) clients.results = clients.results.filter((client) => client.id !== companyId)
 
   useEffect(() => {
     if (flows && !loadingF && id) {

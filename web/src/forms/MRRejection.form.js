@@ -9,9 +9,9 @@ export const MRRejectionForm = ({ id, onCancel, onDone,mr }) => {
 
   const { form, submit, loading } = useHandleForm({
     create:async (data)=>{
-      console.log(data);
-      const response = await createMRStatus({ ...data,mr,is_rejected:true });
-      return response},
+    console.log(data, id, mr);
+    const response = await createMRStatus({ ...data,mr,is_rejected:true });
+    return response},
     edit: null,
     retrieve: null,
     success: 'Successfully Submitted',
