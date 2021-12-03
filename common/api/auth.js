@@ -750,7 +750,7 @@ export const editGRN = (id, data) =>
     // },
   });
 
-export const retrieveGRN = (id) =>
+export const retrieveGRN = (id) => 
   loadAPI(`/edit-grn/${id}/`, {
     method: 'GET',
     secure: true,

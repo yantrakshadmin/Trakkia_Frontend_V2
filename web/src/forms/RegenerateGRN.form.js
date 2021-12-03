@@ -17,8 +17,8 @@ import _ from 'lodash';
 import {filterActive} from 'common/helpers/mrHelper';
 
 export const GRNForm = ({id, onCancel, onDone}) => {
-  const {data: warehouses} = useAPI('/warehouse/', {});
-  const {data: products} = useAPI('/products/', {});
+  const {data: warehouses} = useAPI('/warehouse/', {}, false,true);
+  const {data: products} = useAPI('/products/', {},false, true );
 
   const {form, submit, loading} = useHandleForm({
     create: createRegGRN,
@@ -56,7 +56,7 @@ export const GRNForm = ({id, onCancel, onDone}) => {
                       option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                   },
                   others: {
-                    selectOptions: filterActive(_, warehouses) || [],
+                    selectOptions: filterActive(_, warehouses?.results || [] ) ,
                     key: 'id',
                     customTitle: 'name',
                     dataKeys: ['address', 'city'],
@@ -89,7 +89,7 @@ export const GRNForm = ({id, onCancel, onDone}) => {
                                 option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                             },
                             others: {
-                              selectOptions: filterActive(_, products) || [],
+                              selectOptions: filterActive(_, products?.results || [] ) ,
                               key: 'id',
                               dataKeys: ['name', 'description', 'category'],
                               customTitle: 'short_code',

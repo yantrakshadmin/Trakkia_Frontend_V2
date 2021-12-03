@@ -42,6 +42,7 @@ const KitEmployeeScreen = () => {
   const {filteredData} = useTableSearch({
     searchVal,
     reqData,
+    usePaginated:false
   });
 
   useEffect(() => {
@@ -157,7 +158,7 @@ const KitEmployeeScreen = () => {
             <Download />
           </Button>
           <a
-            href={`${DEFAULT_BASE_URL}/employee/grn-barcode/`}
+            href={`../grn-barcode/`}
             // href={`${DEFAULT_BASE_URL}/print-barcodes/${record.id}/`}
             target="_blank"
             rel="noopener noreferrer">

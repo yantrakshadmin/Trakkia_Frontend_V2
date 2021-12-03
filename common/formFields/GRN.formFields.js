@@ -145,15 +145,15 @@ export const GRNFormFields = [
     others: null,
     customLabel: 'Inward Date',
   },
-  {
-    key: 'document',
-    kwargs: {
-      placeholder: 'Enter',
-    },
-    type: FORM_ELEMENT_TYPES.FILE_DRAG_DROP,
-    others: null,
-    customLabel: 'Document',
-  },
+  // {
+  //   key: 'document',
+  //   kwargs: {
+  //     placeholder: 'Enter',
+  //   },
+  //   type: FORM_ELEMENT_TYPES.FILE_DRAG_DROP,
+  //   others: null,
+  //   customLabel: 'Document',
+  // },
 ];
 
 export const GRNItemFormFields = [
