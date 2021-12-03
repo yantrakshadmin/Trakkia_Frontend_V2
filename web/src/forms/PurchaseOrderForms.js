@@ -1,9 +1,13 @@
+  
 import React, {useState} from 'react';
 import {Form, Col, Row, Button, Divider, Spin, message} from 'antd';
-import {GRNFormFields, GRNItemFormFields} from 'common/formFields/GRN.formFields';
+import {
+  PurchaseOrdersFormFields,
+  PurchaseOrderItemFormFields,
+} from 'common/formFields/PurchaseOrderFormfields';
 import {useAPI} from 'common/hooks/api';
 import {useHandleForm} from 'hooks/form';
-import {createGRN, editGRN, retrieveGRN} from 'common/api/auth';
+import {createPurchseOrder, editPurchaseOrder, retrievePurchaseOrder} from 'common/api/auth';
 import {PlusOutlined, MinusCircleOutlined} from '@ant-design/icons';
 import moment from 'moment';
 import formItem from '../hocs/formItem.hoc';
@@ -11,24 +15,58 @@ import formItem from '../hocs/formItem.hoc';
 import _ from 'lodash';
 import {filterActive} from 'common/helpers/mrHelper';
 
-export const GRNForm = ({id, onCancel, onDone}) => {
-  const [reqFile, setFile] = useState(null);
+export const PurchaseOrderForm = ({id, onCancel, onDone}) => {
+  const {data: vendors} = useAPI('/vendors/', {} ,false , true);
+  const {data: warehouses} = useAPI('/warehouse/', {}, false, true);
+  const {data: products} = useAPI('/products/', {}, false , true );
 
-  const {data: vendors} = useAPI('/vendors/', {} , false , true);
-  const {data: warehouses} = useAPI('/warehouse/', {}, false , true);
-  const {data: products} = useAPI('/products/', {} , false , true);
+  const preProcessData = (data) => {
+    const newdata = {...data, amount: data.amount.toString(), gst: data.gst.toString()};
+    return newdata;
+  };
 
   const {form, submit, loading} = useHandleForm({
-    create: createGRN,
-    edit: editGRN,
-    retrieve: retrieveGRN,
-    success: 'GRN created/edited successfully.',
-    failure: 'Error in creating/editing GRN.',
+    create: createPurchseOrder,
+    edit: editPurchaseOrder,
+    retrieve: retrievePurchaseOrder,
+    success: 'Purchase Order created/edited successfully.',
+    failure: 'Error in creating/editing PUrchase Order.',
     done: onDone,
     close: onCancel,
     id,
-    dates: ['inward_date'],
+    dates: ['expected_delivery'],
+    customHandling: preProcessData,
   });
+
+  const checkfields = (data) => {
+    console.log('data inside change is ', data);
+    const d = form.getFieldValue('items');
+    const name = data[0].name[2];
+    const value = data[0].value;
+    const index = data[0].name[1];
+    let priceperunit;
+    if (products !== null && products !== undefined) {
+      (products?.results || []).forEach((prod) => {
+        if (prod.id === value && name === 'item') {
+          priceperunit = prod.priceperunit;
+        }
+      });
+    }
+    if (name === 'item') {
+      if (d) {
+        const newd = d.map((oned) => {
+          if (oned) {
+            if (oned.item === value) {
+              oned.item_price = priceperunit;
+              return oned;
+            }
+            return oned;
+          }
+        });
+        form.setFieldsValue('items', newd);
+      }
+    }
+  };
   //
   // const preProcess = (data) => {
   //   if (reqFile) {
@@ -50,32 +88,16 @@ export const GRNForm = ({id, onCancel, onDone}) => {
 
   return (
     <Spin spinning={loading}>
-      <Divider orientation="left">GRN Details</Divider>
-      <Form onFinish={submit} form={form} layout="vertical" hideRequiredMark autoComplete="off">
+      <Divider orientation="left">Purchase Order Details</Divider>
+      <Form
+        onFinish={submit}
+        form={form}
+        layout="vertical"
+        hideRequiredMark
+        autoComplete="off"
+        onFieldsChange={checkfields}>
         <Row style={{justifyContent: 'left'}}>
-          {GRNFormFields.slice(0, 1).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem({
-                  ...item,
-                  kwargs: {
-                    placeholder: 'Select',
-                    showSearch: true,
-                    filterOption: (input, option) =>
-                      option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
-                  },
-                  others: {
-                    selectOptions: filterActive(_, warehouses?.results || [] ) ,
-                    key: 'id',
-                    customTitle: 'name',
-                    dataKeys: ['address', 'city'],
-                    showSearch: true,
-                  },
-                })}
-              </div>
-            </Col>
-          ))}
-          {GRNFormFields.slice(1, 2).map((item, idx) => (
+          {PurchaseOrdersFormFields.slice(0, 1).map((item, idx) => (
             <Col span={6}>
               <div key={idx} className="p-2">
                 {formItem({
@@ -98,7 +120,14 @@ export const GRNForm = ({id, onCancel, onDone}) => {
               </div>
             </Col>
           ))}
-          {GRNFormFields.slice(2, 3).map((item, idx) => (
+          {PurchaseOrdersFormFields.slice(1, 2).map((item, idx) => (
+            <Col span={6}>
+              <div key={idx} className="p-2">
+                {formItem(item)}
+              </div>
+            </Col>
+          ))}
+          {PurchaseOrdersFormFields.slice(2, 3).map((item, idx) => (
             <Col span={6}>
               <div key={idx} className="p-2">
                 {formItem({
@@ -110,78 +139,22 @@ export const GRNForm = ({id, onCancel, onDone}) => {
                       option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                   },
                   others: {
+                    selectOptions: filterActive(_, warehouses?.results || [] ) ,
                     key: 'id',
-                    selectOptions: vendors
-                      ? filterActive(_, vendors?.results || []).filter((vendor) => vendor.type === 'Transporter')
-                      : [],
                     customTitle: 'name',
-                    dataKeys: ['street', 'city'],
+                    dataKeys: ['address', 'city'],
+                    showSearch: true,
                   },
                 })}
               </div>
             </Col>
           ))}
-          {GRNFormFields.slice(3, 4).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem(item)}
-              </div>
-            </Col>
-          ))}
         </Row>
         <Row style={{justifyContent: 'left'}}>
-          {GRNFormFields.slice(4, 8).map((item, idx) => (
+          {PurchaseOrdersFormFields.slice(4, 8).map((item, idx) => (
             <Col span={6}>
               <div key={idx} className="p-2">
                 {formItem({...item})}
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Row style={{justifyContent: 'left'}}>
-          {GRNFormFields.slice(8, 12).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem({...item})}
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Row style={{justifyContent: 'left'}}>
-          {GRNFormFields.slice(12, 13).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem({...item})}
-              </div>
-            </Col>
-          ))}
-          {GRNFormFields.slice(13, 14).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem({...item})}
-              </div>
-            </Col>
-          ))}
-          {GRNFormFields.slice(14, 15).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem({
-                  ...item,
-                  kwargs: {
-                    onChange(info) {
-                      const {status} = info.file;
-                      if (status !== 'uploading') {
-                        console.log(info.file, info.fileList);
-                      }
-                      if (status === 'done') {
-                        setFile(info.file);
-                        message.success(`${info.file.name} file uploaded successfully.`);
-                      } else if (status === 'error') {
-                        message.error(`${info.file.name} file upload failed.`);
-                      }
-                    },
-                  },
-                })}
               </div>
             </Col>
           ))}
@@ -193,8 +166,8 @@ export const GRNForm = ({id, onCancel, onDone}) => {
               <div>
                 {fields.map((field, index) => (
                   <Row align="middle">
-                    {GRNItemFormFields.slice(0, 1).map((item) => (
-                      <Col span={5}>
+                    {PurchaseOrderItemFormFields.slice(0, 1).map((item) => (
+                      <Col span={7}>
                         <div className="p-2">
                           {formItem({
                             ...item,
@@ -221,8 +194,8 @@ export const GRNForm = ({id, onCancel, onDone}) => {
                         </div>
                       </Col>
                     ))}
-                    {GRNItemFormFields.slice(1, 4).map((item) => (
-                      <Col span={5}>
+                    {PurchaseOrderItemFormFields.slice(1, 3).map((item) => (
+                      <Col span={7}>
                         <div className="p-2">
                           {formItem({
                             ...item,
