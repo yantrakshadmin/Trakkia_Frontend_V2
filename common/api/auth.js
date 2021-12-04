@@ -1321,8 +1321,8 @@ export const deleteRC2TestInv = (id) =>
   });
 
 export const createMRStatus = (data) => {
-  return loadAPI('create-mrstatus/', {
-    method: 'POST',
+  return loadAPI(`mr-edit/${data.mr}/`, {
+    method: 'PATCH',
     secure: true,
     data,
   });
