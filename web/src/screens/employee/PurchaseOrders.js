@@ -1,8 +1,9 @@
+
+  
 import React, {useState, useEffect} from 'react';
-import { useSelector } from 'react-redux';
 import {DEFAULT_BASE_URL} from 'common/constants/enviroment';
 import GRNColumns from 'common/columns/GRN.column';
-import {Popconfirm, Button, Input} from 'antd';
+import {Popconfirm, Button, Input, Space} from 'antd';
 import {connect} from 'react-redux';
 import {useTableSearch} from 'hooks/useTableSearch';
 import {useAPI} from 'common/hooks/api';
@@ -11,79 +12,62 @@ import Delete from 'icons/Delete';
 import Document from 'icons/Document';
 import Download from 'icons/Download';
 import Print from 'icons/Print';
-
+import moment from 'moment';
 import {deleteGRN, retrieveGRNBars} from 'common/api/auth';
 import {deleteHOC} from '../../hocs/deleteHoc';
 import {ProductTable} from '../../components/GRNProductsTable';
 import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
-import {GRNForm} from '../../forms/GRN.form';
+import {PurchaseOrderForm} from '../../forms/PurchaseOrderForms';
+import {GRNForm} from 'forms/GRN.form';
 import {GetUniqueValue} from 'common/helpers/getUniqueValues';
 import TableWithTabHoc from '../../hocs/TableWithTab.hoc';
-
+import {Select} from 'antd';
 import DeleteWithPassword from '../../components/DeleteWithPassword';
 import {DEFAULT_PASSWORD} from 'common/constants/passwords';
 import NoPermissionAlert from 'components/NoPermissionAlert';
-const {Search} = Input;
+import {Popover} from 'antd';
+import {FileAddOutlined} from '@ant-design/icons';
 
-const KitEmployeeScreen = () => {
+const {Search} = Input;
+const {Option} = Select;
+
+const KitEmployeeScreen = ({currentPage}) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [reqData, setReqData] = useState(null);
   const [csvData, setCsvData] = useState(null);
   const [barLoading, setBarLoading] = useState(false);
   const [barID, setBarID] = useState(null);
+  const [createGrn, setCreateGrn] = useState(null);
 
-  const { user, page } = useSelector(s => s);
-  const {userMeta} = user;
-  const { viewType,companyId } = userMeta
-  const { currentPage } = page;
-  const {data: grns, loading, reload, status} = useAPI(`/grns/`, {} ,false  , true);
+  const {data: pos, loading, reload, status} = useAPI('/purchaseorders/', {}, false , true);
 
   const {filteredData} = useTableSearch({
     searchVal,
     reqData,
-    usePaginated:false
+    usePaginated : false,
+    useCompanyIdAndViewType : true,
   });
 
   useEffect(() => {
-    if (grns) {
+    if (pos) {
       const fetchData = async () => {
-        const newData = grns.map((grn) => ({
-          id: grn.id,
-          warehouse: grn.warehouse.name,
-          material_vendor: grn.material_vendor.name,
-          transport_vendor: grn.transport_vendor.name,
-          reference_no: grn.reference_no,
-          invoice_no: grn.invoice_no,
-          inward_date: grn.inward_date,
-          products: grn.items,
-          document: grn.document,
+        const newData = pos.map((po) => ({
+          id: po.id,
+          delivered_to: po.delivered_to.name,
+          material_vendor: po.material_vendor.name,
+          expected_delivery: po.expected_delivery,
+          payment_terms: po.payment_terms,
+          po_number: po.po_number,
+          billing_gst: po.billing_gst,
+          amount: po.amount,
+          gst: po.gst,
         }));
         setReqData(newData);
       };
       fetchData();
     }
-  }, [grns]);
-
-  useEffect(() => {
-    if (filteredData) {
-      const csvd = [];
-      filteredData.forEach((d) => {
-        const temp = {...d};
-        delete temp.products;
-        csvd.push(temp);
-        d.products.forEach((prod) => {
-          csvd.push({
-            ShortCode: prod.item.short_code,
-            Name: prod.item.name,
-            Quantity: prod.item_quantity,
-            Price: prod.item_price,
-          });
-        });
-      });
-      setCsvData(csvd);
-    }
-  }, [filteredData]);
+  }, [pos]);
 
   const download = (filename, data) => {
     const blob = new Blob([data], {type: 'text/csv'});
@@ -98,45 +82,69 @@ const KitEmployeeScreen = () => {
       document.body.removeChild(elem);
     }
   };
-
   const cancelEditing = () => {
     setEditingId(null);
+    setCreateGrn(false);
   };
 
   const columns = [
     {
-      title: 'GRN ID',
+      title: 'PO ID',
       key: 'id',
       dataIndex: 'id',
       sorter: (a, b) => a.id - b.id,
     },
     {
-      title: 'Warehouse',
-      key: 'warehouse',
-      dataIndex: 'warehouse',
-      filters: GetUniqueValue(filteredData || [], 'warehouse'),
+      title: 'Material Vendor',
+      key: 'material_vendor',
+      dataIndex: 'material_vendor',
+    },
+    {
+      title: 'Delivered to',
+      key: 'delivered_to',
+      dataIndex: 'delivered_to',
+      filters: GetUniqueValue(filteredData || [], 'delivered_to'),
       onFilter: (value, record) => record.warehouse === value,
     },
-    ...GRNColumns,
+    {
+      title: 'Expected Delivery',
+      key: 'expected_delivery',
+      sorter: (a, b) => moment(a.expected_delivery).unix() - moment(b.expected_delivery).unix(),
+      render: (text, record) => {
+        return moment(record.expected_delivery).format('DD/MM/YYYY');
+      },
+    },
+    {
+      title: 'Payment Terms',
+      key: 'payment_terms',
+      dataIndex: 'payment_terms',
+    },
+    {
+      title: 'PO Number',
+      key: 'po_number',
+      dataIndex: 'po_number',
+    },
+    {
+      title: 'Billing GST',
+      key: 'billing_gst',
+      dataIndex: 'billing_gst',
+    },
+    {
+      title: 'Amount',
+      key: 'amount',
+      dataIndex: 'amount',
+    },
+    {
+      title: 'GST',
+      key: 'gst',
+      dataIndex: 'gst',
+    },
     {
       title: 'Action',
       key: 'operation',
       width: '7vw',
       render: (text, record) => (
         <div className="row justify-evenly">
-          <a href={record.document} target="_blank" rel="noopener noreferrer">
-            <Button
-              style={{
-                backgroundColor: 'transparent',
-                border: 'none',
-                boxShadow: 'none',
-                padding: '1px',
-              }}
-              disabled={!record.document}
-              onClick={(e) => e.stopPropagation()}>
-              <Document />
-            </Button>
-          </a>
           <Button
             style={{
               backgroundColor: 'transparent',
@@ -144,22 +152,15 @@ const KitEmployeeScreen = () => {
               boxShadow: 'none',
               padding: '1px',
             }}
-            loading={record.id === barID ? barLoading : false}
-            onClick={async (e) => {
+            onClick={(e) => {
+              setEditingId(record.id);
               e.stopPropagation();
-              setBarLoading(true);
-              setBarID(record.id);
-              const {data} = await retrieveGRNBars(record.id);
-              if (data) {
-                download(`${record.id}.txt`, data.join('\n \n'));
-                setBarLoading(false);
-              }
             }}>
-            <Download />
+            <Edit />
           </Button>
           <a
-            href={`../grn-barcode/`}
             // href={`${DEFAULT_BASE_URL}/print-barcodes/${record.id}/`}
+            href={`../purchase-order/${record.id}`}
             target="_blank"
             rel="noopener noreferrer">
             <Button
@@ -174,49 +175,22 @@ const KitEmployeeScreen = () => {
             </Button>
           </a>
           <Button
+            type="primary"
+            shape="circle"
             style={{
-              backgroundColor: 'transparent',
-              border: 'none',
-              boxShadow: 'none',
-              padding: '1px',
+              fontSize: '12px',
+              // backgroundColor: 'transparent',
+              // border: 'none',
+              // boxShadow: 'none',
+              // padding: '1px',
             }}
             onClick={(e) => {
               setEditingId(record.id);
+              setCreateGrn(true);
               e.stopPropagation();
             }}>
-            <Edit />
+            GRN
           </Button>
-          {/* <Popconfirm
-            title='Confirm Delete'
-            onCancel={(e) => e.stopPropagation()}
-            onConfirm={deleteHOC({
-              record,
-              reload,
-              api: deleteGRN,
-              success: 'Deleted GRN successfully',
-              failure: 'Error in deleting GRN',
-            })}>
-            <Button
-              style={{
-                backgroundColor: 'transparent',
-                boxShadow: 'none',
-                border: 'none',
-                padding: '1px',
-              }}
-              onClick={(e) => e.stopPropagation()}>
-              <Delete />
-            </Button>
-          </Popconfirm> */}
-          {/* <DeleteWithPassword
-            password={DEFAULT_PASSWORD}
-            deleteHOC={deleteHOC({
-              record,
-              reload,
-              api: deleteGRN,
-              success: 'Deleted GRN successfully',
-              failure: 'Error in deleting GRN',
-            })}
-          /> */}
         </div>
       ),
     },
@@ -224,7 +198,7 @@ const KitEmployeeScreen = () => {
 
   const tabs = [
     {
-      name: 'All GRNs',
+      name: 'All Purchase Orders',
       key: 'allGRNs',
       data: filteredData,
       columns,
@@ -245,16 +219,18 @@ const KitEmployeeScreen = () => {
         refresh={reload}
         tabs={tabs}
         size="middle"
-        title="GRNs"
+        title="Purchase Orders  "
         editingId={editingId}
         cancelEditing={cancelEditing}
-        modalBody={GRNForm}
+        modalBody={createGrn ? GRNForm : PurchaseOrderForm}
         modalWidth={60}
-        expandHandleKey="products"
-        expandParams={{loading}}
-        ExpandBody={ProductTable}
+        formParams={{noEdit:true}}
+        createGrnWithPO={createGrn}
+        // expandHandleKey="products"
+        // expandParams={{loading}}
+        // ExpandBody={ProductTable}
         // csvdata={csvData}
-        downloadLink={`${DEFAULT_BASE_URL}/grn-download/`}
+        // downloadLink={`${DEFAULT_BASE_URL}/grn-download/`}
 
         // csvname={`GRNs${  searchVal  } .csv`}
       />
@@ -262,6 +238,8 @@ const KitEmployeeScreen = () => {
   );
 };
 
+const mapStateToProps = (state) => {
+  return {currentPage: state.page.currentPage};
+};
 
-
-export default KitEmployeeScreen;
+export default connect(mapStateToProps)(KitEmployeeScreen);

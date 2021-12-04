@@ -750,7 +750,7 @@ export const editGRN = (id, data) =>
     // },
   });
 
-export const retrieveGRN = (id) =>
+export const retrieveGRN = (id) => 
   loadAPI(`/edit-grn/${id}/`, {
     method: 'GET',
     secure: true,
@@ -1569,5 +1569,48 @@ export const deleteEmployee = (id) =>
     loadAPI(`/emp-profile/${id}/`, {
       method: 'DELETE',
       secure: true,
+  });
+
+
+  export const createPurchseOrder = (data) =>
+  loadAPI('/create-po/', {
+    method: 'POST',
+    secure: true,
+    data,
+    // headers: {
+    //   'Content-Type': 'multipart/form-data  boundary=' + Math.random().toString().substr(2),
+    // },
+  });
+
+export const editPurchaseOrder = (id, data) =>
+  loadAPI(`/edit-po/${id}/`, {
+    method: 'PATCH',
+    secure: true,
+    data,
+    // headers: {
+    //   'Content-Type': 'multipart/form-data  boundary=' + Math.random().toString().substr(2),
+    // },
+  });
+
+export const retrievePurchaseOrder = (id) =>
+  loadAPI(`/edit-po/${id}/`, {
+    method: 'GET',
+    secure: true,
+    // headers: {
+    //   'Content-Type': 'multipart/form-data  boundary=' + Math.random().toString().substr(2),
+    // },
+  });
+
+export const retrievePurchaseOrders = () =>
+  loadAPI(`/purchaseorders/`, {
+    method: 'GET',
+    secure: true,
+  });
+
+export const printPurchaseOrders = (id) =>
+  loadAPI(`/print-purchaseorders/`, {
+    method: 'GET',
+    secure: true,
+    params: {id},
   });
   
