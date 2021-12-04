@@ -224,6 +224,7 @@ const KitEmployeeScreen = ({currentPage}) => {
         cancelEditing={cancelEditing}
         modalBody={createGrn ? GRNForm : PurchaseOrderForm}
         modalWidth={60}
+        formParams={{noEdit:true}}
         createGrnWithPO={createGrn}
         // expandHandleKey="products"
         // expandParams={{loading}}

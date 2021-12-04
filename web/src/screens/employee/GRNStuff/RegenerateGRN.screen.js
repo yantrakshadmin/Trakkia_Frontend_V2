@@ -39,10 +39,13 @@ const KitEmployeeScreen = ({currentPage}) => {
   const {filteredData} = useTableSearch({
     searchVal,
     reqData,
+    usePaginated:false
   });
+
 
   useEffect(() => {
     if (grns) {
+    
       const fetchData = async () => {
         const newData = grns.map((grn) => ({
           id: grn.id,
@@ -51,6 +54,7 @@ const KitEmployeeScreen = ({currentPage}) => {
           products: grn.items,
         }));
         setReqData(newData);
+    
       };
       fetchData();
     }
@@ -150,7 +154,7 @@ const KitEmployeeScreen = ({currentPage}) => {
             <Download />
           </Button> */}
           <a
-            href={`${DEFAULT_BASE_URL}/employee/grn-barcode`}
+            href={`../grn-barcode`}
             // href={`${DEFAULT_BASE_URL}/print-rebarcodes/${record.id}/`}
             target="_blank"
             rel="noopener noreferrer">

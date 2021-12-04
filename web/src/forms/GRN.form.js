@@ -11,13 +11,12 @@ import formItem from '../hocs/formItem.hoc';
 import _ from 'lodash';
 import {filterActive} from 'common/helpers/mrHelper';
 
-export const GRNForm = ({id, onCancel, onDone}) => {
+export const GRNForm = ({id, onCancel, onDone, noEdit}) => {
   const [reqFile, setFile] = useState(null);
 
   const {data: vendors} = useAPI('/vendors/', {} , false , true);
   const {data: warehouses} = useAPI('/warehouse/', {}, false , true);
   const {data: products} = useAPI('/products/', {} , false , true);
-
   const {form, submit, loading} = useHandleForm({
     create: createGRN,
     edit: editGRN,
@@ -26,7 +25,7 @@ export const GRNForm = ({id, onCancel, onDone}) => {
     failure: 'Error in creating/editing GRN.',
     done: onDone,
     close: onCancel,
-    id,
+    id : noEdit ? null : id,
     dates: ['inward_date'],
   });
   //
