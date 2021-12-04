@@ -29,15 +29,17 @@ import NoPermissionAlert from 'components/NoPermissionAlert';
 const {Search} = Input;
 
 const OutwardDocketScreen = ({currentPage, isEmployee}) => {
+
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [reqData, setReqData] = useState(null);
   const [deliveryId, setDeliveryId] = useState(null);
   const [TN, setTN] = useState(null);
-  const user = useSelector((s) => s.user.userMeta.id);
-  console.log(user, isEmployee, 'Props');
+  const user = useSelector((s) => s.user.userMeta);
+  const {viewType} = user
+  console.log(user, viewType, isEmployee, 'Props');
 
-  const {data: outwards, loading, reload, status} = useAPI('emp-outwards/', {});
+  const {data: outwards, loading, reload, status} = useAPI('outwards/', {});
   const {filteredData} = useTableSearch({
     searchVal,
     reqData,
@@ -51,6 +53,7 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
       setReqData(reqD);
     }
   }, [outwards]);
+
   const columns = [
     {
       title: 'Sr. No.',
@@ -321,6 +324,7 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
         modalWidth={98}
         formParams={{transaction_no: TN}}
         cancelEditing={cancelEditing}
+        // hideRightButton={viewType !== 'Consignor'}
       />
     </NoPermissionAlert>
   );

@@ -15,6 +15,7 @@ import { filterActive } from 'common/helpers/mrHelper';
 import { outwardProductFormFields } from 'common/formFields/return.formFields';
 import Creatable from 'react-select/creatable/dist/react-select.esm';
 import formItem from '../hocs/formItem.hoc';
+import { useSelector } from 'react-redux';
 
 const getKits = (data) => {
   return data.map((item) => ({
@@ -37,8 +38,12 @@ const getKitItems = (data, setPcc) => {
 };
 
 export const OutwardDocketForm = ({ id, onCancel, onDone }) => {
-  const { data: flows } = useAPI('/client-flows-wo/');
-  const { data: kits } = useAPI('/client-kits-wo/');
+
+  const companyId = useSelector((s) => s.user.userMeta.companyId);
+
+  const {data: kits} = useAPI(`/company-kits/?id=${companyId}`, {});
+  const {data: flows} = useAPI(`/outward-flows/?id=${companyId}&rc=1`, {});
+
   const [receiverClients, setReceiverClients] = useState([]);
   const [pcc, setPcc] = useState([]);
   const [products, setProducts] = useState(null);

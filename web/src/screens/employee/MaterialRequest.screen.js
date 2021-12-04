@@ -41,6 +41,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
 
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
+  const [rejectionId, setRejectionId] = useState(null);
   const [csvData, setCsvData] = useState(null);
   const [filterOptions, setFilterOptions] = useState([]);
   const [materialReqVisible, setMaterialReqVisible] = useState(false);
@@ -236,7 +237,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
     ...(viewType === 'Pool Operator' ? [{
       title: 'Options',
       key: 'options',
-      width: (viewType === 'Pool Operator') ? '10vw' : '0',
+      width: '10vw',
       render: (text, record) => (
         <ActionsPopover
           triggerTitle='Options'
@@ -266,7 +267,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
                   type='primary'
                   disabled={record.is_allocated || record.is_rejected}
                   onClick={(e) => {
-                    setEditingId(record.id);
+                    setRejectionId(record.id);
                     setRejectionVisible(true);
                     e.stopPropagation();
                   }}>
@@ -396,7 +397,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
         }}
         footer={null}>
         <MRRejectionForm
-          mr={editingId}
+          mr={rejectionId}
           onDone={() => {
             setRejectionVisible(false);
           }}

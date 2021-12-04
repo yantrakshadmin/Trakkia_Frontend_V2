@@ -50,6 +50,7 @@ export const useTableSearch = ({ searchVal, retrieve, reqData, retrieveParams, u
         }
         setOrigData(usePaginated?reqData?.results||[]:reqData);
         setFilteredData(usePaginated?reqData?.results||[]:reqData);
+
       }
       if (fullData) {
         const searchInd = (usePaginated?(fullData?.results||[]):fullData).map((d) => {

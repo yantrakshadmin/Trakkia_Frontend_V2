@@ -52,7 +52,10 @@ const ReturnDocketsScreen = ({currentPage}) => {
   const {filteredData, reload} = useTableSearch({
     searchVal,
     reqData,
+    usePaginated: false
   });
+
+  console.log(filteredData)
 
   useEffect(() => {
     if (returns) {

@@ -18,8 +18,10 @@ import './returnform.styles.scss';
 
 import _ from 'lodash';
 import {filterActive} from 'common/helpers/mrHelper';
+import { connect } from 'react-redux';
 
-const ReturnForm = ({location}) => {
+const ReturnForm = ({location, user}) => {
+
   const [products, setProducts] = useState(null);
   const [kitID, setKitID] = useState(null);
   const [pcc, setPcc] = useState([]);
@@ -31,10 +33,10 @@ const ReturnForm = ({location}) => {
   const [receiverClient, setReceiverClient] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const {data: receiverClients} = useAPI('/receiverclients/', {});
-  const {data: warehouses} = useAPI('/warehouse/', {});
-  const {data: flows} = useAPI('/flows/', {});
-  const {data: vendors} = useAPI('/vendors/', {});
+  const {data: receiverClients} = useAPI('/company-list/', {});
+  const {data: warehouses} = useAPI(`/company-warehouse/?id=${user.companyId}`, {});
+  // const {data: flows} = useAPI(`/company-flows/?id=${user.companyId}`, {});
+  const {data: vendors} = useAPI(`/company-vendor/?id=${user.companyId}`, {});
 
   const {form, submit} = useHandleForm({
     create: createReturn,
@@ -54,7 +56,7 @@ const ReturnForm = ({location}) => {
         setReturn(data);
       }
     };
-    if (location.state) fetchReturn();
+    if (location.state.id) fetchReturn();
   }, [location.state]);
 
   useEffect(() => {
@@ -86,25 +88,29 @@ const ReturnForm = ({location}) => {
     if (returnn && form) setVals();
   }, [returnn, form]);
 
-  useEffect(() => {
-    if (flows && receiverClient) {
-      const reqf = flows.filter((flo) => flo.receiver_client.id === receiverClient);
-      // console.log(reqf);
-      setReqFlows(reqf);
-    }
-  }, [flows, receiverClient]);
+  // useEffect(() => {
+
+  //   if (flows && receiverClient) {
+  //     console.log(receiverClient)
+  //     const reqf = flows.filter((flo) => flo.receiver_client.id === receiverClient);
+  //     console.log(reqf);
+  //     setReqFlows(reqf);
+  //   }
+  // }, [flows, receiverClient]);
 
   useEffect(() => {
     const fetchKits = async () => {
       const kitss = [];
       const prods = [];
-      const {data} = await loadAPI(`/r-flows/?id=${receiverClient}`);
+      const {data} = await loadAPI(`/return-flows/?id=${user.companyId}&rc=${receiverClient}`);
+      console.log(data)
       data.forEach((d) => {
         d.kits.forEach((k) => {
           kitss.push({...k.kit});
           k.kit.products.forEach((p) => prods.push(p.product));
         });
       });
+      console.log(kitss)
       setProducts(prods);
       setKits(_.uniqBy(kitss, 'id'));
     };
@@ -132,6 +138,7 @@ const ReturnForm = ({location}) => {
                 console.log(kitID);
                 const rk = _.find(kits, (k) => k.id === kitID);
                 if (rk) {
+                  console.log(rk)
                   const produces = [];
                   rk.products.forEach((p) => {
                     produces.push({product: p.product.id, product_quantity: p.quantity});
@@ -205,6 +212,7 @@ const ReturnForm = ({location}) => {
     submit(reqD);
   };
   console.log(pcc, 'pcc');
+
   return (
     <Spin spinning={loading}>
       <Divider orientation="left">Return Docket Details</Divider>
@@ -238,6 +246,7 @@ const ReturnForm = ({location}) => {
                 },
                 others: {
                   selectOptions: filterActive(_, warehouses) || [],
+                  // selectOptions: warehouses?.results || [],
                   key: 'id',
                   dataKeys: ['address', 'city'],
                   customTitle: 'name',
@@ -260,7 +269,8 @@ const ReturnForm = ({location}) => {
                     option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                 },
                 others: {
-                  selectOptions: filterActive(_, receiverClients) || [],
+                  // selectOptions: filterActive(_, receiverClients) || [],
+                  selectOptions: receiverClients?.results || [],
                   key: 'id',
                   dataKeys: ['address', 'city'],
                   customTitle: 'name',
@@ -268,7 +278,7 @@ const ReturnForm = ({location}) => {
               })}
             </div>
           </Col>
-          <Col span={8}>
+          {/* <Col span={8}>
             <div key={3} className="p-2">
               {formItem({
                 ...returnFormFields[4],
@@ -279,6 +289,7 @@ const ReturnForm = ({location}) => {
                     option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                 },
                 others: {
+                  // selectOptions: filterActive(_, reqFlows) || [],
                   selectOptions: filterActive(_, reqFlows) || [],
                   key: 'id',
                   dataKeys: ['flow_name', 'flow_info', 'flow_type'],
@@ -286,7 +297,7 @@ const ReturnForm = ({location}) => {
                 },
               })}
             </div>
-          </Col>
+          </Col> */}
         </Row>
         <Row style={{justifyContent: 'left'}}>
           {returnFormFields.slice(5, 9).map((item, idx) => (
@@ -318,6 +329,7 @@ const ReturnForm = ({location}) => {
                 others: {
                   selectOptions: vendors
                     ? filterActive(_, vendors).filter((vendor) => vendor.type === 'Transporter')
+                    // ? vendors?.results.filter((vendor) => vendor.type === 'Transporter')
                     : [],
                   key: 'id',
                   customTitle: 'name',
@@ -358,6 +370,7 @@ const ReturnForm = ({location}) => {
                               },
                               others: {
                                 selectOptions: filterActive(_, kits) || [],
+                                // selectOptions: kits?.results || [],
                                 key: 'id',
                                 //dataKeys: ['kit_name'],
                                 customTitle: 'kit_name',
@@ -504,4 +517,8 @@ const ReturnForm = ({location}) => {
   );
 };
 
-export default ReturnForm;
+const mapStateToProps = (state) => {
+  return { user: state.user.userMeta };
+};
+
+export default connect(mapStateToProps)(ReturnForm);

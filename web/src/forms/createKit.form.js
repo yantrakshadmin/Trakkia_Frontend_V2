@@ -21,7 +21,7 @@ export const KitForm = ({id, onCancel, onDone}) => {
   const {data: clients} = useAPI('/company-list/', {});
   if(clients) clients.results = clients.results.filter((client) => client.id !== companyId)
   console.log(clients, user)
-  const {data: products} = useAPI(`/products/?company=${companyId}&view=${viewType}`, {});
+  const {data: products} = useAPI(`/company-products/?id=${companyId}`, {});
 
   const {form, submit, loading} = useHandleForm({
     create: createKit,
@@ -127,8 +127,7 @@ export const KitForm = ({id, onCancel, onDone}) => {
                                 option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                             },
                             others: {
-                              // selectOptions: filterActive(_, products) || [],
-                              selectOptions: products?.results || [],
+                              selectOptions: filterActive(_, products) || [],
                               key: 'id',
                               dataKeys: ['name', 'description', 'category'],
                               customTitle: 'short_code',

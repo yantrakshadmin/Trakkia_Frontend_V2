@@ -20,7 +20,7 @@ export const FlowForm = ({id, onCancel, onDone}) => {
 
   const {data: clients, loading: cLoading} = useAPI('/company-list/', {});
   if(clients) clients.results = clients.results.filter((client) => client.id !== companyId)
-  const {data: kits, loading: kLoading} = useAPI(`/kits/?company=${companyId}&view=${viewType}`, {});
+  const {data: kits, loading: kLoading} = useAPI(`/company-kits/?id=${companyId}`, {});
   const {data: flows, loading: fLoading} = useAPI(`/flows/?company=${companyId}&view=${viewType}`, {});
 
   console.log(clients)
@@ -62,6 +62,7 @@ export const FlowForm = ({id, onCancel, onDone}) => {
                 f.sender_client.user === form.getFieldValue('sender_client') &&
                 f.receiver_client.id === form.getFieldValue('receiver_client'),
             );
+            console.log(temp)
             if (temp) {
               setFormValid(false);
             } else {
@@ -232,8 +233,7 @@ export const FlowForm = ({id, onCancel, onDone}) => {
                             },
                             form,
                             others: {
-                              // selectOptions: (showAllKits ? kits : filterActive(_, kits)) || [],
-                              selectOptions: (showAllKits ? kits?.results : kits?.results) || [],
+                              selectOptions: (showAllKits ? kits : filterActive(_, kits)) || [],
                               key: 'id',
                               dataKeys: ['components_per_kit', 'kit_info', 'kit_name'],
                               customTitle: 'kit_name',
