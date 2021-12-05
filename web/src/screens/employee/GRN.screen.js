@@ -253,6 +253,7 @@ const KitEmployeeScreen = () => {
         expandHandleKey="products"
         expandParams={{loading}}
         ExpandBody={ProductTable}
+        hideRightButton
         // csvdata={csvData}
         downloadLink={`${DEFAULT_BASE_URL}/grn-download/`}
 

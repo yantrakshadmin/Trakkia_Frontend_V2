@@ -36,7 +36,7 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee}) => {
     searchVal,
     retrieve: retrieveRelocations,
   });
-  //const {data: mrStatusData} = useAPI('list-mrstatus/');
+  const {data: mrStatusData} = useAPI(`/relocations/` , false ,false);
   const cancelEditing = () => {
     setEditingId(null);
     setDeliveryId(null);
