@@ -4,6 +4,7 @@ import {
   relocationFormFields,
   relocationFlowFormFields,
 } from 'common/formFields/relocation.formFields';
+import { useSelector } from 'react-redux';
 import {useAPI} from 'common/hooks/api';
 import {useHandleForm} from 'hooks/form';
 import {createRelocation, editRelocation, retrieveRelocation} from 'common/api/auth';
@@ -24,26 +25,40 @@ export const RelocationForm = ({id, onCancel, onDone, isEmployee}) => {
 
   const [kits, setKits] = useState([]);
 
+  const {user} = useSelector((s) => s);
+  const {userMeta} = user;
+  const {companyId} = userMeta;
+
   // const {data: flows} = useAPI('/myflows/', {});
   // const {data: kits} = useControlledSelect(flowId);
-  const {data: vendors} = useAPI('/vendors-exp/', {});
-  const {data: products, loading: ploading} = useAPI('/products/', {});
-  const {data: kitsFull, loading: kloading} = useAPI('/kits/', {});
-  const {data: warehouses} = useAPI('/warehouse/', {});
+  // const {data: vendors} = useAPI('/vendors-exp/', {});
+  // const {data: products, loading: ploading} = useAPI('/products/', {});
+  // const {data: kitsFull, loading: kloading} = useAPI('/kits/', {});
+  // const {data: warehouses} = useAPI(`/company-warehouse/?id=${}`, {});
 
-  useEffect(() => {
+  const {data: vendors} = useAPI(`/company-vendor/?id=${companyId}`, {}, false, false);
+  const {data: warehouses} = useAPI(`/company-warehouse/?id=${companyId}`, {}, false, false);
+  const {data: products, loading :ploading } = useAPI(`/company-products/?id=${companyId}`, {}, false, false);
+  const {data: kitsFull, loading: kloading} = useAPI(`/company-kits/?id=${companyId}`, {},false, false   );
+  // const {data: warehouses} = useAPI(`/company-warehouse/?id=${companyId}`, {});
+
+
+  useEffect(() => { 
     if (!kloading) {
-      const temp = kitsFull.map((k) => ({
+      const temp = (kitsFull || []).map((k) => {
+        return ({
         id: k.id,
         active: k.active,
         kit_name: k.kit_name,
         kit_info: k.kit_info,
-        products: k.products.map((p) => ({
-          product: p.product.id,
-          short_code: p.product.short_code,
+        products: k.products.map((p) => {
+        const thisProduct = _.find(products, (pro) => pro.id === p.product);
+          return({
+          product: p.product,
+          short_code: thisProduct.short_code,
           quantity: p.quantity,
-        })),
-      }));
+        })}),
+      })});
       setKits(temp);
     }
   }, [kloading]);
@@ -80,9 +95,11 @@ export const RelocationForm = ({id, onCancel, onDone, isEmployee}) => {
       if (temp === 'Kits') {
         const ki = [...kitItems];
         const iks = form.getFieldValue('items_kits');
+        console.log(iks,'iks')
         iks.forEach((i, idx) => {
           const x = i.items.map((j) => {
             const thisProduct = _.find(products, (p) => p.id === j.product);
+            console.log(thisProduct, j, 'this is where we need')
             return {
               product: j.product,
               quantity: j.quantity,
@@ -96,8 +113,28 @@ export const RelocationForm = ({id, onCancel, onDone, isEmployee}) => {
     }
   }, [loading, ploading]);
 
+  // const preProcess = useCallback(
+  //   (data) => {
+  //           console.log('preProcess before',data);
+  //     if (data.productORkits === 'Kits') {
+  //       const {items_kits} = data;
+  //       const temp = items_kits.map((ik, idx) => ({
+  //         ...ik,
+  //         items: kitItems[idx],
+  //       }));
+  //       data.items_kits = temp;
+  //     }
+  //     console.log('preProcess after',data);
+  //     //console.log(data);
+  //     submit(data);
+  //   },
+  //   [submit, kitItems],
+  // );
+
+
   const preProcess = useCallback(
     (data) => {
+      console.log(data,'this game ::::')
       if (data.productORkits === 'Kits') {
         const {items_kits} = data;
         const temp = items_kits.map((ik, idx) => ({
@@ -112,8 +149,10 @@ export const RelocationForm = ({id, onCancel, onDone, isEmployee}) => {
     [submit, kitItems],
   );
 
+
   const handleFieldsChange = useCallback(
     (data) => {
+      console.log(data,'this,,,,,,')
       if (data[0]) {
         if (data[0].name) {
           const thisField = data[0].name[0];
@@ -122,13 +161,16 @@ export const RelocationForm = ({id, onCancel, onDone, isEmployee}) => {
             form.setFieldsValue({items_kits: []});
             setKitItems([]);
           }
+          console.log(data,'this data')
           if (
             data[0].name[0] === 'items_kits' &&
             data[0].name[2] === 'quantity' &&
             form.getFieldValue(['items_kits', data[0].name[1], 'kit'])
           ) {
+            
             const kitID = form.getFieldValue(['items_kits', data[0].name[1], 'kit']);
             const thisKit = _.find(kits, (k) => k.id === kitID);
+            console.log(thisKit, 'this kit')
             if (thisKit) {
               const fieldName = data[0].name[1];
               const val = data[0].value;
@@ -353,6 +395,7 @@ export const RelocationForm = ({id, onCancel, onDone, isEmployee}) => {
                                       const thisKit = _.find(kits, (k) => k.id === v);
                                       const temp = [...kitItems];
                                       temp[field.name] = thisKit.products;
+                                      console.log(temp,thisKit, kits,'lele' )
                                       setKitItems(temp);
                                     },
                                   },
@@ -423,6 +466,7 @@ export const RelocationForm = ({id, onCancel, onDone, isEmployee}) => {
               {kitItems.map((i, idx) => {
                 return (
                   <>
+                  {console.log(i,' : i ',kitItems,'tisjiskld')}
                     <Row>
                       <Col span={12}>Product</Col>
                       <Col span={12}>Quantity</Col>

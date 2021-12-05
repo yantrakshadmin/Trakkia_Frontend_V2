@@ -1,33 +1,58 @@
 import React, {useState} from 'react';
 import {Form, Col, Row, Button, Divider, Spin, message} from 'antd';
-import {GRNFormFields, GRNItemFormFields} from 'common/formFields/GRN.formFields';
+import {GRNFormFields, GRNItemFormFields, PoGRNFields} from 'common/formFields/GRN.formFields';
 import {useAPI} from 'common/hooks/api';
 import {useHandleForm} from 'hooks/form';
-import {createGRN, editGRN, retrieveGRN} from 'common/api/auth';
+import {createGRN, editGRN, getUserMeta, retrievePurchaseOrder, retrieveGRN} from 'common/api/auth';
 import {PlusOutlined, MinusCircleOutlined} from '@ant-design/icons';
+
 import moment from 'moment';
 import formItem from '../hocs/formItem.hoc';
+import {useSelector} from 'react-redux';
 
 import _ from 'lodash';
 import {filterActive} from 'common/helpers/mrHelper';
 
-export const GRNForm = ({id, onCancel, onDone, noEdit}) => {
+export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
   const [reqFile, setFile] = useState(null);
 
-  const {data: vendors} = useAPI('/vendors/', {} , false , true);
-  const {data: warehouses} = useAPI('/warehouse/', {}, false , true);
-  const {data: products} = useAPI('/products/', {} , false , true);
+  const {user} = useSelector((s) => s);
+  const {userMeta} = user;
+  const {companyId} = userMeta;
+
+  const {data: vendors} = useAPI(`/company-vendor/?id=${companyId}`, {}, false, false);
+  const {data: warehouses} = useAPI(`/company-warehouse/?id=${companyId}`, {}, false, false);
+  const {data: products} = useAPI(`/products/`, {}, false, true);
+
+  const handleGrnWithPO = (data) => {
+    data['warehouse'] = data['delivered_to'];
+    delete data['delivered_to'];
+    let sum = 0;
+    data.items.forEach((i) => {
+      sum += i.item_price * i.item_quantity;
+    });
+    sum += (sum * parseInt(data.billing_gst)) / 100;
+    data.invoice_amount = sum;
+
+    return data;
+  };
   const {form, submit, loading} = useHandleForm({
     create: createGRN,
     edit: editGRN,
-    retrieve: retrieveGRN,
+    // retrieve: retrieveGRN,
+    retrieve: createGrnWithPO ? retrievePurchaseOrder : retrieveGRN,
     success: 'GRN created/edited successfully.',
     failure: 'Error in creating/editing GRN.',
     done: onDone,
     close: onCancel,
-    id : noEdit ? null : id,
+    id,
     dates: ['inward_date'],
+    customHandling: createGrnWithPO ? handleGrnWithPO : undefined,
   });
+
+
+
+  
   //
   // const preProcess = (data) => {
   //   if (reqFile) {
@@ -51,6 +76,17 @@ export const GRNForm = ({id, onCancel, onDone, noEdit}) => {
     <Spin spinning={loading}>
       <Divider orientation="left">GRN Details</Divider>
       <Form onFinish={submit} form={form} layout="vertical" hideRequiredMark autoComplete="off">
+        <Row>
+          {PoGRNFields.slice(0, 2).map((item, idx) => (
+            <Col span={6}>
+              <div key={idx} className="p-2">
+                {formItem(item)}
+              </div>
+            </Col>
+          ))}
+        </Row>
+        <Divider orientation="left"></Divider>
+
         <Row style={{justifyContent: 'left'}}>
           {GRNFormFields.slice(0, 1).map((item, idx) => (
             <Col span={6}>
@@ -64,7 +100,7 @@ export const GRNForm = ({id, onCancel, onDone, noEdit}) => {
                       option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                   },
                   others: {
-                    selectOptions: filterActive(_, warehouses?.results || [] ) ,
+                    selectOptions: filterActive(_, warehouses || []),
                     key: 'id',
                     customTitle: 'name',
                     dataKeys: ['address', 'city'],
@@ -88,7 +124,9 @@ export const GRNForm = ({id, onCancel, onDone, noEdit}) => {
                   others: {
                     key: 'id',
                     selectOptions: vendors
-                      ? filterActive(_, vendors?.results || []).filter((vendor) => vendor.type === 'Material')
+                      ? filterActive(_, vendors || []).filter(
+                          (vendor) => vendor.type === 'Material',
+                        )
                       : [],
                     customTitle: 'name',
                     dataKeys: ['street', 'city'],
@@ -111,7 +149,9 @@ export const GRNForm = ({id, onCancel, onDone, noEdit}) => {
                   others: {
                     key: 'id',
                     selectOptions: vendors
-                      ? filterActive(_, vendors?.results || []).filter((vendor) => vendor.type === 'Transporter')
+                      ? filterActive(_, vendors || []).filter(
+                          (vendor) => vendor.type === 'Transporter',
+                        )
                       : [],
                     customTitle: 'name',
                     dataKeys: ['street', 'city'],
@@ -206,7 +246,7 @@ export const GRNForm = ({id, onCancel, onDone, noEdit}) => {
                                 option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
                             },
                             others: {
-                              selectOptions: filterActive(_, products?.results || [] ) ,
+                              selectOptions: filterActive(_, products?.results || []),
                               key: 'id',
                               dataKeys: ['name', 'description', 'category'],
                               customTitle: 'short_code',

@@ -12,6 +12,7 @@ export const PurchaseOrdersFormFields = [
     type: FORM_ELEMENT_TYPES.SELECT,
     others: null,
     customLabel: 'Material Vendor',
+
   },
   {
     key: 'billing_gst',
