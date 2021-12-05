@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Col, Row, Button, Divider, Spin } from 'antd';
+import { useSelector } from 'react-redux';
+import { Form, Col, Row, Button, Divider, Spin, Input } from 'antd';
 import moment from 'moment';
 import {
   allotmentFormFields,
@@ -14,10 +15,15 @@ import formItem from '../hocs/formItem.hoc';
 const AllotmentForm = ({ location }) => {
   const [flows, setFlows] = useState([]);
   const [kits, setKits] = useState([]);
+  const [flowProducts, setFlowProduct] = useState({});
+  const { user, page } = useSelector((s) => s);
+  const { userMeta } = user;
+  const { companyId } = userMeta;
 
-  const { data: flowFetched } = useAPI(`/mr-table-exp-allot/?id=${location.state.id || ''}`, {});
-  const { data: warehouses } = useAPI('/warehouse/', {});
-  const { data: vendors } = useAPI('/vendors/', {});
+  const { data: flowFetched } = useAPI(`/mr-table-altform/?id=${location.state.id || ''}`, {}, false, false);
+  const { data: warehouses } = useAPI(`/company-warehouse/?id=${companyId}`, {}, false, false);
+  const { data: vendors } = useAPI(`/company-vendor/?id=${companyId}`, {}, false, false);
+  const { data: products } = useAPI(`/company-products/?id=${companyId}`, {}, false, false);
 
   const onDone = () => {
     navigate('./material-request/');
@@ -36,11 +42,11 @@ const AllotmentForm = ({ location }) => {
       if (location.state.id && flowFetched && flowFetched[0] && form) {
         const tempKits = [];
         const tempFlows = [];
-        const reqFlows = (flowFetched[0].flows || []).map(item => {
+        const reqFlows = ((flowFetched && flowFetched[0]?.flows) || []).map(item => {
           tempFlows.push(item.flow);
           tempKits.push(item.kit);
           return {
-            flow: item.flow.id,
+            flow: item.id,
             kit: item.kit.id,
             asked_quantity: item.quantity,
           };
@@ -59,7 +65,6 @@ const AllotmentForm = ({ location }) => {
           expected_delivery: moment(flowFetched[0].delivery_required_on),
         });
       }
-      console.log(flows, kits, 'this', flowFetched);
     };
     fetchFlows();
   }, [location.state.id, flowFetched, form]);
@@ -67,6 +72,12 @@ const AllotmentForm = ({ location }) => {
   const preProcess = (data) => {
     submit(data);
   };
+
+  const findById = (id, arr) =>{
+    console.log(id, arr,kits,'---')
+    return (arr||[]).filter(item => (item.id === id))[0]
+
+  }
 
   return (
     <Spin spinning={loading}>
@@ -142,8 +153,8 @@ const AllotmentForm = ({ location }) => {
             return (
               <div>
                 {fields.map((field, index) => (
-                  <Row align='middle'>
-                    <Col span={6}>
+                  <Row>
+                    <Col span={4}>
                       <div className='p-2'>
                         {formItem({
                           ...allotmentProductFormFields[0],
@@ -161,7 +172,7 @@ const AllotmentForm = ({ location }) => {
                         })}
                       </div>
                     </Col>
-                    <Col span={6}>
+                    <Col span={4}>
                       <div className='p-2'>
                         {formItem({
                           ...allotmentProductFormFields[1],
@@ -180,7 +191,7 @@ const AllotmentForm = ({ location }) => {
                       </div>
                     </Col>
                     {allotmentProductFormFields.slice(2, 4).map((item, idx) => (
-                      <Col span={6}>
+                      <Col span={3}>
                         <div key={idx} className='p-2'>
                           {formItem({
                             ...item,
@@ -196,6 +207,33 @@ const AllotmentForm = ({ location }) => {
                         </div>
                       </Col>
                     ))}
+                    <Col span={10}>
+                    <div className='p-2'>
+                        <Row>
+                          <Col span={12}>Product</Col>
+                          <Col span={12}>Short Code</Col>
+                        </Row>
+                        {(kits[index]?.products || []).map((i, idx) => {
+                          console.group(i, i.product,'group')
+                          return (
+                            <div className={'py-2'}>
+                              <Input.Group compact>
+                                <Input
+                                  style={{ width: '50%' }}
+                                  value={i.product?.name||''}
+                                  disabled
+                                />
+                                <Input
+                                  style={{ width: '50%' }}
+                                  value={i.product?.short_code||''}
+                                  disabled
+                            />
+                              </Input.Group>
+                            </div>
+                          );
+                        })}
+                        </div>
+                    </Col>
                   </Row>
                 ))}
               </div>

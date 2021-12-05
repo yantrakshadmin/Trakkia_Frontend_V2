@@ -37,7 +37,7 @@ const ExpandTable = (props) => {
         {loading ? (
           <Spin spinning={loading} />
         ) : (
-          <Table dataSource={data[0].flows} columns={cols} size="small" pagination={false} />
+          <Table dataSource={(data && data[0]?.flows) ||[]} columns={cols} size="small" pagination={false} />
         )}
       </Col>
     </Row>
