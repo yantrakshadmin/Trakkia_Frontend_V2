@@ -1,5 +1,28 @@
 import {FORM_ELEMENT_TYPES} from '../../web/src/constants/formFields.constant';
 
+export const PoGRNFields = [
+  {
+    key: 'po_number',
+    rules: [{message: 'Please enter purchase order number!'}],
+    kwargs: {
+      placeholder: 'Enter',
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    others: null,
+    customLabel: 'Purchase Order Number',
+  },
+  {
+    key: 'id',
+    rules: [{message: 'Please enter purchase order ID!'}],
+    kwargs: {
+      placeholder: 'Enter',
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    others: null,
+    customLabel: 'Purchase Order ID',
+  },
+];
+
 export const GRNFormFields = [
   {
     key: 'warehouse',

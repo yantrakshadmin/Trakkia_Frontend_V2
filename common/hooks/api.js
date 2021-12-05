@@ -10,7 +10,7 @@ const defaultAPIResponse = {
   status: 0,
 };
 
-export const useAPI = (
+export const  useAPI = (
   url,
   opts = {},
   usePaginated = true,

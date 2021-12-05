@@ -95,7 +95,7 @@ const TableWithTabHOC = ({
   pageSize=10,
   RightBody,
   cancelEditing,
-  hideRightButton,
+  hideRightButton ,
   customRowSelectionType,
   expandHandleKey,
   ExpandBody,

@@ -7,6 +7,8 @@ export const getJWTTokens = ({username, password}) =>
     secure: false,
   });
 
+
+
 export const isUserVerified = ({username}) =>
   loadAPI(`/verification/`, {
     params: {username},
