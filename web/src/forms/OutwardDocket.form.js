@@ -16,6 +16,7 @@ import { outwardProductFormFields } from 'common/formFields/return.formFields';
 import Creatable from 'react-select/creatable/dist/react-select.esm';
 import formItem from '../hocs/formItem.hoc';
 import { useSelector } from 'react-redux';
+import { loadAPI } from 'common/helpers/api';
 
 const getKits = (data) => {
   return data.map((item) => ({
@@ -41,24 +42,30 @@ export const OutwardDocketForm = ({ id, onCancel, onDone }) => {
 
   const companyId = useSelector((s) => s.user.userMeta.companyId);
 
-  const {data: kits} = useAPI(`/company-kits/?id=${companyId}`, {});
-  const {data: flows} = useAPI(`/outward-flows/?id=${companyId}&rc=1`, {});
+  const {data: flows} = useAPI(`/outward-receivers/?id=${companyId}`, {}, false, false);
+  const {data: vendors_data} = useAPI(`/company-vendor/?id=${companyId}`, {}, false, false);
 
   const [receiverClients, setReceiverClients] = useState([]);
+  const [vendors, setVendors] = useState([]);
+  const [receiverClientID, setReceiverClientID] = useState(null);
+  const [kits, setKits] = useState([]);
   const [pcc, setPcc] = useState([]);
   const [products, setProducts] = useState(null);
   const [kitID, setKitID] = useState(null);
   const [remarks, setRemarks] = useState({ value: '', label: '' });
 
   useEffect(() => {
+
+    if(vendors_data) setVendors(vendors_data.filter((vendor) => vendor.type === 'Transporter'))
+    
+  }, [vendors_data])
+
+  useEffect(() => {
     if (flows) {
       setReceiverClients(
-        filterActive(
-          _,
-          getUniqueObject(
-            flows.map((item) => item.receiver_client),
-            'id',
-          ),
+        getUniqueObject(
+          flows.map((item) => item.receiver_client),
+          'id',
         ),
       );
     }
@@ -98,9 +105,29 @@ export const OutwardDocketForm = ({ id, onCancel, onDone }) => {
     setProducts(prods);
   }, [kits]);
 
+  useEffect(() => {
+
+    const fetchKits = async () => {
+
+      var {data} = await loadAPI(`/outward-flows/?id=${companyId}&rc=${receiverClientID}`);
+      setKits(getUniqueObject(
+        data.map((item) => item.kits)[0].map((item) => item.kit),
+        'id',
+      ))
+
+    }
+
+    if(receiverClientID) fetchKits()
+
+
+  }, [receiverClientID])
+
   const handleFieldsChange = (data) => {
     if (data[0]) {
       if (data[0].name) {
+        if(data[0].name[0] === 'sending_location'){
+          setReceiverClientID(form.getFieldValue('sending_location'))
+        }
         if (data[0].name[2] === 'quantity_parts') {
           const allkits = form.getFieldValue('kits');
           const selectedKit = kits.filter((i) => i.id === allkits[data[0].name[1]].kit);
@@ -198,7 +225,22 @@ export const OutwardDocketForm = ({ id, onCancel, onDone }) => {
               </div>
             </Col>
           ))}
-          {outwardDocketFormFields.slice(4, 7).map((item, idx) => (
+          {outwardDocketFormFields.slice(4, 5).map((item, idx) => (
+            <Col span={6}>
+              <div key={idx.toString()} className='p-2'>
+                {formItem({
+                  ...item,
+                  others: {
+                    selectOptions: vendors,
+                    key: 'id',
+                    customTitle: 'name',
+                    dataKeys: ['address'],
+                  },
+                })}
+              </div>
+            </Col>
+          ))}
+          {outwardDocketFormFields.slice(5, 7).map((item, idx) => (
             <Col span={6}>
               <div key={idx.toString()} className='p-2'>
                 {formItem(item)}

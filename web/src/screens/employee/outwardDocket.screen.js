@@ -4,7 +4,7 @@ import {connect, useSelector} from 'react-redux';
 import {useTableSearch} from 'hooks/useTableSearch';
 import {Link} from '@reach/router';
 import {useAPI} from 'common/hooks/api';
-import {deleteOutward} from 'common/api/auth';
+import {deleteOutward, retrieveOutward, retrieveOutwardDocket} from 'common/api/auth';
 import {outwardDocketColumn} from 'common/columns/outwardDocket.column';
 import {GetUniqueValue} from 'common/helpers/getUniqueValues';
 import {loadAPI} from 'common/helpers/api';
@@ -39,20 +39,11 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
   const {viewType} = user
   console.log(user, viewType, isEmployee, 'Props');
 
-  const {data: outwards, loading, reload, status} = useAPI('outwards/', {});
-  const {filteredData} = useTableSearch({
+  const {filteredData, loading, reload, status} = useTableSearch({
     searchVal,
-    reqData,
+    retrieve: retrieveOutwardDocket,
+    useCompanyIdAndViewType: true
   });
-
-  useEffect(() => {
-    if (outwards) {
-      const reqD = outwards.map((ret) => ({
-        ...ret,
-      }));
-      setReqData(reqD);
-    }
-  }, [outwards]);
 
   const columns = [
     {
@@ -250,7 +241,7 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
               setEditingId(record.id);
               e.stopPropagation();
             }}
-            disabled={isEmployee ? true : false}>
+            disabled={viewType === 'Consignor' ? false : true}>
             <Edit />
           </Button>
           {isEmployee ? null : (
@@ -301,6 +292,8 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
     cancelEditing();
     reload();
   };
+
+  console.log(reqData, filteredData)
 
   return (
     <NoPermissionAlert hasPermission={isEmployee ? (status === 403 ? false : true) : true}>

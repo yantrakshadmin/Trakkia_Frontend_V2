@@ -18,10 +18,10 @@ export const KitForm = ({id, onCancel, onDone}) => {
   const {userMeta} = user;
   const { viewType,companyId } = userMeta
 
-  const {data: clients} = useAPI('/company-list/', {});
+  const {data: clients} = useAPI('/company-list/', {}, false, false);
   if(clients) clients.results = clients.results.filter((client) => client.id !== companyId)
   console.log(clients, user)
-  const {data: products} = useAPI(`/company-products/?id=${companyId}`, {});
+  const {data: products} = useAPI(`/company-products/?id=${companyId}`, {}, false, false);
 
   const {form, submit, loading} = useHandleForm({
     create: createKit,

@@ -21,11 +21,11 @@ export const outwardDocketColumn = [
     dataIndex: 'transporter_name',
     key: 'transporter_name',
   },
-  {
-    title: 'Vehicle Details',
-    dataIndex: 'vehicle_details',
-    key: 'vehicle_details',
-  },
+  // {
+  //   title: 'Vehicle Details',
+  //   dataIndex: 'vehicle_details',
+  //   key: 'vehicle_details',
+  // },
   {
     title: 'Invoice Number',
     dataIndex: 'invoice_number',

@@ -194,8 +194,8 @@ export const retrieveOutward = (id) =>
     method: 'GET',
     secure: true,
   });
-export const retrieveOutwardDocket = (id) =>
-  loadAPI(`outwards/?id=${id}`, {
+export const retrieveOutwardDocket = ({companyId,viewType, page, pageSize}) =>
+  loadAPI(`outwards/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
   });

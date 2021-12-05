@@ -18,10 +18,10 @@ export const FlowForm = ({id, onCancel, onDone}) => {
   const {userMeta} = user;
   const { viewType,companyId } = userMeta
 
-  const {data: clients, loading: cLoading} = useAPI('/company-list/', {});
+  const {data: clients, loading: cLoading} = useAPI('/company-list/', {}, false, false);
   if(clients) clients.results = clients.results.filter((client) => client.id !== companyId)
-  const {data: kits, loading: kLoading} = useAPI(`/company-kits/?id=${companyId}`, {});
-  const {data: flows, loading: fLoading} = useAPI(`/flows/?company=${companyId}&view=${viewType}`, {});
+  const {data: kits, loading: kLoading} = useAPI(`/company-kits/?id=${companyId}`, {}, false, false,);
+  const {data: flows, loading: fLoading} = useAPI(`/flows/`, {}, false, true);
 
   console.log(clients)
 

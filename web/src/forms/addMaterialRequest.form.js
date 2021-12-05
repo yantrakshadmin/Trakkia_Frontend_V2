@@ -24,10 +24,10 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
 
   const [flowId, setFlowId] = useState(null);
   const [selectedClient, setSelectedClient] = useState({name: 'Select Client', id: null});
-  const {data: flows, loading: loadingF} = useAPI(`/company-flows/?id=${selectedClient.id}`, {});
+  const {data: flows, loading: loadingF} = useAPI(`/company-flows/?id=${selectedClient.id}`, {}, false, false);
   const [selectedKits, setSelectedKits] = useState([]);
   //const {data: kits} = useControlledSelect(flowId);
-  const {data: clients} = useAPI('/company-list/', {});
+  const {data: clients} = useAPI('/company-list/', {}, false, false);
   if(clients) clients.results = clients.results.filter((client) => client.id !== companyId)
 
   useEffect(() => {
