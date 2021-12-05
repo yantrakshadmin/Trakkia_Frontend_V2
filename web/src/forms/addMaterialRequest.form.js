@@ -29,7 +29,7 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
   //const {data: kits} = useControlledSelect(flowId);
   const {data: clients} = useAPI('/company-list/', {}, false, false);
   if(clients) clients.results = clients.results.filter((client) => client.id !== companyId)
-
+  
   useEffect(() => {
     if (flows && !loadingF && id) {
       const temp = [];
