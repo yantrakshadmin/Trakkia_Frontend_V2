@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
+import { useSelector } from 'react-redux';
 import { Form, Col, Row, Button, Divider, Spin, message, Alert } from 'antd';
 import { expenseFormFields, expenseFlowFormFields } from 'common/formFields/expense.formFields';
 import { useAPI } from 'common/hooks/api';
@@ -20,10 +21,17 @@ export const ExpenseForm = ({ id, onCancel, onDone, isEmployee }) => {
 
   // const {data: flows} = useAPI('/myflows/', {});
   // const {data: kits} = useControlledSelect(flowId);
-  const { data: vendors } = useAPI('/vendors-exp/', {});
-  const { data: allotExp } = useAPI('/allot-exp/', {});
-  const { data: grnExp } = useAPI('/grn-exp/', {});
-  const { data: returnExp } = useAPI('/return-exp/', {});
+
+
+  const {user} = useSelector((s) => s);
+  const {userMeta} = user;
+  const {companyId} = userMeta;
+
+
+  const { data: vendors } = useAPI(`/vendors-exp/?id=${companyId}`, {} , false, false);
+  const { data: allotExp } = useAPI(`/allot-exp/?id=${companyId}`, {}, false, false);
+  const { data: grnExp } = useAPI(`/grn-exp/?id=${companyId}`, {}, false, false);
+  const { data: returnExp } = useAPI(`/return-exp/?id=${companyId}`, {}, false, false);
   const [refreshTransactionNumber,setRefreshTransactionNumber] = useState(0)
   const { form, submit, loading } = useHandleForm({
     create: createExpense,

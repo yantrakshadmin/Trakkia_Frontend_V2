@@ -31,6 +31,7 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee}) => {
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
     retrieve: retrieveExpenses,
+    usePaginated : false
   });
   //const {data: mrStatusData} = useAPI('list-mrstatus/');
   const cancelEditing = () => {
