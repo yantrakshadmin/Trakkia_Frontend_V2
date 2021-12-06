@@ -47,7 +47,7 @@ const ReturnDocketsScreen = ({currentPage}) => {
   const [TN, setTN] = useState(null);
   const navigate = useNavigate();
 
-  const {data: returns, loading, reload: reloadFull, status} = useAPI('/return-table/', {});
+  const {data: returns, loading, reload: reloadFull, status} = useAPI('/return-table/', {}, true, );
 
   const {filteredData, reload} = useTableSearch({
     searchVal,
@@ -59,7 +59,8 @@ const ReturnDocketsScreen = ({currentPage}) => {
 
   useEffect(() => {
     if (returns) {
-      const reqD = returns.map((ret) => ({
+      console.log(returns,"backsodi")
+      const reqD = (returns?.results||[]).map((ret) => ({
         ...ret,
       }));
       setReqData(reqD);
