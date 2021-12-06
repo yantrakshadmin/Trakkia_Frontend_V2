@@ -28,9 +28,7 @@ export const AllotmentMainForm = ({ id, onCancel, onDone }) => {
     close: onCancel,
     id,
   });
-  console.log(id);
   useEffect(() => {
-    console.log(id);
     const fetchAllotment = async () => {
       setLoading(true);
       const { data } = await retrieveAllotments(id);
@@ -156,7 +154,7 @@ export const AllotmentMainForm = ({ id, onCancel, onDone }) => {
                           noLabel: index != 0,
                           others: {
                             selectOptions: flows || [],
-                            customTitle: 'flow_name',
+                            customTitle: 'flow',
                             key: 'id',
                             formOptions: {
                               ...field,

@@ -466,7 +466,6 @@ export const RelocationForm = ({id, onCancel, onDone, isEmployee}) => {
               {kitItems.map((i, idx) => {
                 return (
                   <>
-                  {console.log(i,' : i ',kitItems,'tisjiskld')}
                     <Row>
                       <Col span={12}>Product</Col>
                       <Col span={12}>Quantity</Col>

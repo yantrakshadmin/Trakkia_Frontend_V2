@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Form, Col, Row, Button, Divider, Spin, Input } from 'antd';
 import moment from 'moment';
@@ -10,20 +10,20 @@ import { useAPI } from 'common/hooks/api';
 import { useHandleForm } from 'hooks/form';
 import { createAllotment } from 'common/api/auth';
 import { navigate } from '@reach/router';
+import _ from 'lodash';
+import { f } from 'react-select/dist/index-4bd03571.esm';
 import formItem from '../hocs/formItem.hoc';
 
 const AllotmentForm = ({ location }) => {
   const [flows, setFlows] = useState([]);
   const [kits, setKits] = useState([]);
-  const [flowProducts, setFlowProduct] = useState({});
-  const { user, page } = useSelector((s) => s);
+  const { user } = useSelector((s) => s);
   const { userMeta } = user;
   const { companyId } = userMeta;
 
   const { data: flowFetched } = useAPI(`/mr-table-altform/?id=${location.state.id || ''}`, {}, false, false);
   const { data: warehouses } = useAPI(`/company-warehouse/?id=${companyId}`, {}, false, false);
   const { data: vendors } = useAPI(`/company-vendor/?id=${companyId}`, {}, false, false);
-  const { data: products } = useAPI(`/company-products/?id=${companyId}`, {}, false, false);
 
   const onDone = () => {
     navigate('./material-request/');
@@ -43,7 +43,7 @@ const AllotmentForm = ({ location }) => {
         const tempKits = [];
         const tempFlows = [];
         const reqFlows = ((flowFetched && flowFetched[0]?.flows) || []).map(item => {
-          tempFlows.push(item.flow);
+          tempFlows.push(item);
           tempKits.push(item.kit);
           return {
             flow: item.id,
@@ -70,19 +70,58 @@ const AllotmentForm = ({ location }) => {
   }, [location.state.id, flowFetched, form]);
 
   const preProcess = (data) => {
+    console.log(data,'this... ');
+    data.flows = (data.flows || []).map((f,ind) => ({
+      ...f,
+      items: (flows[ind]?.kit.products || []).map((pro)=>({ product:pro.id, quantity:pro.quantity }))
+    }));
     submit(data);
   };
 
-  const findById = (id, arr) =>{
-    console.log(id, arr,kits,'---')
-    return (arr||[]).filter(item => (item.id === id))[0]
+  const onChange = useCallback(
+    (data) => {
+      if(data[0].name[0] === 'flows' && data[0].name[2] === 'alloted_quantity'){
+        const thisFlow = flows[data[0].name[1]];
+        const thisFlowFromFetchedFlows = (flowFetched[0].flows||[]).filter(f => f.id === thisFlow.id)[0];
+        if(thisFlowFromFetchedFlows){
+          const tempFlows = [...flows]
+          tempFlows[data[0].name[1]] = { ...thisFlow, 
+            kit: { ...(thisFlow?.kit || {}), 
+              products: (thisFlow?.kit.products||[]).map((p) => 
+                ({ ...p, quantity: (thisFlowFromFetchedFlows.quantity || 0) * parseInt(data[0].value,10) })) } 
+          }
+          setFlows(tempFlows)
+        }
+      }
+    },
+    [form, kits],
+  );
 
+
+
+  const onProductQuantityChange = (e,flowIndex, productIndex) => {
+    const tempFlows = [...flows]
+    tempFlows[flowIndex] = { ...tempFlows[flowIndex], 
+      kit: { ...(tempFlows[flowIndex]?.kit || {}), 
+        products: (tempFlows[flowIndex]?.kit.products||[])
+          .map((p,ind2) => (ind2 === productIndex ? 
+            { ...p, quantity:e.target.value||'' }: p)) } 
+    }
+    setFlows(tempFlows)
   }
+
 
   return (
     <Spin spinning={loading}>
       <Divider orientation='left'>Allotment Details</Divider>
-      <Form onFinish={preProcess} form={form} layout='vertical' hideRequiredMark autoComplete='off'>
+      <Form 
+        onFinish={preProcess} 
+        form={form}
+        layout='vertical'
+        hideRequiredMark 
+        autoComplete='off'
+        onFieldsChange={onChange}>
+
         <Row style={{ justifyContent: 'left' }}>
           {allotmentFormFields.slice(0, 4).map((item, idx) => (
             <Col span={6}>
@@ -145,11 +184,10 @@ const AllotmentForm = ({ location }) => {
             </Col>
           ))}
         </Row>
-
         <Divider orientation='left'>Kit Details</Divider>
-
         <Form.List name='flows'>
           {(fields, { add, remove }) => {
+            console.log(flows,flows[0]?.kit?.products)
             return (
               <div>
                 {fields.map((field, index) => (
@@ -161,7 +199,7 @@ const AllotmentForm = ({ location }) => {
                           noLabel: index != 0,
                           others: {
                             selectOptions: flows || [],
-                            customTitle: 'flow_name',
+                            customTitle: 'flow',
                             key: 'id',
                             formOptions: {
                               ...field,
@@ -208,31 +246,30 @@ const AllotmentForm = ({ location }) => {
                       </Col>
                     ))}
                     <Col span={10}>
-                    <div className='p-2'>
+                      <div className='p-2'>
                         <Row>
-                          <Col span={12}>Product</Col>
                           <Col span={12}>Short Code</Col>
+                          <Col span={12}>Quantity</Col>
                         </Row>
-                        {(kits[index]?.products || []).map((i, idx) => {
-                          console.group(i, i.product,'group')
-                          return (
-                            <div className={'py-2'}>
+                        {(flows[index]?.kit?.products|| []).map((i, proIndex) => 
+                          (
+                            <div className='py-2'>
                               <Input.Group compact>
-                                <Input
-                                  style={{ width: '50%' }}
-                                  value={i.product?.name||''}
-                                  disabled
-                                />
                                 <Input
                                   style={{ width: '50%' }}
                                   value={i.product?.short_code||''}
                                   disabled
-                            />
+                                  />
+                                <Input
+                                  style={{ width: '50%' }}
+                                  value={i.quantity||0}
+                                  type='number'
+                                  onChange={(ev) => onProductQuantityChange(ev,index, proIndex)}
+                                    />
                               </Input.Group>
                             </div>
-                          );
-                        })}
-                        </div>
+                          ))}
+                      </div>
                     </Col>
                   </Row>
                 ))}
