@@ -46,7 +46,7 @@ const AllotmentForm = ({ location }) => {
           tempFlows.push(item);
           tempKits.push(item.kit);
           return {
-            flow: item.id,
+            flow: item.flow.id,
             kit: item.kit.id,
             asked_quantity: item.quantity,
           };
@@ -73,7 +73,7 @@ const AllotmentForm = ({ location }) => {
     console.log(data,'this... ');
     data.flows = (data.flows || []).map((f,ind) => ({
       ...f,
-      items: (flows[ind]?.kit.products || []).map((pro)=>({ product:pro.id, quantity:pro.quantity }))
+      items: (flows[ind]?.kit.products || []).map((pro)=>({ product:pro.product.id, quantity:pro.quantity }))
     }));
     submit(data);
   };
@@ -192,14 +192,15 @@ const AllotmentForm = ({ location }) => {
               <div>
                 {fields.map((field, index) => (
                   <Row>
+                    {console.log(field)}
                     <Col span={4}>
                       <div className='p-2'>
                         {formItem({
                           ...allotmentProductFormFields[0],
                           noLabel: index != 0,
                           others: {
-                            selectOptions: flows || [],
-                            customTitle: 'flow',
+                            selectOptions: flows.map(flow => flow.flow) || [],
+                            customTitle: 'flow_name',
                             key: 'id',
                             formOptions: {
                               ...field,

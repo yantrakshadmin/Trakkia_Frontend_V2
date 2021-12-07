@@ -19,7 +19,7 @@ import moment from 'moment';
 
 const {Search} = Input;
 
-const MaterialRequestEmployeeScreen = ({currentPage}) => {
+const MaterialRequestEmployeeScreen = ({currentPage, user}) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
 
@@ -113,7 +113,7 @@ const MaterialRequestEmployeeScreen = ({currentPage}) => {
         size="middle"
         title="Volume Plan"
         editingId={editingId}
-        hideRightButton={true}
+        hideRightButton={user.viewType === 'Consignor' ? false : true}
         cancelEditing={cancelEditing}
         modalBody={DemandModuleForm}
         formParams={{filteredData: filteredData}}
@@ -127,7 +127,7 @@ const MaterialRequestEmployeeScreen = ({currentPage}) => {
 };
 
 const mapStateToProps = (state) => {
-  return {currentPage: state.page.currentPage};
+  return {currentPage: state.page.currentPage, user: state.user.userMeta};
 };
 
 export default connect(mapStateToProps)(MaterialRequestEmployeeScreen);

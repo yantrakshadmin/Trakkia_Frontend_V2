@@ -145,6 +145,7 @@ const FormItem = ({key, rules, kwargs, type, others, customLabel, noLabel}) => {
           {...formOptions}>
           <Select {...kwargs}>
             {others.selectOptions.map((item, index) => (
+              
               <Option
                 key={index.toString()}
                 search={

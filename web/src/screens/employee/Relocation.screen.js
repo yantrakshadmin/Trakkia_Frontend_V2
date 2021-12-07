@@ -26,7 +26,7 @@ import _ from 'lodash';
 
 const {Search} = Input;
 
-const ExpenseEmployeeScreen = ({currentPage, isEmployee}) => {
+const ExpenseEmployeeScreen = ({currentPage, isEmployee, user}) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [deliveryId, setDeliveryId] = useState(null);
@@ -167,13 +167,14 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee}) => {
         //expandHandleKey="transactions"
         //expandParams={{loading}}
         //ExpandBody={ExpandTable}
+        hideRightButton={user.viewType === 'Pool Operator' ? false : true}
       />
     </NoPermissionAlert>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {currentPage: state.page.currentPage};
+  return {currentPage: state.page.currentPage, user: state.user.userMeta};
 };
 
 export default connect(mapStateToProps)(ExpenseEmployeeScreen);

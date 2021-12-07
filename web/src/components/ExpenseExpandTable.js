@@ -38,7 +38,7 @@ const getCols = (tt) => {
 };
 
 const ExpandTable = (props) => {
-  const {data, loading} = useAPI(`expenses-exp/?id=${props.id}`);
+  const {data, loading} = useAPI(`expenses-exp/?id=${props.id}`, {}, false);
 
   useEffect(() => {
     if (!loading) {
