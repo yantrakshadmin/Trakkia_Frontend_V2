@@ -17,13 +17,19 @@ import DmCalModal from './demandModuleCalModal.form';
 
 import _ from 'lodash';
 import {filterActive} from 'common/helpers/mrHelper';
+import { useSelector } from 'react-redux';
 
-export const DemandModuleForm = ({id, onCancel, onDone}) => {
-  const {data: flows} = useAPI('/myflows/', {});
+export const CreateDemandModuleForm = ({id, onCancel, onDone}) => {
 
+  const {companyId} = useSelector((s) => s.user.userMeta);
+
+  const {data: flows} = useAPI(`/demand-flows/?id=${companyId}`, {}, false);
+
+  const [kits, setKits] = useState([]);
   const [flowId, setFlowId] = useState(null);
 
-  const {data: kits} = useControlledSelect(flowId);
+  // const {data: kits} = useControlledSelect(flowId);
+  // const {data: kits} = useAPI(`/outward-receivers/?id=${companyId}`, {}, false);
 
   const {form, submit, loading} = useHandleForm({
     create: createDm,
@@ -92,8 +98,11 @@ export const DemandModuleForm = ({id, onCancel, onDone}) => {
         if (data[0].name[0] === 'demand_flows') {
           const fieldKey = data[0].name[1];
           const flowsX = form.getFieldValue('demand_flows');
+          console.log(flowsX[fieldKey].flow, flowsX[fieldKey].kit)
           const thisFlow = _.find(flows, (o) => o.id === flowsX[fieldKey].flow);
-          const thisKit = _.find(kits, (o) => o.id === flowsX[fieldKey].kit);
+          setKits(thisFlow.kits)
+          const thisKit = _.find(kits, (o) => o.kit.id === flowsX[fieldKey].kit).kit;
+          console.log(kits, thisKit)
           Object.assign(flowsX[fieldKey], {
             part_number: thisKit.part_number,
             receiver_client_name: thisFlow.receiver_client.name,
@@ -202,7 +211,7 @@ export const DemandModuleForm = ({id, onCancel, onDone}) => {
                                 },
                               },
                               others: {
-                                selectOptions: filterActive(_, kits) || [],
+                                selectOptions: filterActive(_, kits.map(kit => kit.kit)) || [],
                                 key: 'id',
                                 customTitle: 'part_name',
                                 //dataKeys: ['kit_name', 'kit_info', 'components_per_kit'],

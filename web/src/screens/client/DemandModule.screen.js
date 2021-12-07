@@ -5,7 +5,7 @@ import {deleteDm, retrieveDmsClient} from 'common/api/auth';
 import {connect} from 'react-redux';
 import {useTableSearch} from 'hooks/useTableSearch';
 import {loadAPI} from 'common/helpers/api';
-import {DemandModuleForm} from 'forms/demandModule.form';
+import {CreateDemandModuleForm} from 'forms/demandModule.form';
 import TableWithTabHOC from 'hocs/TableWithTab.hoc';
 import DemandModuleTable from 'components/DemandModuleTable';
 import {deleteHOC} from 'hocs/deleteHoc';
@@ -138,7 +138,7 @@ const MaterialRequestEmployeeScreen = ({currentPage, user}) => {
         title="Volume Plan"
         editingId={editingId}
         cancelEditing={cancelEditing}
-        modalBody={DemandModuleForm}
+        modalBody={CreateDemandModuleForm}
         modalWidth={98}
         expandHandleKey="demand_flows"
         expandParams={{loading}}

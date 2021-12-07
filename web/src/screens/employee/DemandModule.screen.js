@@ -7,6 +7,7 @@ import {useTableSearch} from 'hooks/useTableSearch';
 import {useAPI} from 'common/hooks/api';
 import {mergeArray} from 'common/helpers/mrHelper';
 import {DemandModuleForm} from 'forms/demandModuleEmployee.form';
+import {CreateDemandModuleForm} from 'forms/demandModule.form';
 import TableWithTabHOC from 'hocs/TableWithTab.hoc';
 import DemandModuleTable from 'components/DemandModuleTable';
 import NoPermissionAlert from 'components/NoPermissionAlert';
@@ -26,6 +27,7 @@ const MaterialRequestEmployeeScreen = ({currentPage, user}) => {
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
     retrieve: retrieveDms,
+    usePaginated: false
   });
   const cancelEditing = () => {
     setEditingId(null);
@@ -115,7 +117,7 @@ const MaterialRequestEmployeeScreen = ({currentPage, user}) => {
         editingId={editingId}
         hideRightButton={user.viewType === 'Consignor' ? false : true}
         cancelEditing={cancelEditing}
-        modalBody={DemandModuleForm}
+        modalBody={editingId ? DemandModuleForm : CreateDemandModuleForm}
         formParams={{filteredData: filteredData}}
         modalWidth={98}
         expandHandleKey="demand_flows"
