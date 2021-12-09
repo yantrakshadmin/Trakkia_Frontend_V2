@@ -10,7 +10,8 @@ export const PrivateRoutes = ({ routes, extraRoutes, user, outerRoutes }) => {
   return (
     <Router>
       <Redirect path='/' user={user} />
-      {user.active?(
+      {/* {user.active?( */}
+      {true ?(
         <> 
           {outerRoutes
             ? outerRoutes.map((Route, index) => {

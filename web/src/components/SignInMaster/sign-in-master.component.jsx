@@ -35,13 +35,13 @@ const SignInMaster = () => (
             position: 'absolute',
             right: '190px',
             top: '160px',
-            width: '10px',
+            width: '100px',
             height: '90px',
             opacity: '0',
           }}>
-          <Link to='/sign-up/client' />
+          <Link to='/sign-up/' />
         </Button>
-        <Button
+        {/* <Button
           type='primary'
           style={{
             position: 'absolute',
@@ -52,7 +52,7 @@ const SignInMaster = () => (
             opacity: '0',
           }}>
           <Link to='/sign-up/employee' />
-        </Button>
+        </Button> */}
       </Col>
     </Row>
   </div>

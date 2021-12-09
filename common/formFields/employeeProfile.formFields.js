@@ -2,7 +2,7 @@ import {FORM_ELEMENT_TYPES} from '../../web/src/constants/formFields.constant';
 
 export const clientFormFields = [
   {
-    key: 'employee_name',
+    key: 'name',
     rules: [{required: true, message: 'Please enter name!'}],
     kwargs: {
       placeholder: 'Enter',
@@ -12,7 +12,7 @@ export const clientFormFields = [
     customLabel: 'Name',
   },
   {
-    key: 'employee_email',
+    key: 'email',
     rules: [{required: true, message: 'Please enter email!'}],
     kwargs: {
       placeholder: 'Enter',
@@ -22,7 +22,7 @@ export const clientFormFields = [
     customLabel: 'Email Address',
   },
   {
-    key: 'employee_phone',
+    key: 'phone',
     rules: [{required: true, message: 'Please enter phone!'}],
     kwargs: {
       placeholder: 'Enter',
@@ -32,14 +32,41 @@ export const clientFormFields = [
     customLabel: 'Phone No.',
   },
   {
-    key: 'employee_city',
-    rules: [{required: true, message: 'Please enter City!'}],
+    key: 'address',
+    rules: [{required: true, message: 'Please enter Address!'}],
     kwargs: {
       placeholder: 'Enter',
     },
     type: FORM_ELEMENT_TYPES.INPUT,
     others: null,
-    customLabel: 'City',
+    customLabel: 'Address',
+  },
+  {
+    key: 'type',
+    rules: [{ required: true, message: 'Select Type!' }],
+    kwargs: {
+      placeholder: 'Select',
+      mode:'multiple',
+
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: {
+      selectOptions: [{ value:'Pool Operator',label:'Pool Operator' },
+        { value:'Consignor',label:'Consignor' },
+        { value:'Consignee',label:'Consignee' }]
+      ,
+      style: { width: '100%' },
+    },
+    customLabel: 'Type',
+  },
+  {
+    key: 'gstin',
+    rules: [{ required: true, message: 'Please select GST IN!' }],
+    kwargs: {
+      placeholder: 'GST IN',
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    customLabel: 'GST IN',
   },
 ];
 

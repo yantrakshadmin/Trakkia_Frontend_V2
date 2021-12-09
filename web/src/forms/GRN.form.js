@@ -20,8 +20,8 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
   const {userMeta} = user;
   const {companyId} = userMeta;
 
-  const {data: vendors} = useAPI(`/company-vendor/?id=${companyId}`, {}, false, false);
-  const {data: warehouses} = useAPI(`/company-warehouse/?id=${companyId}`, {}, false, false);
+  const {data: vendors} = useAPI(`/company-vendor/?id=${companyId}`);
+  const {data: warehouses} = useAPI(`/company-warehouse/?id=${companyId}`);
   const {data: products} = useAPI(`/products/`, {}, false, true);
 
   const handleGrnWithPO = (data) => {

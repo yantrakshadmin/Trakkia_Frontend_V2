@@ -51,7 +51,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
   const [reqData, setReqData] = useState([]);
   const [TN, setTN] = useState(null);
   const [visible, setVisible] = useState(false);
-  const { data: allotments, loading, reload: reloadFull, status } = useAPI('/allotments-table/', {}, false);
+  const { data: allotments, loading, reload: reloadFull, status } = useAPI('/allotments-table/');
   // const { data: count } = useAPI('/mr-count/', {});
   const [altId, setAltId] = useState(null);
   const { filteredData, reload } = useTableSearch({

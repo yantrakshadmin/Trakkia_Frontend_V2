@@ -28,10 +28,10 @@ export const ExpenseForm = ({ id, onCancel, onDone, isEmployee }) => {
   const {companyId} = userMeta;
 
 
-  const { data: vendors } = useAPI(`/vendors-exp/?id=${companyId}`, {} , false, false);
-  const { data: allotExp } = useAPI(`/allot-exp/?id=${companyId}`, {}, false, false);
-  const { data: grnExp } = useAPI(`/grn-exp/?id=${companyId}`, {}, false, false);
-  const { data: returnExp } = useAPI(`/return-exp/?id=${companyId}`, {}, false, false);
+  const { data: vendors } = useAPI(`/vendors-exp/?id=${companyId}`);
+  const { data: allotExp } = useAPI(`/allot-exp/?id=${companyId}`);
+  const { data: grnExp } = useAPI(`/grn-exp/?id=${companyId}`);
+  const { data: returnExp } = useAPI(`/return-exp/?id=${companyId}`);
   const [refreshTransactionNumber,setRefreshTransactionNumber] = useState(0)
   const { form, submit, loading } = useHandleForm({
     create: createExpense,

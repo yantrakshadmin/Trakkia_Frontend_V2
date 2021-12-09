@@ -10,7 +10,7 @@ export const signUpFailure = () => ({
 });
 
 export const signUpSuccess = (user) => ({
-  payload: {...user, type: 'public'},
+  payload: {...user, type: 'employee'},
   type: SIGN_UP_SUCCESS,
 });
 

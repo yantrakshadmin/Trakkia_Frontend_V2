@@ -36,10 +36,10 @@ export const RelocationForm = ({id, onCancel, onDone, isEmployee}) => {
   // const {data: kitsFull, loading: kloading} = useAPI('/kits/', {});
   // const {data: warehouses} = useAPI(`/company-warehouse/?id=${}`, {});
 
-  const {data: vendors} = useAPI(`/company-vendor/?id=${companyId}`, {}, false, false);
-  const {data: warehouses} = useAPI(`/company-warehouse/?id=${companyId}`, {}, false, false);
-  const {data: products, loading :ploading } = useAPI(`/company-products/?id=${companyId}`, {}, false, false);
-  const {data: kitsFull, loading: kloading} = useAPI(`/company-kits/?id=${companyId}`, {},false, false   );
+  const {data: vendors} = useAPI(`/company-vendor/?id=${companyId}`);
+  const {data: warehouses} = useAPI(`/company-warehouse/?id=${companyId}`);
+  const {data: products, loading :ploading } = useAPI(`/company-products/?id=${companyId}`);
+  const {data: kitsFull, loading: kloading} = useAPI(`/company-kits/?id=${companyId}`);
   // const {data: warehouses} = useAPI(`/company-warehouse/?id=${companyId}`, {});
 
 

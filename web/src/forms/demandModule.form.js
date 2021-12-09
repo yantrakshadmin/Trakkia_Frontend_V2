@@ -18,18 +18,23 @@ import DmCalModal from './demandModuleCalModal.form';
 import _ from 'lodash';
 import {filterActive} from 'common/helpers/mrHelper';
 import { useSelector } from 'react-redux';
+import { FORM_ELEMENT_TYPES } from 'constants/formFields.constant';
 
 export const CreateDemandModuleForm = ({id, onCancel, onDone}) => {
 
   const {companyId} = useSelector((s) => s.user.userMeta);
 
-  const {data: flows} = useAPI(`/demand-flows/?id=${companyId}`, {}, false);
-
   const [kits, setKits] = useState([]);
   const [flowId, setFlowId] = useState(null);
+  const [selectedClient, setSelectedClient] = useState(null);
+
+
+  const {data: flows} = useAPI(`/demand-flows/?id=${selectedClient}&sc=${companyId}`);
+  const {data: clients} = useAPI('/company-list/');
+  if(clients) clients.results = clients.results.filter((client) => client.id !== companyId)
 
   // const {data: kits} = useControlledSelect(flowId);
-  // const {data: kits} = useAPI(`/outward-receivers/?id=${companyId}`, {}, false);
+  // const {data: kits} = useAPI(`/outward-receivers/?id=${companyId}`);
 
   const {form, submit, loading} = useHandleForm({
     create: createDm,
@@ -92,9 +97,15 @@ export const CreateDemandModuleForm = ({id, onCancel, onDone}) => {
 
   const handleFieldsChange = useCallback(
     (data) => {
-      console.log(data);
-      setDMTouched(true);
+      if(form.getFieldValue('delivery_month')) setDMTouched(true);
       try {
+        if (data[0]) {
+          if (data[0].name[0] === 'client_id') {
+            const sc = _.find(clients?.results, (item) => item.id === data[0].value);
+            setSelectedClient(sc.id);
+          }
+        }
+
         if (data[0].name[0] === 'demand_flows') {
           const fieldKey = data[0].name[1];
           const flowsX = form.getFieldValue('demand_flows');
@@ -141,12 +152,33 @@ export const CreateDemandModuleForm = ({id, onCancel, onDone}) => {
         onFieldsChange={handleFieldsChange}>
         <Row style={{justifyContent: 'left'}}>
           {demandModuleFormFields.slice(0, 1).map((item, idx) => (
-            <Col span={24}>
+            <Col span={12}>
               <div key={idx} className="p-2">
                 {formItem(item)}
               </div>
             </Col>
           ))}
+          <Col span={12}>
+            {formItem({
+              key: 'client_id',
+              kwargs: {
+                disabled: !dmTouched,
+                showSearch: true,
+                placeholder: 'Select',
+                filterOption: (input, option) =>
+                  option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+              },
+              others: {
+                // selectOptions: filterActive(_, clients) || [],
+                selectOptions: (clients?.results || []).filter(item => item.type.map(t => t.company_type).includes('Pool Operator')) ,
+                key: 'id',
+                customTitle: 'name',
+                dataKeys: ['phone' , 'email'],
+              },
+              type: FORM_ELEMENT_TYPES.SELECT,
+              customLabel: 'Client',
+            })}
+          </Col>
         </Row>
 
         <Divider orientation="left">Flow and Kit Details</Divider>

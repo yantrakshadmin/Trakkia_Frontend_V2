@@ -1,17 +1,23 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Col, Row, Button, Divider, Spin} from 'antd';
+import {Form, Col, Row, Button, Divider, Spin, Select} from 'antd';
 import {clientFormFields} from 'common/formFields/employeeProfile.formFields';
 import {useHandleForm} from 'hooks/form';
-import {editEmployeeProfile, retrieveEmployeeProfile} from 'common/api/auth';
+import {editCompanyProfile, editEmployeeProfile, retrieveEmployeeProfile} from 'common/api/auth';
 import formItem from '../hocs/formItem.hoc';
+import { useAPI } from 'common/hooks/api';
+import { loadAPI } from 'common/helpers/api';
 
-const EmployeeForm = ({id, onCancel, onDone}) => {
-  const [reqFile, setFile] = useState(null);
+const { Option } = Select
 
-  const {form, submit, loading} = useHandleForm({
+const EmployeeForm = ({id, isAdmin, onCancel, onDone}) => {
+
+  const [formData, setFormData] = Form.useForm();
+  const retrieveURL = isAdmin ? 'company-profile' : 'emp-profile'
+  const {data: userData} = useAPI(`/${retrieveURL}/${id}`)
+
+  const {submit, loading} = useHandleForm({
     create: null,
-    edit: editEmployeeProfile,
-    retrieve: retrieveEmployeeProfile,
+    edit: isAdmin ? editCompanyProfile : editEmployeeProfile,
     success: 'Employee created/edited successfully.',
     failure: 'Error in creating/editing Employee.',
     done: onDone,
@@ -20,25 +26,18 @@ const EmployeeForm = ({id, onCancel, onDone}) => {
   });
 
   useEffect(() => {
-    if (id && !loading) {
-      const email = form.getFieldValue('employee_email');
-      if (!email || email === '0') {
-        form.setFieldsValue({employee_email: ''});
-      }
-    }
-  }, [loading]);
+    if(userData) userData.type = userData.type.map(d => d.company_type)
+    formData.setFieldsValue(userData)
+  }, [userData])
 
   const handleFieldsChange = (data) => {};
 
   const preProcess = (data) => {
-    if (reqFile) {
-      data.annexure = reqFile.originFileObj;
-    } else delete data.annexure;
-    const req = new FormData();
-    for (const key in data) {
-      req.append(key.toString(), data[key]);
-    }
-    submit(req);
+
+    data.type = data.type.map(type => ({company_id: type}))
+
+    submit(data);
+
   };
 
   return (
@@ -46,7 +45,7 @@ const EmployeeForm = ({id, onCancel, onDone}) => {
       <Divider orientation="left">User Details</Divider>
       <Form
         onFinish={preProcess}
-        form={form}
+        form={formData}
         layout="vertical"
         hideRequiredMark
         autoComplete="off"

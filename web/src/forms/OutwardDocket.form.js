@@ -42,8 +42,8 @@ export const OutwardDocketForm = ({ id, onCancel, onDone }) => {
 
   const companyId = useSelector((s) => s.user.userMeta.companyId);
 
-  const {data: flows} = useAPI(`/outward-receivers/?id=${companyId}`, {}, false, false);
-  const {data: vendors_data} = useAPI(`/company-vendor/?id=${companyId}`, {}, false, false);
+  const {data: flows} = useAPI(`/outward-receivers/?id=${companyId}`);
+  const {data: vendors_data} = useAPI(`/company-vendor/?id=${companyId}`);
 
   const [receiverClients, setReceiverClients] = useState([]);
   const [vendors, setVendors] = useState([]);

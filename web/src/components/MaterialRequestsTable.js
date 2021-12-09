@@ -23,7 +23,7 @@ const cols = [
 ];
 
 const ExpandTable = (props) => {
-  const {data, loading} = useAPI(`mr-table-exp/?id=${props.id}`, {}, false);
+  const {data, loading} = useAPI(`mr-table-exp/?id=${props.id}`);
 
   useEffect(() => {
     if (!loading) {

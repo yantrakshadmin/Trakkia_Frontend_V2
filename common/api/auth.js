@@ -382,13 +382,17 @@ export const editEmployeeProfile = (id, req) =>
     method: 'PATCH',
     secure: true,
     data: req,
-    headers: {
-      'Content-Type': `multipart/form-data  boundary=${Math.random().toString().substr(2)}`,
-    },
+  });
+
+export const editCompanyProfile = (id, req) =>
+  loadAPI(`/company-profile/${id}/`, {
+    method: 'PATCH',
+    secure: true,
+    data: req,
   });
 
 export const retrieveEmployeeProfile = (id) =>
-  loadAPI(`/emp-profile/${id}`, {
+  loadAPI(`/company-profile/${id}`, {
     method: 'GET',
     secure: true,
   });

@@ -13,7 +13,7 @@ const defaultAPIResponse = {
 export const  useAPI = (
   url,
   opts = {},
-  usePaginated = true,
+  usePaginated,
   useCompanyIdAndViewType,
   pageSize = 10,
 ) => {

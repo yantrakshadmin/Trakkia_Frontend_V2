@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Form, Card, Typography, Divider,Col,Row  } from 'antd';
+import { Button, Form, Card, Typography, Divider,Col,Row, Input  } from 'antd';
 import { connect } from 'react-redux';
 import { signUpCompany } from 'common/actions/signUp';
 import { redirectTo } from '@reach/router';
@@ -18,9 +18,18 @@ const SignUp = ({ user,signUpCompany:signUp }) => {
     retrieve: ()=>{},
     success: 'Vendor created/edited successfully.',
     failure: 'Error in creating/editing vendor.',
-    done: ()=>{},
+    done: ()=>{console.log('created')},
     close: ()=>{},
   });
+
+  const preProcess = (data) => {
+
+    data.first_name = data.name.substr(0, data.name.indexOf(' '))
+    data.last_name = data.name.substr(data.name.indexOf(' ') + 1)
+
+    submit(data)
+
+  }
   
   useEffect(() => {
     if (user.first_name) redirectTo('/');
@@ -57,11 +66,42 @@ const SignUp = ({ user,signUpCompany:signUp }) => {
             initialValues={{
               remember: true,
             }}
-            onFinish={submit}
+            onFinish={preProcess}
             hideRequiredMark>
             <Row justify='start'>
               {
-                signUpFormFields.map((item,idx) => (
+                signUpFormFields.slice(0,3).map((item,idx) => (
+                  <Col span={24} key={idx.toString()}>
+                    <div className='p-2'>
+                      {formItem(item)}
+                    </div>
+                  </Col>
+                ))
+              }
+              <Form.Item
+                name='confirm'
+                label='Confirm Password'
+                dependencies={['password']}
+                hasFeedback
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please confirm your password!',
+                  },
+                  ({getFieldValue}) => ({
+                    validator(rule, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve();
+                      }
+
+                      return Promise.reject('The two passwords that you entered do not match!');
+                    },
+                  }),
+                ]}>
+                <Input.Password />
+              </Form.Item>
+              {
+                signUpFormFields.slice(3,7).map((item,idx) => (
                   <Col span={24} key={idx.toString()}>
                     <div className='p-2'>
                       {formItem(item)}

@@ -21,9 +21,9 @@ const AllotmentForm = ({ location }) => {
   const { userMeta } = user;
   const { companyId } = userMeta;
 
-  const { data: flowFetched } = useAPI(`/mr-table-altform/?id=${location.state.id || ''}`, {}, false, false);
-  const { data: warehouses } = useAPI(`/company-warehouse/?id=${companyId}`, {}, false, false);
-  const { data: vendors } = useAPI(`/company-vendor/?id=${companyId}`, {}, false, false);
+  const { data: flowFetched } = useAPI(`/mr-table-altform/?id=${location.state.id || ''}`);
+  const { data: warehouses } = useAPI(`/company-warehouse/?id=${companyId}`);
+  const { data: vendors } = useAPI(`/company-vendor/?id=${companyId}`);
 
   const onDone = () => {
     navigate('./material-request/');
