@@ -23,7 +23,7 @@ const {Search} = Input;
 
 const getCycleTime = (sks, sender_client) => {
   const temp = _.find(sks, (i) => `${i.sender} - ${i.receiver}` === sender_client);
-  return temp.total_cycle_time;
+  return temp?.total_cycle_time;
 };
 
 const CreateCPScreen = ({currentPage}) => {
@@ -38,6 +38,7 @@ const CreateCPScreen = ({currentPage}) => {
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
     retrieve: retrieveCP,
+    usePaginated : false,
   });
 
   useEffect(() => {

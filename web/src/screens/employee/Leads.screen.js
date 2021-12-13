@@ -34,10 +34,13 @@ const WarehouseEmployeeScreen = ({currentPage}) => {
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
     retrieve: retrieveLeads,
+    usePaginated : false,
   });
+
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log(filteredData, "filterrr");
     if (filteredData) {
       const csvd = [];
       filteredData.forEach((d) => {
