@@ -8,7 +8,7 @@ import FilesViewModal from '../../components/FilesViewModal';
 import NoPermissionAlert from 'components/NoPermissionAlert';
 import {HideShowTag} from './SCS.screen';
 
-import _ from 'lodash';
+// import _ from 'lodash';
 
 const {Search} = Input;
 

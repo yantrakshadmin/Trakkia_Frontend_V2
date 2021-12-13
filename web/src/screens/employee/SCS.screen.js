@@ -60,6 +60,7 @@ const PFEPEmployeeScreen = ({currentPage}) => {
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
     retrieve: retrieveSCSs,
+    usePaginated : false,
   });
   useEffect(() => {
     if (filteredData) {
