@@ -80,3 +80,64 @@ export const clientFormFields = [
 //     customLabel: 'Mailing List',
 //   },
 // ];
+
+export const employeeFormFields = [
+  {
+    key: 'name',
+    rules: [{required: true, message: 'Please enter name!'}],
+    kwargs: {
+      placeholder: 'Enter',
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    others: null,
+    customLabel: 'Name',
+  },
+  {
+    key: 'email',
+    rules: [{required: true, message: 'Please enter email!'}],
+    kwargs: {
+      placeholder: 'Enter',
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    others: null,
+    customLabel: 'Email Address',
+  },
+  {
+    key: 'phone',
+    rules: [{required: true, message: 'Please enter phone!'}],
+    kwargs: {
+      placeholder: 'Enter',
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    others: null,
+    customLabel: 'Phone No.',
+  },
+  {
+    key: 'city',
+    rules: [{required: true, message: 'Please enter City!'}],
+    kwargs: {
+      placeholder: 'Enter',
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    others: null,
+    customLabel: 'City',
+  },
+  {
+    key: 'type',
+    rules: [{ required: true, message: 'Select Type!' }],
+    kwargs: {
+      placeholder: 'Select',
+      mode:'multiple',
+
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: {
+      selectOptions: [{ value:'Pool Operator',label:'Pool Operator' },
+        { value:'Consignor',label:'Consignor' },
+        { value:'Consignee',label:'Consignee' }]
+      ,
+      style: { width: '100%' },
+    },
+    customLabel: 'Type',
+  },
+];

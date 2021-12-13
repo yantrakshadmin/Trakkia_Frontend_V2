@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import leadColumns from 'common/columns/Leads.colums';
+import userColumns from 'common/columns/Users.column';
 import { Popconfirm, Button, Input } from 'antd';
 import { connect  } from 'react-redux';
 import { useTableSearch } from 'hooks/useTableSearch';
@@ -9,6 +9,7 @@ import { deleteHOC } from 'hocs/deleteHoc';
 import Edit from 'icons/Edit';
 import TableWithTabHOC from 'hocs/TableWithTab.hoc';
 import {AddUserForm}  from 'forms/SuperUser/addUser.form';
+import {EditUserForm}  from 'forms/SuperUser/editUser.form';
 import NoPermissionAlert from 'components/NoPermissionAlert';
 
 const { Search } = Input;
@@ -19,17 +20,18 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
 
   const { filteredData, loading, reload, hasPermission } = useTableSearch({
     searchVal,
-    retrieve: ()=>[],
+    retrieve: retrieveEmployeeList,
+    useCompanyIdAndViewType: true
   });
 
 
   const columns = [
-    ...leadColumns,
+    ...userColumns,
     {
       title: 'Action',
       key: 'operation',
       fixed: 'right',
-      width: '12vw',
+      width: '8vw',
       render: (text, record) => (
         <div className='row align-center justify-evenly'>
           <Button
@@ -40,7 +42,8 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
               padding: '1px',
             }}
             onClick={(e) => {
-              setEditingId(record.id);
+              setEditingId(record.user);
+              console.log(record, record.user)
               e.stopPropagation();
             }}>
             <Edit />
@@ -75,7 +78,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
     {
       name: 'All Users',
       key: 'allUsers',
-      data: [],
+      data: filteredData || [],
       columns,
       loading,
     },
@@ -99,7 +102,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
         title='Users'
         editingId={editingId}
         cancelEditing={cancelEditing}
-        modalBody={AddUserForm}
+        modalBody={editingId ? EditUserForm : AddUserForm}
         modalWidth={60}
         scroll={{ x: 1200 }}
         formParams={{companyId: user.companyId}}

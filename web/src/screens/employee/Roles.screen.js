@@ -134,7 +134,7 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee}) => {
         refresh={reload}
         tabs={tabs}
         size="middle"
-        title="Roles"
+        title="Group"
         editingId={editingId}
         cancelEditing={cancelEditing}
         modalBody={GroupForm}
