@@ -1,23 +1,22 @@
 import React, {useEffect, useState} from 'react';
 import {Form, Col, Row, Button, Divider, Spin, Select} from 'antd';
-import {clientFormFields} from 'common/formFields/employeeProfile.formFields';
+import {employeeFormFields} from 'common/formFields/employeeProfile.formFields';
 import {useHandleForm} from 'hooks/form';
 import {editCompanyProfile, editEmployeeProfile, retrieveEmployeeProfile} from 'common/api/auth';
-import formItem from '../hocs/formItem.hoc';
+import formItem from '../../hocs/formItem.hoc';
 import { useAPI } from 'common/hooks/api';
 import { loadAPI } from 'common/helpers/api';
 
 const { Option } = Select
 
-const EmployeeForm = ({id, isAdmin, onCancel, onDone}) => {
+export const EditUserForm = ({id, onCancel, onDone}) => {
 
   const [formData, setFormData] = Form.useForm();
-  const retrieveURL = isAdmin ? 'company-profile' : 'emp-profile'
-  const {data: userData} = useAPI(`/${retrieveURL}/${id}`)
+  const {data: userData} = useAPI(`/emp-profile/${id}`)
 
   const {submit, loading} = useHandleForm({
     create: null,
-    edit: isAdmin ? editCompanyProfile : editEmployeeProfile,
+    edit: editEmployeeProfile,
     success: 'Employee created/edited successfully.',
     failure: 'Error in creating/editing Employee.',
     done: onDone,
@@ -26,7 +25,7 @@ const EmployeeForm = ({id, isAdmin, onCancel, onDone}) => {
   });
 
   useEffect(() => {
-    if(userData) userData.type = userData.type.map(d => d.company_type)
+    if(userData) userData.type = userData.type.map(d => d.emp_type)
     formData.setFieldsValue(userData)
   }, [userData])
 
@@ -34,7 +33,7 @@ const EmployeeForm = ({id, isAdmin, onCancel, onDone}) => {
 
   const preProcess = (data) => {
 
-    data.type = data.type.map(type => ({company_type: type}))
+    data.type = data.type.map(type => ({emp_type: type}))
 
     submit(data);
 
@@ -51,7 +50,7 @@ const EmployeeForm = ({id, isAdmin, onCancel, onDone}) => {
         autoComplete="off"
         onFieldsChange={handleFieldsChange}>
         <Row style={{justifyContent: 'left'}}>
-          {clientFormFields.map((item, idx) => (
+          {employeeFormFields.map((item, idx) => (
             <Col span={8}>
               <div key={idx} className="p-2">
                 {formItem(item)}
@@ -137,5 +136,3 @@ const EmployeeForm = ({id, isAdmin, onCancel, onDone}) => {
     </Spin>
   );
 };
-
-export default EmployeeForm;

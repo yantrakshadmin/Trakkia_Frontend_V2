@@ -1564,9 +1564,11 @@ export const editUser = (id,data) => loadAPI(`/emp-profile/${id}/`, {
   method: 'POST',
   data,
 });
+
+
     
-export const retrieveEmployeeList = (id) =>
-  loadAPI(`/employees/${id}/`, {
+export const retrieveEmployeeList = ({companyId,viewType, page, pageSize}) =>
+  loadAPI(`/employees/${companyId}/?page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
   });

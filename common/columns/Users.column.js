@@ -2,31 +2,35 @@
 
 export default [
   {
-    title: 'First Name',
-    key: 'first_name',
-    dataIndex: 'first_name',
-    width: '16vw',
-    // sorter: (a, b) => ifNotStrReturnA(a.name).localeCompare(ifNotStrReturnA(b.name)),
-    // showSorterTooltip: false,
-  },
-  {
-    title: 'Last Name',
-    key: 'last_name',
-    dataIndex: 'last_name',
-    width: '16vw',
+    title: 'Name',
+    key: 'name',
+    dataIndex: 'name',
+    width: '8vw',
     // sorter: (a, b) => ifNotStrReturnA(a.name).localeCompare(ifNotStrReturnA(b.name)),
     // showSorterTooltip: false,
   },
   {
     title: 'Email',
     key: 'email',
-    width: '16vw',
+    width: '8vw',
     dataIndex: 'email',
   },
   {
-    title: 'Username',
-    key: 'username',
-    width: '16vw',
-    dataIndex: 'username',
+    title: 'Phone',
+    key: 'phone',
+    width: '8vw',
+    dataIndex: 'phone',
+  },
+  {
+    title: 'City',
+    key: 'city',
+    width: '8vw',
+    dataIndex: 'city',
+  },
+  {
+    title: 'Role',
+    key: 'role',
+    width: '8vw',
+    dataIndex: 'role',
   },
 ];
