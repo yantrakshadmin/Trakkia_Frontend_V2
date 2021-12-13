@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { Form, Col, Row, Button, Divider, Spin } from 'antd';
 import moment from 'moment';
 import {
@@ -7,17 +8,21 @@ import {
 } from 'common/formFields/allotmentMain.formFields';
 import { useAPI } from 'common/hooks/api';
 import { useHandleForm } from 'hooks/form';
-import { createAllotment, editAllotment, retrieveAllotments } from 'common/api/auth';
+import { createAllotment, editAllotment, retrieveAllotment, retrieveAllotments } from 'common/api/auth';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import formItem from '../hocs/formItem.hoc';
 
 export const AllotmentMainForm = ({ id, onCancel, onDone }) => {
   const [loading, setLoading] = useState(true);
 
-  const { data: warehouses } = useAPI('/warehouse/', {});
-  const { data: vendors } = useAPI('/vendors/', {});
-  const { data: kits } = useAPI('/kits/', {});
-  const { data: flows } = useAPI('/flows/', {});
+  const { companyId } = useSelector((s) => s.user.userMeta);
+
+  const { data: warehouses } = useAPI(`/company-warehouse/?id=${companyId}`);
+  const { data: vendors } = useAPI(`/company-vendor/?id=${companyId}`);
+  const { data: kits } = useAPI(`/company-kits/?id=${companyId}`);
+  const { data: flows } = useAPI(`/company-flows/?id=${companyId}`);
+  const { data: mr } = useAPI(`/edit-allotment/${id}/`);
+  console.log(mr)
 
   const { form, submit } = useHandleForm({
     create: createAllotment,
@@ -31,7 +36,7 @@ export const AllotmentMainForm = ({ id, onCancel, onDone }) => {
   useEffect(() => {
     const fetchAllotment = async () => {
       setLoading(true);
-      const { data } = await retrieveAllotments(id);
+      const { data } = await retrieveAllotment(id);
       if (data) {
         const allotment = data;
         console.log(allotment);
@@ -60,7 +65,8 @@ export const AllotmentMainForm = ({ id, onCancel, onDone }) => {
         setLoading(false);
       }
     };
-    if (id && form && kits && warehouses && flows && vendors) fetchAllotment();
+    if (id && form && kits && warehouses && vendors) fetchAllotment();
+    // if (id && form && kits && warehouses && flows && vendors) fetchAllotment();
   }, [id, form, kits, warehouses, flows, vendors]);
 
   const preProcess = (data) => {

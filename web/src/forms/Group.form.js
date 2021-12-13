@@ -7,17 +7,21 @@ import {createGroup, editGroup, retrieveGroup} from 'common/api/auth';
 import {PlusOutlined, MinusCircleOutlined} from '@ant-design/icons';
 import formItem from '../hocs/formItem.hoc';
 import {FORM_ELEMENT_TYPES} from '../constants/formFields.constant';
+import { useSelector } from 'react-redux';
 
 import _ from 'lodash';
+import { getUniqueObject } from 'common/helpers/getUniqueValues';
 
 export const GroupForm = ({id, onCancel, onDone}) => {
-  const {data: employees} = useAPI('/employees/', {});
+  
+  const { companyId, viewType } = useSelector(s => s.user.userMeta);
 
-  const {data: sender_clients} = useAPI('/clients/', {});
-  const {data: receiver_clients} = useAPI('/receiverclients/', {});
-  const {data: warehouses} = useAPI('/warehouse/', {});
+  const {data: employees} = useAPI(`/employees/${companyId}`, {});
+  const {data: sender_clients} = useAPI(`/senderclients/?company=${companyId}&view=${viewType}`, {});
+  const {data: receiver_clients} = useAPI(`/receiverclients/?company=${companyId}&view=${viewType}`, {});
 
   const [selectedModels, setSelectedModels] = useState([]);
+  const [clients, setClients] = useState([]);
 
   const {form, submit, loading} = useHandleForm({
     create: createGroup,
@@ -31,32 +35,59 @@ export const GroupForm = ({id, onCancel, onDone}) => {
     dates: ['invoice_date'],
   });
 
+  console.log(form.getFieldValue('employees'))
+
   useEffect(() => {
-    if (id && !loading) {
-      const temp = form.getFieldValue('groupmodels');
-      const smTemp = selectedModels;
-      temp.forEach((m) => {
-        const k = _.findKey(groupModelChoicesGrouped, (o) => o.includes(m.model));
-        if (k && !smTemp.includes(k)) {
-          smTemp.push(k);
-          form.setFieldsValue({
-            [k]: true,
-          });
-        }
-      });
-      setSelectedModels(smTemp);
+    
+    if(sender_clients && receiver_clients){
+
+      setClients(getUniqueObject([...sender_clients, ...receiver_clients], 'id'))
+
     }
-  }, [id, loading]);
+
+  }, [sender_clients, receiver_clients])
+
+  // useEffect(() => {
+  //   if (id && !loading) {
+  //     const temp = form.getFieldValue('modules');
+  //     const smTemp = selectedModels;
+  //     temp.forEach((m) => {
+  //       const k = _.findKey(groupModelChoicesGrouped, (o) => o.includes(m.model));
+  //       if (k && !smTemp.includes(k)) {
+  //         smTemp.push(k);
+  //         form.setFieldsValue({
+  //           [k]: true,
+  //         });
+  //       }
+  //     });
+  //     setSelectedModels(smTemp);
+  //   }
+  // }, [id, loading]);
 
   const preProcess = useCallback(
     (data) => {
+      console.log(data, selectedModels)
       const temp = {};
+      temp.name = data.name;
+      temp.accessible_companies = data.accessible_companies.map((c) => ({pk: c}));
+      temp.employees = data.employees.map((c) => ({pk: c}));
+      let s = [];
+      selectedModels.forEach((i) => {
+        groupModelChoicesGrouped[i].forEach((j) => {
+          s.push({model: j});
+        });
+      });
+      temp.modules = s
+      submit(temp)
+
+      return
+      // const temp = {};
       temp.name = data.name;
       temp.emp = data.emp;
       temp.sender_clients = data.sender_clients || [];
       temp.receiver_clients = data.receiver_clients || [];
       temp.warehouses = data.warehouses || [];
-      let s = [];
+      // let s = [];
       selectedModels.forEach((i) => {
         groupModelChoicesGrouped[i].forEach((j) => {
           s.push({model: j});
@@ -106,29 +137,38 @@ export const GroupForm = ({id, onCancel, onDone}) => {
                   ...item,
                   others: {
                     ...item.others,
-                    selectOptions: employees || [
-                      {
-                        user: 2,
-                        employee_name: 'Yantraksh',
-                        employee_email: '0',
-                        employee_phone: '0',
-                        employee_city: '0',
-                        employee_role: 'callrahul',
-                      },
-                    ],
+                    selectOptions: employees?.results || [],
                     key: 'user',
-                    dataKeys: ['employee_email'],
-                    customTitle: 'employee_name',
+                    dataKeys: ['email'],
+                    customTitle: 'name',
                   },
                 })}
               </div>
             </Col>
           ))}
         </Row>
+        {/* <Row>
+        {groupFormFields.slice(2, 3).map((item, idx) => (
+            <Col span={item.colSpan}>
+              <div key={idx} className="p-2">
+                {formItem({
+                  ...item,
+                  others: {
+                    ...item.others,
+                    selectOptions: clients || [],
+                    key: 'id',
+                    dataKeys: ['email'],
+                    customTitle: 'name',
+                  },
+                })}
+              </div>
+            </Col>
+          ))}
+        </Row> */}
 
         <Divider orientation="left">Model Details</Divider>
 
-        <Row style={{justifyContent: 'left'}}>
+        {/* <Row style={{justifyContent: 'left'}}>
           {_.keys(groupModelChoicesGrouped).map((modelName, modelIdx) => (
             <Col span={8} key={modelIdx}>
               <Card>
@@ -158,11 +198,11 @@ export const GroupForm = ({id, onCancel, onDone}) => {
               </Card>
             </Col>
           ))}
-        </Row>
+        </Row> */}
 
         <br />
 
-        <Row gutter={10}>
+        {/* <Row gutter={10}>
           <Col span={8}>
             <Card title="Sender Clients">
               <Form.List name="sender_clients">
@@ -361,7 +401,7 @@ export const GroupForm = ({id, onCancel, onDone}) => {
               </Form.List>
             </Card>
           </Col>
-        </Row>
+        </Row> */}
 
         <br />
 

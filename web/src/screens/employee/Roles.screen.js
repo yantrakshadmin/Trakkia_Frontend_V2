@@ -27,7 +27,11 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee}) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
 
-  const {filteredData, loading, reload} = useTableSearch({searchVal, retrieve: retrieveGroups});
+  const {filteredData, loading, reload} = useTableSearch({
+    searchVal, 
+    retrieve: retrieveGroups,
+    usePaginated: false
+  });
   //const {data: mrStatusData} = useAPI('list-mrstatus/');
   const cancelEditing = () => {
     setEditingId(null);
@@ -140,7 +144,7 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee}) => {
         modalBody={GroupForm}
         modalWidth={90}
         formParams={{isEmployee}}
-        expandHandleKey="groupmodels"
+        expandHandleKey="modules"
         expandParams={{loading}}
         ExpandBody={GroupExpandTable}
       />

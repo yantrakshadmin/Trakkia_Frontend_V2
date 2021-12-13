@@ -17,9 +17,8 @@ import formItem from '../hocs/formItem.hoc';
 const AllotmentForm = ({ location }) => {
   const [flows, setFlows] = useState([]);
   const [kits, setKits] = useState([]);
-  const { user } = useSelector((s) => s);
-  const { userMeta } = user;
-  const { companyId } = userMeta;
+
+  const { companyId } = useSelector((s) => s.user.userMeta);
 
   const { data: flowFetched } = useAPI(`/mr-table-altform/?id=${location.state.id || ''}`);
   const { data: warehouses } = useAPI(`/company-warehouse/?id=${companyId}`);
@@ -109,7 +108,6 @@ const AllotmentForm = ({ location }) => {
     }
     setFlows(tempFlows)
   }
-
 
   return (
     <Spin spinning={loading}>

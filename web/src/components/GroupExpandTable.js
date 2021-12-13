@@ -14,7 +14,7 @@ const cols = [
   },
 ];
 
-const GroupExpandTable = ({loading, groupmodels}) => {
+const GroupExpandTable = ({loading, modules}) => {
   //const [data, setData] = useState([]);
 
   //   useEffect(() => {
@@ -27,7 +27,7 @@ const GroupExpandTable = ({loading, groupmodels}) => {
     <Spin spinning={loading}>
       <Row align="center" style={{margin: '3vh'}}>
         <Col span={24}>
-          <Table dataSource={groupmodels} columns={cols} size="small" pagination={false} />
+          <Table dataSource={modules} columns={cols} size="small" pagination={false} />
         </Col>
       </Row>
     </Spin>

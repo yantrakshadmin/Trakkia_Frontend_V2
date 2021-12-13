@@ -67,10 +67,11 @@ export const groupFormFields = [
     customLabel: 'Group Name',
   },
   {
-    key: 'emp',
+    key: 'employees',
     rules: [{ required: true, message: 'Please select emp!' }],
     kwargs: {
       placeholder: 'Select',
+      mode:'multiple',
       showSearch: true,
       filterOption: (input, option) =>
         option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
@@ -78,7 +79,22 @@ export const groupFormFields = [
     type: FORM_ELEMENT_TYPES.SELECT,
     others: null,
     customLabel: 'Employee',
-    colSpan: 6,
+    colSpan: 18,
+  },
+  {
+    key: 'accessible_companies',
+    rules: [{ required: true, message: 'Please select client!' }],
+    kwargs: {
+      placeholder: 'Select',
+      mode:'multiple',
+      showSearch: true,
+      filterOption: (input, option) =>
+        option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: null,
+    customLabel: 'Clients',
+    colSpan: 18,
   },
   {
     // key: 'solution_palletized_box',

@@ -11,9 +11,9 @@ export default [
     key: 'name',
     dataIndex: 'name',
   },
-  {
-    title: 'Employee',
-    key: 'emp',
-    dataIndex: 'emp',
-  },
+  // {
+  //   title: 'Employee',
+  //   key: 'emp',
+  //   dataIndex: 'emp',
+  // },
 ];
