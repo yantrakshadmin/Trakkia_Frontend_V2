@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import {Row, Col, Typography, Spin} from 'antd';
 import {Table} from 'react-bootstrap';
 
+
 import moment from 'moment';
 
 import {
@@ -12,6 +13,7 @@ import {
 
 import '../Docket/docket.styles.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useParams } from '@reach/router';
 
 const {Title} = Typography;
 // dispatch_date: "2020-10-22T17:13:16.490000Z"
@@ -77,19 +79,29 @@ const {Title} = Typography;
 const OutwardDocket = ({location, match}) => {
   const [allotment, setAllotment] = useState(null);
   const [total, setTotal] = useState(0);
+  const param = useParams();
+  console.log(param, "ggggg") ;
 
   useEffect(() => {
     const fetchAllotment = async () => {
       if (location.state) {
+      
         if (location.state.id) {
-          const {data} = await retrieveOutwardDocketEmp(location.state.id);
+          const {data} = await retrieveOutwardDocketEmp(location.state.id) ;
           console.log(data, 'ye wala');
           if (data) setAllotment(data);
         }
       }
+      else{
+        const {data} = await retrieveOutwardDocketEmp(param.id) ;
+          console.log(data, 'ye wala');
+          if (data) setAllotment(data);
+        
+      }
     };
     fetchAllotment();
   }, [location]);
+
 
   useEffect(() => {
     const calcTotal = () => {
@@ -229,7 +241,7 @@ const OutwardDocket = ({location, match}) => {
                   <p style={{fontWeight: 'bold'}}>Sender's Name : </p>
                 </Col>
                 <Col span={12} style={{wordWrap: 'break-word'}}>
-                  {allotment.owner.client_name}
+                  {allotment.owner.company.name}
                 </Col>
               </Row>
             </Col>
@@ -251,8 +263,7 @@ const OutwardDocket = ({location, match}) => {
                   <p style={{fontWeight: 'bold'}}>Sender's Address : </p>
                 </Col>
                 <Col span={12} style={{wordWrap: 'break-word'}}>
-                  {`${allotment.owner.client_billing_address},${allotment.owner.client_city},${allotment.owner.client_state},
-                      ${allotment.owner.client_pincode}`}
+                  {`${allotment.owner.company.address}`}
                 </Col>
               </Row>
             </Col>
@@ -274,7 +285,7 @@ const OutwardDocket = ({location, match}) => {
                   <p style={{fontWeight: 'bold'}}>GST : </p>
                 </Col>
                 <Col span={12} style={{wordWrap: 'break-word'}}>
-                  {allotment.owner.client_gst}
+                  {allotment.owner.company.gstin}
                 </Col>
               </Row>
             </Col>
@@ -284,7 +295,7 @@ const OutwardDocket = ({location, match}) => {
                   <p style={{fontWeight: 'bold'}}>GST : </p>
                 </Col>
                 <Col span={12} style={{wordWrap: 'break-word'}}>
-                  {allotment.sending_location.emitter.client_gst}
+                  {allotment.sending_location.gstin}
                 </Col>
               </Row>
             </Col>
@@ -356,7 +367,7 @@ const OutwardDocket = ({location, match}) => {
               <Col span={24}>
                 <p style={{fontWeight: 'bold', display: 'inline'}}>Transporter Name : </p>
                 <p style={{display: 'inline', wordWrap: 'break-word'}}>
-                  {allotment.transporter_name}
+                  {allotment.transporter_name?.name}
                 </p>
               </Col>
             </Row>

@@ -47,11 +47,13 @@ const ReturnDocketsScreen = ({currentPage}) => {
   const [TN, setTN] = useState(null);
   const navigate = useNavigate();
 
+ 
+
   const {data: returns, loading, reload: reloadFull, status} = useAPI('/return-table/', {}, true, );
 
   const {filteredData, reload} = useTableSearch({
     searchVal,
-    reqData,
+    reqData,  
     usePaginated: false
   });
 
@@ -93,7 +95,9 @@ const ReturnDocketsScreen = ({currentPage}) => {
       render: (text, record) => {
         return (
           <div className="row align-center justify-evenly">
-            <a href={`../return-docket/${record.transaction_no}`} target="_blank" rel="noreferrer">
+          
+
+            <a href={`../return-docket/${record.id}`} target="_blank" rel="noreferrer">
               <Download />
             </a>
             <FontAwesomeIcon

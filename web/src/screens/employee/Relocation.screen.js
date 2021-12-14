@@ -51,7 +51,7 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee, user}) => {
         return (
           <div className="row align-center justify-evenly">
             <a
-              href={`../relocation-docket/${record.transaction_no}`}
+              href={`../relocation-docket/${record.id}`}
               target="_blank"
               rel="noreferrer">
               <Download />

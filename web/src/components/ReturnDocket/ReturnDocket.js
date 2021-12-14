@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import { useSelector } from 'react-redux';
 import {Row, Col, Typography, Spin} from 'antd';
 import {Table} from 'react-bootstrap';
 import {useAPI} from 'common/hooks/api';
@@ -17,7 +18,13 @@ const ReturnDocket = ({location, isClient}) => {
   const [total, setTotal] = useState(0);
   const [weight, setWeight] = useState(0);
 
-  const {data: clientKits, loading: ckLoading} = useAPI('/client-kits/', {});
+  const {user} = useSelector((s) => s);
+  const {userMeta} = user;
+  const {companyId} = userMeta;
+
+  const {data: clientKits, loading: ckLoading} = useAPI('/company-list/', {});
+
+
 
   useEffect(() => {
     const fetchReturn = async () => {
@@ -25,6 +32,8 @@ const ReturnDocket = ({location, isClient}) => {
         console.log(location.state);
         if (location.state.id) {
           const {data} = await retrieveReturnDocket(location.state.id);
+         
+        
           if (data) setReqReturn(data);
         }
       } else {
@@ -36,6 +45,8 @@ const ReturnDocket = ({location, isClient}) => {
     };
     fetchReturn();
   }, [location]);
+
+  
 
   useEffect(() => {
     const calcTotal = () => {
@@ -160,7 +171,7 @@ const ReturnDocket = ({location, isClient}) => {
                   <p style={{fontWeight: 'bold'}}>Sender's Name : </p>
                 </Col>
                 <Col span={12} style={{wordWrap: 'break-word'}}>
-                  {reqReturn.receiver_client.name}
+                  {reqReturn.receiver_client?.name}
                 </Col>
               </Row>
             </Col>
@@ -182,7 +193,7 @@ const ReturnDocket = ({location, isClient}) => {
                   <p style={{fontWeight: 'bold'}}>Sender's Address : </p>
                 </Col>
                 <Col span={12} style={{wordWrap: 'break-word'}}>
-                  {`${reqReturn.receiver_client.address}, ${reqReturn.receiver_client.city}`}
+                  {`${reqReturn.receiver_client.address}, ${reqReturn.receiver_client.city || ""}`}
                 </Col>
               </Row>
             </Col>
@@ -206,7 +217,7 @@ const ReturnDocket = ({location, isClient}) => {
                   <p style={{fontWeight: 'bold'}}>GST : </p>
                 </Col>
                 <Col span={12} style={{wordWrap: 'break-word'}}>
-                  {reqReturn.receiver_client.gst}
+                  {reqReturn.receiver_client.gstin}
                 </Col>
               </Row>
             </Col>
@@ -327,7 +338,7 @@ const ReturnDocket = ({location, isClient}) => {
                 <Col span={24}>
                   <p style={{fontWeight: 'bold', display: 'inline'}}>Transporter Name : </p>
                   <p style={{display: 'inline', wordWrap: 'break-word'}}>
-                    {reqReturn.transport_by}
+                    {reqReturn.transport_by?.name}
                   </p>
                 </Col>
               </Row>
