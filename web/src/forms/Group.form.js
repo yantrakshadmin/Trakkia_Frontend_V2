@@ -22,18 +22,47 @@ export const GroupForm = ({id, onCancel, onDone}) => {
 
   const [selectedModels, setSelectedModels] = useState([]);
   const [clients, setClients] = useState([]);
+  const [form] = Form.useForm()
 
-  const {form, submit, loading} = useHandleForm({
+  const {submit, loading} = useHandleForm({
     create: createGroup,
     edit: editGroup,
-    retrieve: retrieveGroup,
     success: 'Group created/edited successfully',
     failure: 'Error in creating/editing Group.',
     done: onDone,
     close: onCancel,
-    id,
     dates: ['invoice_date'],
   });
+
+  useEffect(() => {
+    
+    const fetchGroup = async (id) => {
+
+      const {data} = await retrieveGroup(id)
+
+      data.accessible_companies = data.accessible_companies.map(company => company.pk)
+      data.employees = data.employees.map(employee => employee.pk)
+
+      form.setFieldsValue(data)
+
+      const temp = data.modules;
+      const smTemp = selectedModels;
+      temp.forEach((m) => {
+        const k = _.findKey(groupModelChoicesGrouped, (o) => o.includes(m.model));
+        if (k && !smTemp.includes(k)) {
+          smTemp.push(k);
+          form.setFieldsValue({
+            [k]: true,
+          });
+        }
+      });
+      setSelectedModels(smTemp);
+
+    }
+
+    if(id) fetchGroup(id)
+
+  }, [])
 
   console.log(form.getFieldValue('employees'))
 
@@ -47,22 +76,6 @@ export const GroupForm = ({id, onCancel, onDone}) => {
 
   }, [sender_clients, receiver_clients])
 
-  // useEffect(() => {
-  //   if (id && !loading) {
-  //     const temp = form.getFieldValue('modules');
-  //     const smTemp = selectedModels;
-  //     temp.forEach((m) => {
-  //       const k = _.findKey(groupModelChoicesGrouped, (o) => o.includes(m.model));
-  //       if (k && !smTemp.includes(k)) {
-  //         smTemp.push(k);
-  //         form.setFieldsValue({
-  //           [k]: true,
-  //         });
-  //       }
-  //     });
-  //     setSelectedModels(smTemp);
-  //   }
-  // }, [id, loading]);
 
   const preProcess = useCallback(
     (data) => {
@@ -147,7 +160,7 @@ export const GroupForm = ({id, onCancel, onDone}) => {
             </Col>
           ))}
         </Row>
-        {/* <Row>
+        <Row>
         {groupFormFields.slice(2, 3).map((item, idx) => (
             <Col span={item.colSpan}>
               <div key={idx} className="p-2">
@@ -164,11 +177,11 @@ export const GroupForm = ({id, onCancel, onDone}) => {
               </div>
             </Col>
           ))}
-        </Row> */}
+        </Row>
 
         <Divider orientation="left">Model Details</Divider>
 
-        {/* <Row style={{justifyContent: 'left'}}>
+        <Row style={{justifyContent: 'left'}}>
           {_.keys(groupModelChoicesGrouped).map((modelName, modelIdx) => (
             <Col span={8} key={modelIdx}>
               <Card>
@@ -198,7 +211,7 @@ export const GroupForm = ({id, onCancel, onDone}) => {
               </Card>
             </Col>
           ))}
-        </Row> */}
+        </Row>
 
         <br />
 

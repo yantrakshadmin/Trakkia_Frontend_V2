@@ -1567,7 +1567,7 @@ export const editUser = (id,data) => loadAPI(`/emp-profile/${id}/`, {
 
 
     
-export const retrieveEmployeeList = ({companyId,viewType, page, pageSize}) =>
+export const retrieveEmployeeList = ({companyId, page, pageSize}) =>
   loadAPI(`/employees/${companyId}/?page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
