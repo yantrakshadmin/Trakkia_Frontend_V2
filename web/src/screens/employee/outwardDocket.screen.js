@@ -119,13 +119,15 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
           //   </a>
           <div className="row align-center justify-evenly">
             <Link
-              to={`../outward-docket/${record.id}`}
+              to={`../outward-docket/${record.id}` }
               target="_blank"
+              rel="noreferrer"
               state={{id: record.id}}
               key={record.id}
               style={{textDecoration: 'none'}}>
               <Download />
             </Link>
+          
           </div>
         );
       },
@@ -294,7 +296,7 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
     reload();
   };
 
-  console.log(reqData, filteredData)
+
 
   return (
     <NoPermissionAlert hasPermission={isEmployee ? (status === 403 ? false : true) : true}>

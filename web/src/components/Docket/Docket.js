@@ -181,7 +181,7 @@ const Docket = ({ location,match }) => {
                   <p style={{ fontWeight: 'bold' }}>Receiver's Name : </p>
                 </Col>
                 <Col span={12} style={{ wordWrap: 'break-word' }}>
-                  {allotment.flows[0].flow.sender_client.client_name}
+                  {allotment.flows[0].flow.sender_client.name}
                 </Col>
               </Row>
             </Col>
@@ -209,13 +209,7 @@ const Docket = ({ location,match }) => {
                   <p style={{ fontWeight: 'bold' }}>Receiver's Address : </p>
                 </Col>
                 <Col span={12} style={{ wordWrap: 'break-word' }}>
-                  {`${allotment.flows[0].flow.sender_client.client_shipping_address 
-                  }, ${ 
-                    allotment.flows[0].flow.sender_client.client_shipping_city 
-                  }, ${ 
-                    allotment.flows[0].flow.sender_client.client_shipping_state 
-                  }, ${ 
-                    allotment.flows[0].flow.sender_client.client_shipping_pincode}`}
+                  {`${allotment.flows[0].flow.sender_client.address }`}
                 </Col>
               </Row>
             </Col>
@@ -237,7 +231,7 @@ const Docket = ({ location,match }) => {
                   <p style={{ fontWeight: 'bold' }}>GST : </p>
                 </Col>
                 <Col span={12} style={{ wordWrap: 'break-word' }}>
-                  {allotment.flows[0].flow.sender_client.client_gst}
+                  {allotment.flows[0].flow.sender_client.gstin}
                 </Col>
               </Row>
             </Col>

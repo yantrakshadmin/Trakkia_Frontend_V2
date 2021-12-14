@@ -1,8 +1,13 @@
+/* eslint-disable object-curly-spacing */
 import React, {useState, useEffect} from 'react';
+
 import {Table, Row, Col, Spin} from 'antd';
 import {useAPI} from 'common/hooks/api';
 import TruckLoading from './TruckLoading';
 import _ from 'lodash';
+
+
+
 
 const cols = [
   {
@@ -69,8 +74,8 @@ const ExpandTable = (props) => {
             pagination={false}
           />
         </Col>
-        <Col span={3} style={{textAlign: 'center'}}>
-          <TruckLoading percentage={filled} style={{width: '100%'}} />
+        <Col span={3} style={{textAlign: 'center' }}>
+          <TruckLoading percentage={filled} style={{ width: '100%' }} />
         </Col>
       </Row>
     );

@@ -105,7 +105,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
       render: (text, record) => {
         return (
           <div className='row align-center justify-evenly'>
-            <a href={`../docket/${record.transaction_no}`} target='_blank' rel='noreferrer'>
+            <a href={`../docket/${record.id}`} target='_blank' rel='noreferrer'>
               <Download />
             </a>
             <FontAwesomeIcon

@@ -1,6 +1,9 @@
 import React, {useState, useEffect} from 'react';
+
 import {Table, Row, Col, Spin} from 'antd';
 import {useAPI} from 'common/hooks/api';
+
+
 
 const cols = [
   {
@@ -26,6 +29,7 @@ const cols = [
 
 const ExpandTable = (props) => {
   const {data, loading} = useAPI(`return-table-exp/?id=${props.id}`);
+
 
   useEffect(() => {
     if (!loading) {

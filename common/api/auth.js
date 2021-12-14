@@ -203,7 +203,7 @@ export const retrieveOutwardDocket = ({companyId,viewType, page, pageSize}) =>
   });
 
 export const retrieveOutwardDocketEmp = (id) =>
-  loadAPI(`emp-outwards/?id=${id}`, {
+  loadAPI(`outwards-print/?id=${id}`, {
     method: 'GET',
     secure: true,
   });
@@ -724,8 +724,8 @@ export const retrieveAllotments = (id) =>
     params: {id},
   });
 
-export const retrieveAllotmentsCalender = (tno) =>
-  loadAPI(`/allotments-cal/?tno=${tno}`, {
+export const retrieveAllotmentsCalender = (id) =>
+  loadAPI(`/allotments-print/?id=${id}`, {
     method: 'GET',
     secure: false,
   });
@@ -1106,7 +1106,7 @@ export const retrieveReturnDocket = (id) =>
   });
 
 export const retrieveReturnDocketCaleder = (id) =>
-  loadAPI(`/returns-cal/?tno=${id}`, {
+  loadAPI(`/return-print/?id=${id}`, {
     method: 'GET',
     secure: false,
   });
@@ -1517,8 +1517,8 @@ export const editRelocation = (id, src) =>
     secure: true,
   });
 
-export const retrieveRelocationDocketData = (tno) =>
-  loadAPI(`/relocation-template/?tno=${tno}`, {
+export const retrieveRelocationDocketData = (id) =>
+  loadAPI(`/relocations-print/?id=${id}`, {
     method: 'GET',
     secure: false,
   });
