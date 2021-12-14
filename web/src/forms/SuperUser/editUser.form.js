@@ -6,10 +6,13 @@ import {editCompanyProfile, editEmployeeProfile, retrieveEmployeeProfile} from '
 import formItem from '../../hocs/formItem.hoc';
 import { useAPI } from 'common/hooks/api';
 import { loadAPI } from 'common/helpers/api';
+import { useSelector } from 'react-redux';
 
 const { Option } = Select
 
 export const EditUserForm = ({id, onCancel, onDone}) => {
+
+  const {companyType} = useSelector((state) => state.user.userMeta);
 
   const [formData, setFormData] = Form.useForm();
   const {data: userData} = useAPI(`/emp-profile/${id}`)
@@ -50,78 +53,25 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
         autoComplete="off"
         onFieldsChange={handleFieldsChange}>
         <Row style={{justifyContent: 'left'}}>
-          {employeeFormFields.map((item, idx) => (
+          {employeeFormFields.slice(0,4).map((item, idx) => (
             <Col span={8}>
               <div key={idx} className="p-2">
                 {formItem(item)}
               </div>
             </Col>
           ))}
-        </Row>
-        {/* <Row style={{justifyContent: 'left'}}>
-          {clientFormFields.slice(5, 8).map((item, idx) => (
-            <Col span={8}>
+          {employeeFormFields.slice(4,5).map((item, idx) => (
+            <Col span={16}>
               <div key={idx} className="p-2">
-                {formItem(item)}
+                {formItem({...item,
+                  others: {
+                    selectOptions: companyType.map((type => ({ value:type,label:type })))
+                  },
+                })}
               </div>
             </Col>
           ))}
         </Row>
-        <Row style={{justifyContent: 'space-between'}}>
-          {clientFormFields.slice(8, 12).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem(item)}
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Row style={{justifyContent: 'space-between'}}>
-          {clientFormFields.slice(12, 16).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem(item)}
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Row style={{justifyContent: 'space-between'}}>
-          {clientFormFields.slice(16, 20).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem(item)}
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Row style={{justifyContent: 'space-between'}}>
-          {clientFormFields.slice(21, 22).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem(item)}
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Row align="center">
-          {formItem({
-            ...clientFormFields[20],
-            kwargs: {
-              onChange(info) {
-                const {status} = info.file;
-                if (status !== 'uploading') {
-                  console.log(info.file, info.fileList);
-                }
-                if (status === 'done') {
-                  setFile(info.file);
-                  message.success(`${info.file.name} file uploaded successfully.`);
-                } else if (status === 'error') {
-                  message.error(`${info.file.name} file upload failed.`);
-                }
-              },
-            },
-          })}
-        </Row> */}
 
         <Row>
           <Button type="primary" htmlType="submit">

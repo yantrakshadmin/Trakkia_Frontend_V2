@@ -7,9 +7,10 @@ import _ from 'lodash';
 const cols = [
   {
     title: 'Kit Name',
-    key: 'kit_name',
+    key: 'kit',
     render: (text, record) => {
-      return `${record.kit.kit_name} - ${record.kit.kit_info}`;
+      console.log(record)
+      return `${record.kit}`;
     },
   },
   {
@@ -24,7 +25,7 @@ const cols = [
   },
   {
     title: 'Flow Name',
-    key: 'flow_name',
+    key: 'flow',
     render: (text, record) => {
       return record.flow;
     },
@@ -32,7 +33,7 @@ const cols = [
 ];
 
 const ExpandTable = (props) => {
-  //   const [loading, setLoading] = useState(true);
+
   const {data, loading} = useAPI(`allotments-table-exp/?id=${props.id}`);
 
   const [filled, setFilled] = useState(0);
@@ -62,7 +63,7 @@ const ExpandTable = (props) => {
       <Row align="center" gutter={20} style={{margin: '3vh'}}>
         <Col span={21}>
           <Table
-            dataSource={data[0] ? data[0].flows || [] : []}
+            dataSource={data[0]?.flows || []}
             columns={cols}
             size="small"
             pagination={false}

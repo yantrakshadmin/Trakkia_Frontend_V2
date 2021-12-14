@@ -8,15 +8,17 @@ import {
 } from 'common/formFields/allotment.formFields';
 import { useAPI } from 'common/hooks/api';
 import { useHandleForm } from 'hooks/form';
-import { createAllotment } from 'common/api/auth';
+import { createAllotment, editAllotment, retrieveAllotment } from 'common/api/auth';
 import { navigate } from '@reach/router';
 import _ from 'lodash';
 import { f } from 'react-select/dist/index-4bd03571.esm';
 import formItem from '../hocs/formItem.hoc';
 
 const AllotmentForm = ({ location }) => {
+
   const [flows, setFlows] = useState([]);
   const [kits, setKits] = useState([]);
+  const [form] = Form.useForm();
 
   const { companyId } = useSelector((s) => s.user.userMeta);
 
@@ -25,36 +27,67 @@ const AllotmentForm = ({ location }) => {
   const { data: vendors } = useAPI(`/company-vendor/?id=${companyId}`);
 
   const onDone = () => {
-    navigate('./material-request/');
+    if(location.state.editId) navigate('./allotment-dockets/');
+    else navigate('./material-request/');
   };
 
-  const { form, submit, loading } = useHandleForm({
+  const { submit, loading } = useHandleForm({
     create: createAllotment,
+    edit: editAllotment,
     success: 'Allotment created/edited successfully.',
     failure: 'Error in creating/editing allotment.',
     done: onDone,
     close: () => null,
+    id: location.state.editId
   });
+
+  useEffect(() => {
+
+    const fetchData = async (id) => {
+
+      const {data} = await retrieveAllotment(id)
+      console.log(data, 'data')
+      data.dispatch_date = moment(data.dispatch_date)
+      data.expected_delivery = moment(data.expected_delivery)
+      form.setFieldsValue(data)
+    }
+
+    if(location.state.editId){
+      fetchData(location.state.editId)
+    }
+
+  }, [location])
 
   useEffect(() => {
     const fetchFlows = async () => {
       if (location.state.id && flowFetched && flowFetched[0] && form) {
         const tempKits = [];
         const tempFlows = [];
-        const reqFlows = ((flowFetched && flowFetched[0]?.flows) || []).map(item => {
+        const reqFlows = ((flowFetched && flowFetched[0]?.flows) || []).map((item, idx) => {
+          let foundFlow = form.getFieldValue('flows').find(flow => flow.flow === item.flow.id)
+          console.log(item, form.getFieldValue('flows').find(flow => flow.flow === item.flow.id))
+          item.kit.products = item.kit.products.map(product => {
+            product.quantity = foundFlow.items.find((item) => item.product === product.product.id).quantity
+            return product
+          })
           tempFlows.push(item);
           tempKits.push(item.kit);
           return {
             flow: item.flow.id,
             kit: item.kit.id,
             asked_quantity: item.quantity,
+            ...(location.state.editId && {alloted_quantity : form.getFieldValue('flows')[0].alloted_quantity})
           };
         });
+
+
+        console.log(reqFlows, tempFlows)
         const finalFlows = {
           flows: reqFlows,
         };
         setFlows(tempFlows);
         setKits(tempKits);
+
         form.setFieldsValue({
           ...finalFlows,
           model: 'Rent',
@@ -69,11 +102,11 @@ const AllotmentForm = ({ location }) => {
   }, [location.state.id, flowFetched, form]);
 
   const preProcess = (data) => {
-    console.log(data,'this... ');
     data.flows = (data.flows || []).map((f,ind) => ({
       ...f,
       items: (flows[ind]?.kit.products || []).map((pro)=>({ product:pro.product.id, quantity:pro.quantity }))
     }));
+    console.log(data,'this... ');
     submit(data);
   };
 

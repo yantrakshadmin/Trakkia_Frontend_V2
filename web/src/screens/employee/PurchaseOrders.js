@@ -15,7 +15,7 @@ import Print from 'icons/Print';
 import moment from 'moment';
 import {deleteGRN, retrieveGRNBars} from 'common/api/auth';
 import {deleteHOC} from '../../hocs/deleteHoc';
-import {ProductTable} from '../../components/GRNProductsTable';
+import ExpandTable from 'components/PurchaseOrderExpandTable';
 import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
 import {PurchaseOrderForm} from '../../forms/PurchaseOrderForms';
 import {GRNForm} from 'forms/GRN.form';
@@ -230,7 +230,7 @@ const KitEmployeeScreen = ({currentPage}) => {
 
         // expandHandleKey="products"
         // expandParams={{loading}}
-        // ExpandBody={ProductTable}
+        ExpandBody={ExpandTable}
         // csvdata={csvData}
         // downloadLink={`${DEFAULT_BASE_URL}/grn-download/`}
 

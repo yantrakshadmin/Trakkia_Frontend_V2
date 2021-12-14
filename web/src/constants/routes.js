@@ -105,6 +105,10 @@ export const extraRoutesEmployee = [
     Component: lazy(() => import('forms/allotment.form')),
   },
   {
+    path: '/edit-allotment/',
+    Component: lazy(() => import('forms/allotment.form')),
+  },
+  {
     path: '/grn-barcode/',
     Component: lazy(() => import('components/GRN/barcodeContainer')),
   },

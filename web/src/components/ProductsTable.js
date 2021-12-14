@@ -3,6 +3,7 @@ import {Table, Row, Col, Spin} from 'antd';
 import smallProductsColumns from 'common/columns/smallProduct.column';
 
 const ProductTable = ({loading, products}) => {
+  console.log(products)
   const [data, setData] = useState([]);
 
   useEffect(() => {

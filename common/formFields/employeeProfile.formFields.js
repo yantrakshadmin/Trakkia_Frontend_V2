@@ -132,10 +132,6 @@ export const employeeFormFields = [
     },
     type: FORM_ELEMENT_TYPES.SELECT,
     others: {
-      selectOptions: [{ value:'Pool Operator',label:'Pool Operator' },
-        { value:'Consignor',label:'Consignor' },
-        { value:'Consignee',label:'Consignee' }]
-      ,
       style: { width: '100%' },
     },
     customLabel: 'Type',

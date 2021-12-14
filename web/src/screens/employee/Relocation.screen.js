@@ -8,7 +8,7 @@ import {useAPI} from 'common/hooks/api';
 import {mergeArray} from 'common/helpers/mrHelper';
 import {RelocationForm} from 'forms/relocation.form';
 import TableWithTabHOC from 'hocs/TableWithTab.hoc';
-import ExpandTable from 'components/ExpenseExpandTable';
+import ExpandTable from 'components/RelocationExpandTable';
 import {deleteHOC} from 'hocs/deleteHoc';
 import Delivery from 'icons/Delivery';
 import Edit from 'icons/Edit';
@@ -164,9 +164,9 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee, user}) => {
         modalBody={deliveryId ? DeliveredForm : RelocationForm}
         modalWidth={80}
         formParams={{isEmployee, transaction_no: TN}}
-        //expandHandleKey="transactions"
-        //expandParams={{loading}}
-        //ExpandBody={ExpandTable}
+        // expandHandleKey="transactions"
+        expandParams={{loading}}
+        ExpandBody={ExpandTable}
         hideRightButton={user.viewType === 'Pool Operator' ? false : true}
       />
     </NoPermissionAlert>

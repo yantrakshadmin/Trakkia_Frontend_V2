@@ -6,7 +6,7 @@ import {connect} from 'react-redux';
 import {useTableSearch} from 'hooks/useTableSearch';
 import {FlowForm} from '../../forms/flow.form';
 import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
-import KitsTable from '../../components/KitsTable';
+import FlowExpandTable from '../../components/FlowExpandTable';
 import {deleteHOC} from '../../hocs/deleteHoc';
 import Delete from '../../icons/Delete';
 import Edit from '../../icons/Edit';
@@ -160,9 +160,9 @@ const FlowEmployeeScreen = ({currentPage}) => {
         cancelEditing={cancelEditing}
         modalBody={FlowForm}
         modalWidth={50}
-        // expandHandleKey="kits"
-        // expandParams={{loading}}
-        // ExpandBody={KitsTable}
+        expandHandleKey="kits"
+        expandParams={{loading}}
+        ExpandBody={FlowExpandTable}
         csvdata={csvData}
         csvname={`Flows${searchVal}.csv`}
       />

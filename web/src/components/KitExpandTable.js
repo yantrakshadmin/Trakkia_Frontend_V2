@@ -41,7 +41,7 @@ const cols = [
 
 const ExpandTable = (props) => {
   //   const [loading, setLoading] = useState(true);
-  const {data, loading} = useAPI(`client-kits-exp/?id=${props.id}`);
+  const {data, loading} = useAPI(`kits-exp/?id=${props.id}`);
 
   return (
     <Row align="center" style={{margin: '3vh'}}>
@@ -50,7 +50,7 @@ const ExpandTable = (props) => {
           <Spin spinning={loading} />
         ) : (
           <Table
-            dataSource={data[0] ? data[0].products || [] : []}
+            dataSource={data ? data.products || [] : []}
             columns={cols}
             size="small"
             pagination={false}

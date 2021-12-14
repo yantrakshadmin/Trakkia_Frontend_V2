@@ -16,6 +16,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import allotmentColumns from 'common/columns/Allotment.column';
 import { DeliveredForm } from 'forms/delivered.form';
 import { AllotmentMainForm } from 'forms/allotmentMain.form';
+import AllotmentForm from 'forms/allotment.form';
 import { connect } from 'react-redux';
 import { useTableSearch } from 'hooks/useTableSearch';
 import { deleteAllotment } from 'common/api/auth';
@@ -65,6 +66,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
         id: alt.id,
         transaction_no: alt.transaction_no,
         parent_name: alt.sales_order.owner,
+        parent_id: alt.sales_order.pk,
         dispatch_date: alt.dispatch_date,
         warehouse_name: alt.send_from_warehouse,
         model: alt.model,
@@ -208,10 +210,12 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
               padding: '1px',
             }}
             onClick={(e) => {
-              setEditingId(record.id);
+              // setEditingId(record.id);
               e.stopPropagation();
             }}>
-            <Edit />
+            <Link to='../edit-allotment/' state={{ id: record.parent_id, editId: record.id }} key={record.id}>
+              <Edit />
+            </Link>
           </Button>
           {/* <Popconfirm
             title="Confirm Delete"
@@ -329,7 +333,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
         tabs={tabs}
         size='middle'
         title=''
-        modalBody={deliveryId ? DeliveredForm : AllotmentMainForm}
+        modalBody={deliveryId ? DeliveredForm : AllotmentForm}
         modalWidth={60}
         ExpandBody={ExpandTable}
         editingId={editingId || deliveryId}

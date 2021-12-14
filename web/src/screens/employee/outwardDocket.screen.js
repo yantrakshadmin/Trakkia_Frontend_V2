@@ -25,6 +25,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faBarcode, faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import {yantraColors} from '../../helpers/yantraColors';
 import NoPermissionAlert from 'components/NoPermissionAlert';
+import ExpandTable from 'components/OutwardsExpandTable';
 
 const {Search} = Input;
 
@@ -317,6 +318,7 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
         modalWidth={98}
         formParams={{transaction_no: TN}}
         cancelEditing={cancelEditing}
+        ExpandBody={ExpandTable}
         // hideRightButton={viewType !== 'Consignor'}
       />
     </NoPermissionAlert>

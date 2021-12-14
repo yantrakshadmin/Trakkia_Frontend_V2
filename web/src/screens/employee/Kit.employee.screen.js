@@ -12,6 +12,8 @@ import Delete from '../../icons/Delete';
 import Edit from '../../icons/Edit';
 import {GetUniqueValue, GetUniqueValueNested} from 'common/helpers/getUniqueValues';
 import NoPermissionAlert from 'components/NoPermissionAlert';
+import ExpandTable from '../../components/KitExpandTable';
+
 
 const {Search} = Input;
 
@@ -149,9 +151,9 @@ const KitEmployeeScreen = ({currentPage}) => {
         cancelEditing={cancelEditing}
         modalBody={KitForm}
         modalWidth={45}
-        // expandHandleKey="products"
-        // expandParams={{loading}}
-        // ExpandBody={ProductTable}
+        expandHandleKey="products"
+        expandParams={{loading}}
+        ExpandBody={ExpandTable}
         csvdata={csvData}
         csvname={`Kits${searchVal}.csv`}
       />
