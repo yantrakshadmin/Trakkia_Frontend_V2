@@ -37,7 +37,7 @@ import NoPermissionAlert from 'components/NoPermissionAlert';
 
 const {Search} = Input;
 
-const ReturnDocketsScreen = ({currentPage}) => {
+const ReturnDocketsScreen = ({currentPage, user}) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [reqData, setReqData] = useState(null);
@@ -304,13 +304,14 @@ const ReturnDocketsScreen = ({currentPage}) => {
         modalWidth={60}
         editingId={editingId || deliveryId}
         cancelEditing={cancelEditing}
+        hideRightButton={user.viewType === 'Pool Operator' ? false : true}
       />
     </NoPermissionAlert>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {currentPage: state.page.currentPage};
+  return {currentPage: state.page.currentPage, user: state.user.userMeta};
 };
 
 export default connect(mapStateToProps)(ReturnDocketsScreen);

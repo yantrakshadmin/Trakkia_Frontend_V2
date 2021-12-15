@@ -9,7 +9,7 @@ const EditProfile = ({user}) => {
     navigate('/');
   };
 
-  if (user) return <EmployeeForm id={user.companyId} isAdmin={user.isAdmin} onCancel={() => null} onDone={onFinish} />;
+  if (user) return <EmployeeForm companyType={user.companyType} id={user.companyId} isAdmin={user.isAdmin} onCancel={() => null} onDone={onFinish} />;
   return null;
 };
 

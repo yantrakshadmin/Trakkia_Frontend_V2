@@ -82,21 +82,6 @@ export const groupFormFields = [
     colSpan: 18,
   },
   {
-    key: 'accessible_companies',
-    rules: [{ required: true, message: 'Please select client!' }],
-    kwargs: {
-      placeholder: 'Select',
-      mode:'multiple',
-      showSearch: true,
-      filterOption: (input, option) =>
-        option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
-    },
-    type: FORM_ELEMENT_TYPES.SELECT,
-    others: null,
-    customLabel: 'Clients',
-    colSpan: 18,
-  },
-  {
     // key: 'solution_palletized_box',
     type: FORM_ELEMENT_TYPES.SWITCH,
     others: {

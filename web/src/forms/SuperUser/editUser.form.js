@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Form, Col, Row, Button, Divider, Spin, Select} from 'antd';
+import {Form, Col, Row, Button, Divider, Spin, Select, Card} from 'antd';
 import {employeeFormFields} from 'common/formFields/employeeProfile.formFields';
 import {useHandleForm} from 'hooks/form';
 import {editCompanyProfile, editEmployeeProfile, retrieveEmployeeProfile} from 'common/api/auth';
@@ -7,14 +7,20 @@ import formItem from '../../hocs/formItem.hoc';
 import { useAPI } from 'common/hooks/api';
 import { loadAPI } from 'common/helpers/api';
 import { useSelector } from 'react-redux';
+import { getUniqueObject } from 'common/helpers/getUniqueValues';
 
 const { Option } = Select
 
 export const EditUserForm = ({id, onCancel, onDone}) => {
 
-  const {companyType} = useSelector((state) => state.user.userMeta);
+  const {companyType, companyId, viewType} = useSelector((state) => state.user.userMeta);
 
-  const [formData, setFormData] = Form.useForm();
+  const { data: warehouses } = useAPI(`/company-warehouse/?id=${companyId}`);
+  const { data: sender_clients } = useAPI(`/senderclients/?company=${companyId}&view=${viewType}`, {});
+  const { data: receiver_clients } = useAPI(`/receiverclients/?company=${companyId}&view=${viewType}`, {});
+
+  const [form] = Form.useForm();
+  const [clients, setClients] = useState([]);
   const {data: userData} = useAPI(`/emp-profile/${id}`)
 
   const {submit, loading} = useHandleForm({
@@ -28,8 +34,22 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
   });
 
   useEffect(() => {
-    if(userData) userData.type = userData.type.map(d => d.emp_type)
-    formData.setFieldsValue(userData)
+    
+    if(sender_clients && receiver_clients){
+
+      setClients(getUniqueObject([...sender_clients, ...receiver_clients], 'id'))
+
+    }
+
+  }, [sender_clients, receiver_clients])
+
+  useEffect(() => {
+    if(userData) {
+      userData.type = userData.type.map(d => d.emp_type)
+      userData.clients = userData.clients.map(d => d.pk)
+      userData.warehouse = userData.warehouse.map(d => d.pk)
+    }
+    form.setFieldsValue(userData)
   }, [userData])
 
   const handleFieldsChange = (data) => {};
@@ -37,6 +57,8 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
   const preProcess = (data) => {
 
     data.type = data.type.map(type => ({emp_type: type}))
+    data.clients = data.clients.map(item => ({pk: item}))
+    data.warehouse = data.warehouse.map(item => ({pk: item}))
 
     submit(data);
 
@@ -47,7 +69,7 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
       <Divider orientation="left">User Details</Divider>
       <Form
         onFinish={preProcess}
-        form={formData}
+        form={form}
         layout="vertical"
         hideRequiredMark
         autoComplete="off"
@@ -66,6 +88,38 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
                 {formItem({...item,
                   others: {
                     selectOptions: companyType.map((type => ({ value:type,label:type })))
+                  },
+                })}
+              </div>
+            </Col>
+          ))}
+          {employeeFormFields.slice(5, 6).map((item, idx) => (
+            <Col span={item.colSpan}>
+              <div key={idx} className="p-2">
+                {formItem({
+                  ...item,
+                  others: {
+                    ...item.others,
+                    selectOptions: warehouses || [],
+                    key: 'id',
+                    dataKeys: ['city'],
+                    customTitle: 'name',
+                  },
+                })}
+              </div>
+            </Col>
+          ))}
+          {employeeFormFields.slice(6, 7).map((item, idx) => (
+            <Col span={item.colSpan}>
+              <div key={idx} className="p-2">
+                {formItem({
+                  ...item,
+                  others: {
+                    ...item.others,
+                    selectOptions: clients || [],
+                    key: 'id',
+                    dataKeys: ['email'],
+                    customTitle: 'name',
                   },
                 })}
               </div>

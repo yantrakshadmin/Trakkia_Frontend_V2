@@ -136,4 +136,64 @@ export const employeeFormFields = [
     },
     customLabel: 'Type',
   },
+  {
+    key: 'warehouse',
+    rules: [{ required: true, message: 'Please select emp!' }],
+    kwargs: {
+      placeholder: 'Select',
+      mode:'multiple',
+      showSearch: true,
+      filterOption: (input, option) =>
+        option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: null,
+    customLabel: 'Warehouses',
+    colSpan: 12,
+  },
+  {
+    key: 'clients',
+    rules: [{ required: true, message: 'Please select client!' }],
+    kwargs: {
+      placeholder: 'Select',
+      mode:'multiple',
+      showSearch: true,
+      filterOption: (input, option) =>
+        option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: null,
+    customLabel: 'Clients',
+    colSpan: 12,
+  },
 ];
+
+export const userPoolOperatorChoices = {
+  'Sales': 'sales',
+  'Masters': 'masters',
+  'Volume Plan': 'volume_plan',
+  'Material Request': 'material_request',
+  'Allotment Dockets': 'allotment_docket',
+  'Return Dockets': 'return_docket',
+  'Relocation Dockets': 'relocation_docket',
+  'Outwards Dockets': 'outward_docket',
+  'GRN': 'grn',
+  'Inventory': 'inventory',
+  'Expense': 'expense',
+};
+
+export const userConsignorChoices = {
+  'Masters': 'masters',
+  'Volume Plan': 'volume_plan',
+  'Material Request': 'material_request',
+  'Return Dockets': 'return_docket',
+  'Outwards Dockets': 'outward_docket',
+  'GRN': 'grn',
+  'Inventory': 'inventory',
+};
+
+export const userConsigneeChoices = {
+  'Return Dockets': 'return_docket',
+  'Outwards Dockets': 'outward_docket',
+  'Inventory': 'inventory',
+};

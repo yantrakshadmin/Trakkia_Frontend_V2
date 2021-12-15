@@ -113,6 +113,7 @@ export const extraRoutesEmployee = [
     Component: lazy(() => import('components/GRN/barcodeContainer')),
   },
 ];
+
 export const employeeRoutes = [
   {
     name: 'Dashboard',
@@ -412,13 +413,6 @@ export const employeeRoutes = [
       },
     ],
   },
-  {
-    name: 'Roles',
-    icon: ['fas', 'money-check-alt'],
-    path: '/roles/',
-    Component: lazy(() => import('screens/employee/Roles.screen')),
-    props: { isEmployee: true },
-  },
 ];
 
 export const clientRoutes = [
@@ -537,7 +531,14 @@ export const superUserRoutes = [
         name: 'Users',
         path: '/manage/users/',
         Component: lazy(() => import('screens/superUser/users.screen')),
-      }
+      },
+      {
+        name: 'Roles',
+        icon: ['fas', 'money-check-alt'],
+        path: '/roles/',
+        Component: lazy(() => import('screens/employee/Roles.screen')),
+        props: { isEmployee: true },
+      },
     ],
   },
  ];

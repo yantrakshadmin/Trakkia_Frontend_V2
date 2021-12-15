@@ -33,12 +33,11 @@ const cols2 = [
   },
 ];
 
-const GroupExpandTable = ({loading, modules, employees, accessible_companies}) => {
+const GroupExpandTable = ({loading, modules, employees}) => {
 
   const { companyId } = useSelector(s => s.user.userMeta)
 
   const [employeeData, setEmployeeData] = useState([])
-  const [companyData, setCompanyData] = useState([])
 
   useEffect(() => {
 
@@ -50,30 +49,18 @@ const GroupExpandTable = ({loading, modules, employees, accessible_companies}) =
 
     }
 
-    const fetchCompany = async () => {
-      
-      const { data } = await loadAPI('/company-list/')
-
-      setCompanyData(accessible_companies.map(company => data.results.find(comp => comp.id === company)))
-
-    }
-
     fetchEmployee()
-    fetchCompany()
 
   }, [])
 
   return (
     <Spin spinning={loading}>
       <Row align="center" style={{margin: '3vh'}}>
-        <Col span={8}>
+        <Col span={14}>
           <Table dataSource={modules} columns={cols} size="small" pagination={false} />
         </Col>
-        <Col span={8}>
+        <Col span={10}>
           <Table dataSource={employeeData} columns={cols2} size="small" pagination={false} />
-        </Col>
-        <Col span={8}>
-          <Table dataSource={companyData} columns={cols2} size="small" pagination={false} />
         </Col>
       </Row>
     </Spin>

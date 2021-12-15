@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Router } from '@reach/router';
 import { connect } from 'react-redux';
 import {
@@ -15,7 +15,11 @@ import { PrivateRoutes } from 'components/PrivateRoutes';
 import { NotFound404Screen } from 'screens/404.screen';
 
 const RootRouter = ({ user }) => {
+
   console.log(user,'user')
+
+  const employeesRoutes = (user.viewType === 'Pool Operator') ? employeeRoutes : employeeRoutes.filter((item) => item.name !== 'Sales')
+
   if (user) {
     switch (user.type) {
       case 'public':
@@ -31,7 +35,7 @@ const RootRouter = ({ user }) => {
       case 'employee':
         return (
           <PrivateRoutes
-            routes={[ ...(user.isAdmin?superUserRoutes:[]), ...employeeRoutes]}
+            routes={[ ...(user.isAdmin?superUserRoutes:[]), ...employeesRoutes]}
             extraRoutes={[...(user.isAdmin?extraRoutesSuperUser:[]), ...extraRoutesEmployee]}
             outerRoutes={[...(user.isAdmin?outerRoutesSuperUser:[]), ...outerRoutesEmployee]}
             user={user}

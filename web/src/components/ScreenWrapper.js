@@ -1,5 +1,5 @@
 import React, {useState, Suspense} from 'react';
-import {Layout, Menu, Divider, Dropdown, Avatar, Typography} from 'antd';
+import {Layout, Menu, Divider, Dropdown, Avatar, Typography, Card, List} from 'antd';
 import {Link} from '@reach/router';
 import {useDispatch} from 'react-redux';
 import {signOutUser} from 'common/actions/signIn';
@@ -15,6 +15,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 const {SubMenu} = Menu;
 const {Header, Content, Sider, Footer} = Layout;
 const {Text} = Typography;
+const { Meta } = Card;
 
 const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -52,6 +53,12 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
     </Menu>
   );
 
+  const data = [
+    {
+      title: 'Ant D',
+    },
+  ];
+
   return (
     <Layout className="">
       <Header
@@ -71,7 +78,21 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
 
         <Dropdown overlay={menu} trigger={['click']}>
           <div className="row align-center">
-            <p className="m-2">{user.name}</p>
+            
+            <List
+              style={{minWidth: '100px'}}
+              itemLayout="horizontal"
+              dataSource={data}
+              renderItem={item => (
+                <List.Item>
+                  <List.Item.Meta
+                    title={user.name}
+                    description={user.viewType}
+                  />
+                </List.Item>
+              )}
+            />
+            
             <Avatar size="large" src={user.dp} />
           </div>
         </Dropdown>

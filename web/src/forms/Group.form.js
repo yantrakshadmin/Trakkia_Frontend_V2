@@ -17,12 +17,11 @@ export const GroupForm = ({id, onCancel, onDone}) => {
   const { companyId, viewType } = useSelector(s => s.user.userMeta);
 
   const {data: employees} = useAPI(`/employees/${companyId}`, {});
-  const {data: sender_clients} = useAPI(`/senderclients/?company=${companyId}&view=${viewType}`, {});
-  const {data: receiver_clients} = useAPI(`/receiverclients/?company=${companyId}&view=${viewType}`, {});
 
   const [selectedModels, setSelectedModels] = useState([]);
-  const [clients, setClients] = useState([]);
   const [form] = Form.useForm()
+
+  console.log(selectedModels)
 
   const {submit, loading} = useHandleForm({
     create: createGroup,
@@ -40,7 +39,6 @@ export const GroupForm = ({id, onCancel, onDone}) => {
 
       const {data} = await retrieveGroup(id)
 
-      data.accessible_companies = data.accessible_companies.map(company => company.pk)
       data.employees = data.employees.map(employee => employee.pk)
 
       form.setFieldsValue(data)
@@ -66,23 +64,11 @@ export const GroupForm = ({id, onCancel, onDone}) => {
 
   console.log(form.getFieldValue('employees'))
 
-  useEffect(() => {
-    
-    if(sender_clients && receiver_clients){
-
-      setClients(getUniqueObject([...sender_clients, ...receiver_clients], 'id'))
-
-    }
-
-  }, [sender_clients, receiver_clients])
-
-
   const preProcess = useCallback(
     (data) => {
       console.log(data, selectedModels)
       const temp = {};
       temp.name = data.name;
-      temp.accessible_companies = data.accessible_companies.map((c) => ({pk: c}));
       temp.employees = data.employees.map((c) => ({pk: c}));
       let s = [];
       selectedModels.forEach((i) => {
@@ -152,24 +138,6 @@ export const GroupForm = ({id, onCancel, onDone}) => {
                     ...item.others,
                     selectOptions: employees?.results || [],
                     key: 'user',
-                    dataKeys: ['email'],
-                    customTitle: 'name',
-                  },
-                })}
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Row>
-        {groupFormFields.slice(2, 3).map((item, idx) => (
-            <Col span={item.colSpan}>
-              <div key={idx} className="p-2">
-                {formItem({
-                  ...item,
-                  others: {
-                    ...item.others,
-                    selectOptions: clients || [],
-                    key: 'id',
                     dataKeys: ['email'],
                     customTitle: 'name',
                   },
