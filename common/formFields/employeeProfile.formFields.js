@@ -188,11 +188,11 @@ export const userPoolOperatorChoices = {
   'Sales': 'sales',
   'Masters': 'masters',
   'Volume Plan': 'volume_plan',
-  'Material Request': 'material_request',
+  'Material Requests': 'material_request',
   'Allotment Dockets': 'allotment_docket',
   'Return Dockets': 'return_docket',
-  'Relocation Dockets': 'relocation_docket',
-  'Outwards Dockets': 'outward_docket',
+  'Relocation Docket': 'relocation_docket',
+  'Outward Docket': 'outward_docket',
   'GRN': 'grn',
   'Inventory': 'inventory',
   'Expense': 'expense',
@@ -201,15 +201,15 @@ export const userPoolOperatorChoices = {
 export const userConsignorChoices = {
   'Masters': 'masters',
   'Volume Plan': 'volume_plan',
-  'Material Request': 'material_request',
+  'Material Requests': 'material_request',
   'Return Dockets': 'return_docket',
-  'Outwards Dockets': 'outward_docket',
+  'Outward Docket': 'outward_docket',
   'GRN': 'grn',
   'Inventory': 'inventory',
 };
 
 export const userConsigneeChoices = {
   'Return Dockets': 'return_docket',
-  'Outwards Dockets': 'outward_docket',
+  'Outward Docket': 'outward_docket',
   'Inventory': 'inventory',
 };
