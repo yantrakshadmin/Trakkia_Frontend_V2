@@ -1,130 +1,250 @@
-import React, { useState } from 'react';
-import { Form, Col, Row, Button, Divider, Spin, message, notification } from 'antd';
-import { clientFormFields ,mailingListFormFields } from 'common/formFields/clientProfile.formFields';
-import { useHandleForm } from 'hooks/form';
-import { editClientProfile, retrieveClientProfile } from 'common/api/auth';
+import React, {useEffect, useState} from 'react';
+import {Form, Col, Row, Button, Divider, Spin, Select, Card} from 'antd';
+import {clientFormFields, userConsigneeChoices, userConsignorChoices, userPoolOperatorChoices} from 'common/formFields/employeeProfile.formFields';
+import {useHandleForm} from 'hooks/form';
+import {editCompanyProfile} from 'common/api/auth';
 import formItem from '../hocs/formItem.hoc';
+import { useAPI } from 'common/hooks/api';
+import _ from 'lodash';
+import { FORM_ELEMENT_TYPES } from 'constants/formFields.constant';
 
-export const ClientForm = ({ id, onCancel, onDone }) => {
-  const [reqFile, setFile] = useState(null);
+const ClientForm = ({id, companyType, onCancel, onDone}) => {
 
-  const { form, submit, loading } = useHandleForm({
+  const [formData] = Form.useForm();
+  const retrieveURL = 'company-profile'
+  const {data: userData} = useAPI(`/${retrieveURL}/${id}`)
+  const [selectedModels, setSelectedModels] = useState([]);
+
+  const {submit, loading} = useHandleForm({
     create: null,
-    edit: editClientProfile,
-    retrieve: retrieveClientProfile,
-    success: 'Client created/edited successfully.',
-    failure: 'Error in creating/editing client.',
+    edit: editCompanyProfile,
+    success: 'Employee created/edited successfully.',
+    failure: 'Error in creating/editing Employee.',
     done: onDone,
     close: onCancel,
     id,
   });
 
-  const handleFieldsChange = (data = null) => {
-    console.log(data);
+  useEffect(() => {
+    if(userData) {
+      userData.type = userData.type.map(d => d.company_type)
 
-    if (data)
-      if (data[0])
-        if (data[0].name)
-          if (data[0].name[0])
-            if (data[0].name[0] === 'client_gst' || data[0].name[0] === 'client_pan') {
-              const val = data[0].value.toUpperCase();
-              form.setFieldsValue({ [data[0].name[0]]: val });
-            }
-  };
+      var selectedModel = []
+
+      _.keys(userPoolOperatorChoices).map((modelName) => {
+
+        if(userData[userPoolOperatorChoices[modelName]]){
+          userData[modelName] = true
+          selectedModel.push(modelName)
+        } 
+
+        delete userData[userPoolOperatorChoices[modelName]]
+      })
+
+      setSelectedModels(selectedModel)
+    }
+    formData.setFieldsValue(userData)
+  }, [userData])
+
+  const handleFieldsChange = (data) => {};
 
   const preProcess = (data) => {
-    if (reqFile) {
-      data.annexure = reqFile.originFileObj;
-    } else delete data.annexure;
-    const req = new FormData();
-    for (const key in data) {
-      req.append(key.toString(), data[key]);
-    }
-    submit(req);
+
+    data.type = data.type.map(type => ({company_type: type}))
+
+    _.keys(userPoolOperatorChoices).map((modelName) => {
+
+      if(selectedModels.includes(modelName)){
+        data[userPoolOperatorChoices[modelName]] = true
+      } else {
+        data[userPoolOperatorChoices[modelName]] = false
+      }
+
+    })
+
+    _.keys(userPoolOperatorChoices).map((modelName) => {
+      delete data[modelName]
+    })
+
+    submit(data);
+
   };
 
   return (
     <Spin spinning={loading}>
-      <Divider orientation='left'>Client Details</Divider>
+      <Divider orientation="left">User Details</Divider>
       <Form
         onFinish={preProcess}
-        form={form}
-        layout='vertical'
+        form={formData}
+        layout="vertical"
         hideRequiredMark
-        autoComplete='off'
+        autoComplete="off"
         onFieldsChange={handleFieldsChange}>
-        <Row align='center'>
-          <Col span={24}>{formItem(clientFormFields[0])}</Col>
-        </Row>
-        <Row style={{ justifyContent: 'left' }}>
-          {clientFormFields.slice(1, 5).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className='p-2'>
+        <Row style={{justifyContent: 'left'}}>
+          {clientFormFields.map((item, idx) => (
+            <Col span={8}>
+              <div key={idx} className="p-2">
                 {formItem(item)}
               </div>
             </Col>
           ))}
         </Row>
-        <Row style={{ justifyContent: 'left' }}>
+
+        <br />
+
+        <Row style={{justifyContent: 'left'}}>
+        {
+          companyType.includes('Pool Operator') 
+          ? 
+          _.keys(userPoolOperatorChoices).map((modelName, modelIdx) => (
+            <Col span={8} key={modelIdx}>
+              <Card>
+                <Row gutter={10}>
+                  <Col span={18}>{modelName}</Col>
+                  <Col span={6}>
+                    {formItem({
+                      key: modelName,
+                      type: FORM_ELEMENT_TYPES.SWITCH,
+                      kwargs: {
+                        onChange: (val) => {
+                          if (val) {
+                            setSelectedModels(_.concat(selectedModels, [modelName]));
+                          } else {
+                            setSelectedModels(_.remove(selectedModels, (i) => i !== modelName));
+                          }
+                        },
+                      },
+                      others: {
+                        defaultValue: false,
+                        formOptions: {noStyle: true},
+                      },
+                      customLabel: modelName,
+                    })}
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+          ))
+          :
+          companyType.includes('Consignor')
+          ?
+          _.keys(userConsignorChoices).map((modelName, modelIdx) => (
+            <Col span={8} key={modelIdx}>
+              <Card>
+                <Row gutter={10}>
+                  <Col span={18}>{modelName}</Col>
+                  <Col span={6}>
+                    {formItem({
+                      key: modelName,
+                      type: FORM_ELEMENT_TYPES.SWITCH,
+                      kwargs: {
+                        onChange: (val) => {
+                          if (val) {
+                            setSelectedModels(_.concat(selectedModels, [modelName]));
+                          } else {
+                            setSelectedModels(_.remove(selectedModels, (i) => i !== modelName));
+                          }
+                        },
+                      },
+                      others: {
+                        defaultValue: false,
+                        formOptions: {noStyle: true},
+                      },
+                      customLabel: modelName,
+                    })}
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+          ))
+          :
+          _.keys(userConsigneeChoices).map((modelName, modelIdx) => (
+            <Col span={8} key={modelIdx}>
+              <Card>
+                <Row gutter={10}>
+                  <Col span={18}>{modelName}</Col>
+                  <Col span={6}>
+                    {formItem({
+                      key: modelName,
+                      type: FORM_ELEMENT_TYPES.SWITCH,
+                      kwargs: {
+                        onChange: (val) => {
+                          if (val) {
+                            setSelectedModels(_.concat(selectedModels, [modelName]));
+                          } else {
+                            setSelectedModels(_.remove(selectedModels, (i) => i !== modelName));
+                          }
+                        },
+                      },
+                      others: {
+                        defaultValue: false,
+                        formOptions: {noStyle: true},
+                      },
+                      customLabel: modelName,
+                    })}
+                  </Col>
+                </Row>
+              </Card>
+            </Col>
+          ))
+        }
+        </Row>
+
+        <br />
+        <br />
+        <br />
+
+        {/* <Row style={{justifyContent: 'left'}}>
           {clientFormFields.slice(5, 8).map((item, idx) => (
             <Col span={8}>
-              <div key={idx} className='p-2'>
+              <div key={idx} className="p-2">
                 {formItem(item)}
               </div>
             </Col>
           ))}
         </Row>
-        <Row style={{ justifyContent: 'space-between' }}>
+        <Row style={{justifyContent: 'space-between'}}>
           {clientFormFields.slice(8, 12).map((item, idx) => (
             <Col span={6}>
-              <div key={idx} className='p-2'>
+              <div key={idx} className="p-2">
                 {formItem(item)}
               </div>
             </Col>
           ))}
         </Row>
-        <Row style={{ justifyContent: 'space-between' }}>
+        <Row style={{justifyContent: 'space-between'}}>
           {clientFormFields.slice(12, 16).map((item, idx) => (
             <Col span={6}>
-              <div key={idx} className='p-2'>
+              <div key={idx} className="p-2">
                 {formItem(item)}
               </div>
             </Col>
           ))}
         </Row>
-        <Row style={{ justifyContent: 'space-between' }}>
+        <Row style={{justifyContent: 'space-between'}}>
           {clientFormFields.slice(16, 20).map((item, idx) => (
             <Col span={6}>
-              <div key={idx} className='p-2'>
+              <div key={idx} className="p-2">
                 {formItem(item)}
               </div>
             </Col>
           ))}
         </Row>
-        <Row style={{ justifyContent: 'space-between' }}>
+        <Row style={{justifyContent: 'space-between'}}>
           {clientFormFields.slice(21, 22).map((item, idx) => (
             <Col span={6}>
-              <div key={idx} className='p-2'>
+              <div key={idx} className="p-2">
                 {formItem(item)}
               </div>
             </Col>
           ))}
         </Row>
-        <Row style={{ justifyContent: 'space-between' }}>
-          {mailingListFormFields.map((item, idx) => (
-            <Col span={24}>
-              <div key={idx} className='p-2'>
-                {formItem(item)}
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Row align='center'>
+        <Row align="center">
           {formItem({
             ...clientFormFields[20],
             kwargs: {
               onChange(info) {
-                const { status } = info.file;
+                const {status} = info.file;
                 if (status !== 'uploading') {
                   console.log(info.file, info.fileList);
                 }
@@ -137,14 +257,14 @@ export const ClientForm = ({ id, onCancel, onDone }) => {
               },
             },
           })}
-        </Row>
+        </Row> */}
 
         <Row>
-          <Button type='primary' htmlType='submit'>
+          <Button type="primary" htmlType="submit">
             Save
           </Button>
-          <div className='p-2' />
-          <Button type='primary' onClick={onDone}>
+          <div className="p-2" />
+          <Button type="primary" onClick={onDone}>
             Cancel
           </Button>
         </Row>

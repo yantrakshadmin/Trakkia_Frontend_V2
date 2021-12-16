@@ -1,15 +1,23 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import EmployeeForm from '../../forms/employee.form';
+import ClientForm from '../../forms/client.form';
 import {navigate} from '@reach/router';
+import {getUserMeta} from 'common/helpers/auth';
+import {useDispatch} from 'react-redux';
 
 const EditProfile = ({user}) => {
 
-  const onFinish = () => {
+  const dispatch = useDispatch()
+
+  const onFinish = async () => {
+    
+    await getUserMeta(dispatch);
     navigate('/');
   };
 
-  if (user) return <EmployeeForm companyType={user.companyType} id={user.companyId} isAdmin={user.isAdmin} onCancel={() => null} onDone={onFinish} />;
+  if (user && user.isAdmin) return <ClientForm companyType={user.companyType} id={user.userId} onCancel={() => null} onDone={onFinish} />;
+  else if(user) return <EmployeeForm id={user.userId} onCancel={() => null} onDone={onFinish} />
   return null;
 };
 

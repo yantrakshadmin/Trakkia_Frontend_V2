@@ -123,6 +123,22 @@ export const employeeFormFields = [
     customLabel: 'City',
   },
   {
+    key: 'role',
+    rules: [{ required: true, message: 'Select Role!' }],
+    kwargs: {
+      placeholder: 'Select',
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: {
+      style: { width: '100%' },
+      selectOptions: [
+        'View',
+        'CRUD'
+      ],
+    },
+    customLabel: 'Role',
+  },
+  {
     key: 'type',
     rules: [{ required: true, message: 'Select Type!' }],
     kwargs: {
@@ -138,7 +154,7 @@ export const employeeFormFields = [
   },
   {
     key: 'warehouse',
-    rules: [{ required: true, message: 'Please select emp!' }],
+    rules: [{ required: true, message: 'Please select WareHouse!' }],
     kwargs: {
       placeholder: 'Select',
       mode:'multiple',

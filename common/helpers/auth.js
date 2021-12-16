@@ -12,8 +12,8 @@ export const getUserMeta = async (dispatch) => {
   try {
     const { data: meta } = await getUserMetaAPI();
     if (meta) {
-      const { company_type:companyType, name, email, username, id, is_admin:isAdmin, company_id:companyId } = meta;
-      dispatch(userAuthenticated({ name, email, username, id, companyType, isAdmin, viewType: companyType[0]||null ,type : 'employee', active:true, companyId }));
+      const { company_type:companyType, name, email, username, id, is_admin:isAdmin, company_id:companyId, user_id: userId } = meta;
+      dispatch(userAuthenticated({ name, email, username, id, companyType, isAdmin, viewType: companyType[0]||null ,type : 'employee', active:true, companyId, userId }));
       return false;
     }
 

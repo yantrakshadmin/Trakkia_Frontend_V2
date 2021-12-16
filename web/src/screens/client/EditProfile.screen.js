@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {ClientForm} from '../../forms/client.form';
+import ClientForm from '../../forms/client.form';
 import {navigate} from '@reach/router';
 
 const EditProfile = ({user}) => {

@@ -75,15 +75,15 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
         autoComplete="off"
         onFieldsChange={handleFieldsChange}>
         <Row style={{justifyContent: 'left'}}>
-          {employeeFormFields.slice(0,4).map((item, idx) => (
+          {employeeFormFields.slice(0,5).map((item, idx) => (
             <Col span={8}>
               <div key={idx} className="p-2">
                 {formItem(item)}
               </div>
             </Col>
           ))}
-          {employeeFormFields.slice(4,5).map((item, idx) => (
-            <Col span={16}>
+          {employeeFormFields.slice(5,6).map((item, idx) => (
+            <Col span={8}>
               <div key={idx} className="p-2">
                 {formItem({...item,
                   others: {
@@ -93,7 +93,7 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
               </div>
             </Col>
           ))}
-          {employeeFormFields.slice(5, 6).map((item, idx) => (
+          {employeeFormFields.slice(6, 7).map((item, idx) => (
             <Col span={item.colSpan}>
               <div key={idx} className="p-2">
                 {formItem({
@@ -109,7 +109,7 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
               </div>
             </Col>
           ))}
-          {employeeFormFields.slice(6, 7).map((item, idx) => (
+          {employeeFormFields.slice(7, 8).map((item, idx) => (
             <Col span={item.colSpan}>
               <div key={idx} className="p-2">
                 {formItem({
