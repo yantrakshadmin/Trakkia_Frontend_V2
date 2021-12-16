@@ -31,6 +31,7 @@ export const GroupForm = ({id, onCancel, onDone}) => {
     done: onDone,
     close: onCancel,
     dates: ['invoice_date'],
+    id
   });
 
   useEffect(() => {
