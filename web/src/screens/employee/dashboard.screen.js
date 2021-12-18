@@ -60,8 +60,9 @@ export const DashboardScreen = () => {
     rClientSelected !== 'All Clients' ? `/return-graph/?rc=${rClientSelected}` : '/return-graph/',
     {},
   );
-  const {data: rClients} = useAPI('/names-rc/', {});
-  const {data: sClients} = useAPI('/names-sc/', {});
+
+  const {data: rClients} = useAPI('/receiverclients/', {}, false, true);
+  const {data: sClients} = useAPI('/senderclients/', {}, false, true);
   const {data: clientStats, loading} = useAPI('/cycledays-graph/', {});
   const [clientStatsFiltered, setClientStatsFiltered] = useState([]);
 
@@ -97,6 +98,7 @@ export const DashboardScreen = () => {
           });
           newData[key] = months;
         });
+        console.log(years)
         setSYears(years);
         if (years.length > 0) {
           setSYearSelected(Math.max.apply(Math, years));
@@ -278,9 +280,9 @@ export const DashboardScreen = () => {
           <Button
             type="link"
             onClick={() => {
-              setRClientSelected(key.replaceAll('&', '%26'));
+              setRClientSelected(key.name.replaceAll('&', '%26'));
             }}>
-            {key}
+            {key.name}
           </Button>
         </Menu.Item>
       ))}
@@ -306,11 +308,11 @@ export const DashboardScreen = () => {
         <Menu.Item>
           <Button
             type="link"
-            disabled={key === sClientSelected}
+            disabled={key.name === sClientSelected}
             onClick={() => {
-              setSClientSelected(key.replaceAll('&', '%26'));
+              setSClientSelected(key.name.replaceAll('&', '%26'));
             }}>
-            {key}
+            {key.name}
           </Button>
         </Menu.Item>
       ))}

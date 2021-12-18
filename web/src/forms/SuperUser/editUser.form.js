@@ -47,7 +47,7 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
     if(userData) {
       userData.type = userData.type.map(d => d.emp_type)
       userData.clients = userData.clients.map(d => d.pk)
-      userData.warehouse = userData.warehouse.map(d => d.pk)
+      if(viewType === 'Pool Operator') userData.warehouse = userData.warehouse.map(d => d.pk)
     }
     form.setFieldsValue(userData)
   }, [userData])
@@ -58,7 +58,7 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
 
     data.type = data.type.map(type => ({emp_type: type}))
     data.clients = data.clients.map(item => ({pk: item}))
-    data.warehouse = data.warehouse.map(item => ({pk: item}))
+    if(viewType === 'Pool Operator') data.warehouse = data.warehouse.map(item => ({pk: item}))
 
     submit(data);
 
@@ -93,7 +93,7 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
               </div>
             </Col>
           ))}
-          {employeeFormFields.slice(6, 7).map((item, idx) => (
+          {viewType === 'Pool Operator' && employeeFormFields.slice(6, 7).map((item, idx) => (
             <Col span={item.colSpan}>
               <div key={idx} className="p-2">
                 {formItem({
