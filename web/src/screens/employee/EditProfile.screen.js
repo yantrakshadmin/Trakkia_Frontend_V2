@@ -16,7 +16,7 @@ const EditProfile = ({user}) => {
     navigate('/');
   };
 
-  if (user && user.isAdmin) return <ClientForm companyType={user.companyType} id={user.userId} onCancel={() => null} onDone={onFinish} />;
+  if (user && user.isAdmin) return <ClientForm id={user.userId} onCancel={() => null} onDone={onFinish} />;
   else if(user) return <EmployeeForm id={user.userId} onCancel={() => null} onDone={onFinish} />
   return null;
 };

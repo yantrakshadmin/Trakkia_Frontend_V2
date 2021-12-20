@@ -27,6 +27,7 @@ const ReturnDocket = ({location, isClient}) => {
 
 
   useEffect(() => {
+    console.log(location)
     const fetchReturn = async () => {
       if (location.state) {
         console.log(location.state);

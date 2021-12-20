@@ -102,7 +102,7 @@ export const Cal = (allotments,returns) => {
                 dataSource={currentAllotmentEvent}
                 renderItem={item => (
                   <List.Item>
-                    <a href={`../docket/${item}`} target='_blank' rel='noreferrer'>
+                    <a href={`../docket/${item}/calender`} target='_blank' rel='noreferrer'>
                       {item}
                     </a>
                   </List.Item>
@@ -116,12 +116,14 @@ export const Cal = (allotments,returns) => {
                 bordered
                 dataSource={currentReturnEvent}
                 renderItem={item => (
-                  <a
-                    href={`../return-docket/${item}`}
-                    target='_blank'
-                    rel='noreferrer'>
-                    {item}
-                  </a>
+                  <List.Item>
+                    <a
+                      href={`../return-docket/${item}`}
+                      target='_blank'
+                      rel='noreferrer'>
+                      {item}
+                    </a>
+                  </List.Item>
                 )}
             />
             </Col>

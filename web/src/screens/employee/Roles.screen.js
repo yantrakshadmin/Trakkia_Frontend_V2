@@ -23,9 +23,11 @@ import _ from 'lodash';
 
 const {Search} = Input;
 
-const ExpenseEmployeeScreen = ({currentPage, isEmployee}) => {
+const ExpenseEmployeeScreen = ({currentPage, isEmployee, id}) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
+
+  console.log(id)
 
   const {filteredData, loading, reload} = useTableSearch({
     searchVal, 

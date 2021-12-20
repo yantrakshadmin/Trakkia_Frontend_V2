@@ -7,13 +7,15 @@ import formItem from '../hocs/formItem.hoc';
 import { useAPI } from 'common/hooks/api';
 import _ from 'lodash';
 import { FORM_ELEMENT_TYPES } from 'constants/formFields.constant';
+import { type } from 'jquery';
 
-const ClientForm = ({id, companyType, onCancel, onDone}) => {
+const ClientForm = ({id, onCancel, onDone}) => {
 
   const [formData] = Form.useForm();
   const retrieveURL = 'company-profile'
   const {data: userData} = useAPI(`/${retrieveURL}/${id}`)
   const [selectedModels, setSelectedModels] = useState([]);
+  const [companyType, setCompanyType] = useState([]);
 
   const {submit, loading} = useHandleForm({
     create: null,
@@ -29,6 +31,8 @@ const ClientForm = ({id, companyType, onCancel, onDone}) => {
     if(userData) {
       userData.type = userData.type.map(d => d.company_type)
 
+      setCompanyType(userData.type)
+
       var selectedModel = []
 
       _.keys(userPoolOperatorChoices).map((modelName) => {
@@ -43,10 +47,71 @@ const ClientForm = ({id, companyType, onCancel, onDone}) => {
 
       setSelectedModels(selectedModel)
     }
+
+    console.log(userData, 'userData')
+
     formData.setFieldsValue(userData)
   }, [userData])
 
-  const handleFieldsChange = (data) => {};
+  const handleFieldsChange = (data) => {
+    if(data[0].name[0] == 'type') {
+
+      let types = formData.getFieldValue('type')
+
+      setCompanyType(types)
+
+      if(types.includes('Pool Operator') == false){
+
+        if(types.includes('Consignor')){
+
+          let choices = _.keys(userConsignorChoices).map((modelName) => {
+
+            if(selectedModels.includes(modelName)) return modelName
+
+          }).filter((i) => i)
+
+          _.keys(userPoolOperatorChoices).map((modelName) => {
+
+            if(selectedModels.includes(modelName)) formData.setFieldsValue({ [modelName]: true })
+            else formData.setFieldsValue({ [modelName]: false })
+
+          })
+
+          setSelectedModels(choices)
+
+        } else if(types.includes('Consignee')){
+
+          let choices = _.keys(userConsigneeChoices).map((modelName) => {
+
+            if(selectedModels.includes(modelName)) return modelName
+
+          }).filter((i) => i)
+
+          _.keys(userPoolOperatorChoices).map((modelName) => {
+
+            if(selectedModels.includes(modelName)) formData.setFieldsValue({ [modelName]: true })
+            else formData.setFieldsValue({ [modelName]: false })
+
+          })
+
+          setSelectedModels(choices)
+
+        } else {
+
+          _.keys(userPoolOperatorChoices).map((modelName) => {
+
+            formData.setFieldsValue({ [modelName]: false })
+
+          })
+
+          setSelectedModels([])
+
+        }
+
+      }
+
+    }
+  };
 
   const preProcess = (data) => {
 

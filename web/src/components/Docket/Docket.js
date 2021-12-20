@@ -3,7 +3,7 @@ import { Row, Col, Typography, Spin } from 'antd';
 import { Table } from 'react-bootstrap';
 import moment from 'moment';
 
-import { retrieveAllotments, retrieveAllotmentsCalender } from 'common/api/auth';
+import { retrieveAllotments, retrieveAllotmentsCalender, retrieveAllotmentsDockets } from 'common/api/auth';
 
 import './docket.styles.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -14,15 +14,20 @@ const Docket = ({ location,match }) => {
   const [allotment, setAllotment] = useState(null);
   const [total, setTotal] = useState(0);
 
+  console.log(location.pathname.split('/'))
+
   useEffect(async () => {
     const fetchAllotment = async () => {
+      console.log("Hello1")
       if(location.state){
         if(location.state.id){
-          const { data } = await retrieveAllotmentsCalender(location.state.id);
+          console.log("Hello2")
+          const { data } = await retrieveAllotmentsDockets(location.state.id);
           // const { data } = await retrieveAllotments(location.state.id);
           if (data) setAllotment(data);
         }}
       else{
+        console.log("Hello3")
         const len = location.pathname.length
         const id = location.pathname.slice(17,len);
         const { data } = await retrieveAllotmentsCalender(id)

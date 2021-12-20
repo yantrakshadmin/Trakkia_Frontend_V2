@@ -724,10 +724,16 @@ export const retrieveAllotments = (id) =>
     params: {id},
   });
 
-export const retrieveAllotmentsCalender = (id) =>
+export const retrieveAllotmentsDockets = (id) =>
   loadAPI(`/allotments-print/?id=${id}`, {
     method: 'GET',
     secure: false,
+  });
+
+export const retrieveAllotmentsCalender = (id) =>
+  loadAPI(`/allotments-cal/?tno=${id}`, {
+    method: 'GET',
+    secure: true,
   });
 
 export const deleteAllotment = (id) =>
@@ -1097,18 +1103,15 @@ export const retrieveDocketOutwardInward = (id) =>
   });
 
 export const retrieveReturnDocket = (id) =>
-  loadAPI('/return-docket/', {
-    method: 'GET',
-    secure: true,
-    params: {
-      id,
-    },
-  });
-
-export const retrieveReturnDocketCaleder = (id) =>
   loadAPI(`/return-print/?id=${id}`, {
     method: 'GET',
     secure: false,
+  });
+
+export const retrieveReturnDocketCaleder = (id) =>
+  loadAPI(`/returns-cal/?tno=${id}`, {
+    method: 'GET',
+    secure: true,
   });
 
 export const createLead = (data) =>

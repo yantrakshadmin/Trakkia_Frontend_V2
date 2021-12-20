@@ -533,9 +533,9 @@ export const superUserRoutes = [
         Component: lazy(() => import('screens/superUser/users.screen')),
       },
       {
-        name: 'Roles',
+        name: 'Groups',
         icon: ['fas', 'money-check-alt'],
-        path: '/roles/',
+        path: '/groups/',
         Component: lazy(() => import('screens/employee/Roles.screen')),
         props: { isEmployee: true },
       },

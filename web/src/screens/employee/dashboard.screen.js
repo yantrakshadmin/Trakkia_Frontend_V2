@@ -462,7 +462,7 @@ export const DashboardScreen = () => {
         </Row>
       </Card>
       <br />
-      <Card>
+      {/* <Card>
         <Row gutter={32} align="bottom" justify="center">
           <Col span={12}>
             <MasterHOC
@@ -505,7 +505,7 @@ export const DashboardScreen = () => {
             </div>
           </Col>
         </Row>
-      </Card>
+      </Card> */}
     </>
   );
 };

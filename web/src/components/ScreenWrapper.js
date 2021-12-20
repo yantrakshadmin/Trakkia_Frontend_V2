@@ -114,8 +114,9 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
             theme="dark"
             mode="inline"
             inlineCollapsed
-            defaultSelectedKeys={[routes[0].name]}
-            defaultOpenKeys={[routes[0].name]}
+            // defaultSelectedKeys={[routes[0].name]}
+            defaultSelectedKeys={'Dashboard'}
+            // defaultOpenKeys={[routes[0].name]}
             style={{height: '100%', borderRight: 0}}>
             {routes.map((i) => {
               if (i.subMenu) {

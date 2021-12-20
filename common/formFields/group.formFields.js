@@ -38,9 +38,12 @@ export const groupModelChoicesGrouped = {
   Leads: ['Leads'],
   PFEP: ['PFEP'],
   'Commercial Proposal': ['Commercial Proposal'],
+  'Technical Proposal': ['Technical Proposal'],
   Allotment: ['Material Request', 'Allotment', 'Delivered'],
   Return: ['Return', 'Received'],
   Outward: ['Outward', 'Inward'],
+  Relocation: ['Relocation'],
+  'Purchase Order': ['Purchase Order'],
   'Warehouse Inventory': ['Inventory', 'Inventory Ledger', 'Inventory Adjustments - Warehouse'],
   'Sender Inventory': [
     'Sender Client Inventory',
