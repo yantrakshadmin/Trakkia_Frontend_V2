@@ -52,6 +52,8 @@ const AllotmentForm = ({ location }) => {
       form.setFieldsValue(data)
     }
 
+    console.log(location)
+
     if(location.state.editId){
       fetchData(location.state.editId)
     }
@@ -64,12 +66,14 @@ const AllotmentForm = ({ location }) => {
         const tempKits = [];
         const tempFlows = [];
         const reqFlows = ((flowFetched && flowFetched[0]?.flows) || []).map((item, idx) => {
-          let foundFlow = form.getFieldValue('flows').find(flow => flow.flow === item.flow.id)
-          console.log(item, form.getFieldValue('flows').find(flow => flow.flow === item.flow.id))
-          item.kit.products = item.kit.products.map(product => {
-            product.quantity = foundFlow.items.find((item) => item.product === product.product.id).quantity
-            return product
-          })
+          if(form && location.state.editId){
+            let foundFlow = form.getFieldValue('flows').find(flow => flow.flow === item.flow.id)
+            console.log(item, form.getFieldValue('flows').find(flow => flow.flow === item.flow.id))
+            item.kit.products = item.kit.products.map(product => {
+              product.quantity = foundFlow.items.find((item) => item.product === product.product.id).quantity
+              return product
+            })
+          }
           tempFlows.push(item);
           tempKits.push(item.kit);
           return {
@@ -99,7 +103,7 @@ const AllotmentForm = ({ location }) => {
       }
     };
     fetchFlows();
-  }, [location.state.id, flowFetched, form]);
+  }, [location, flowFetched, form]);
 
   const preProcess = (data) => {
     data.flows = (data.flows || []).map((f,ind) => ({

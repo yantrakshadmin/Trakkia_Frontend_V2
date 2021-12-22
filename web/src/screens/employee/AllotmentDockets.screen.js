@@ -105,13 +105,9 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
       render: (text, record) => {
         return (
           <div className='row align-center justify-evenly'>
-            <Link
-              to={`../docket/${record.id}`}
-              state={{id: record.id}}
-              key={record.id}
-            >
+            <a href={`../docket/${record.id}`} target='_blank' rel='noreferrer'>
               <Download />
-            </Link>
+            </a>
             <FontAwesomeIcon
               className='mx-2 icon-bg'
               icon={faBarcode}
@@ -142,7 +138,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
             documentAvail={!!record.document_available}
             getDocuments={async () => {
               const { data: req } = await loadAPI(
-                `${DEFAULT_BASE_URL}/delivered-docket/?pk=${record.id}`,
+                `/delivered-docket/?pk=${record.id}`,
                 {},
               );
               if (req)
@@ -203,7 +199,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
               setDeliveryId(record.id);
               e.stopPropagation();
             }}
-            disabled={!!(record.is_delivered && record.document_available)}>
+            disabled={!!(record.is_delivered)}>
             <Delivery color={record.is_delivered ? '#7CFC00' : null} />
           </Button>
           <Button

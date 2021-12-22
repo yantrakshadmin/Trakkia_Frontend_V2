@@ -16,11 +16,12 @@ import { NotFound404Screen } from 'screens/404.screen';
 import { useAPI } from 'common/hooks/api';
 import { userPoolOperatorChoices } from 'common/formFields/employeeProfile.formFields';
 import { loadAPI } from 'common/helpers/api';
+import { Loading } from './Loading';
 
 const RootRouter = ({ user }) => {
 
-  console.log(user,'user')
-
+  const [loading, setLoading] = useState(true)
+  
   const [employeesRoutes, setEmployeesRoutes] = useState([{
     name: 'Dashboard',
     icon: ['fas', 'home'],
@@ -36,18 +37,17 @@ const RootRouter = ({ user }) => {
   
       setEmployeesRoutes(employeeRoutes.filter(route => route.name === 'Dashboard' || route.name === 'Reports' || companyProfile[userPoolOperatorChoices[route.name]]))
 
-      console.log(companyProfile, employeeRoutes.filter(route => route.name === 'Dashboard' || route.name === 'Reports' || companyProfile[userPoolOperatorChoices[route.name]]))
+      setLoading(false)
 
     }
 
     if(user.companyId) fetchMenu()
 
-  }, [user])
+  }, [user])  
 
-  console.log(employeesRoutes)
-  
-
-  if (user) {
+  if(loading){
+    return <Loading />
+  } else if (user) {
     switch (user.type) {
       case 'public':
         return (

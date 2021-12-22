@@ -11,9 +11,12 @@ import {
   allDelivered,
   editDelivered,
   retrieveAllotmentsDelivered,
+  retrieveAllotment,
 } from 'common/api/auth';
 import {PlusOutlined, MinusCircleOutlined} from '@ant-design/icons';
 import formItem from '../hocs/formItem.hoc';
+import { loadAPI } from 'common/helpers/api';
+import { getUniqueObject } from 'common/helpers/getUniqueValues';
 
 export const DeliveredForm = ({id, onCancel, onDone, transaction_no}) => {
   const [delivered, setDelivered] = useState(true);
@@ -26,7 +29,7 @@ export const DeliveredForm = ({id, onCancel, onDone, transaction_no}) => {
 
   const {form, submit} = useHandleForm({
     create: createDelivered,
-    retrieve: retrieveDelivered,
+    retrieve: retrieveAllotment,
     success: 'Request created/edited successfully.',
     failure: 'Error in creating/editing request.',
     done: onDone,
@@ -43,11 +46,16 @@ export const DeliveredForm = ({id, onCancel, onDone, transaction_no}) => {
 
   useEffect(() => {
     const fetchDelivered = async () => {
-      const {data} = await allDelivered();
+      const {data} = await loadAPI('/allotments-table/');
       if (data) {
-        const dlvd = data.filter((d) => d.allotment === id)[0];
+        const dlvd = data.filter((d) => d.id == id)[0];
+        console.log(dlvd)
+        const {data: reqdlvd} = await loadAPI(`/mr-table-altform/?id=${dlvd.sales_order.pk}`)
         if (dlvd) {
-          setDeliveryId(dlvd.id);
+          if(dlvd.is_delivered) setDeliveryId(dlvd.id);
+          setReqDlvd(reqdlvd[0]);
+          if(dlvd.is_delivered) setDelivered(true)
+          else setDelivered(false)
           // form.setFieldsValue({delivered: true});
           // setDelivered(true);
         } else {
@@ -62,25 +70,25 @@ export const DeliveredForm = ({id, onCancel, onDone, transaction_no}) => {
     }
   }, [id]);
 
-  useEffect(() => {
-    const fetchDelivered = async () => {
-      setLoading(true);
-      const {data} = await retrieveAllotmentsDelivered(id);
-      if (data) {
-        setLoading(false);
-        const reqdlvd = data;
-        if (reqdlvd) {
-          setReqDlvd(reqdlvd);
-        } else {
-          form.setFieldsValue({delivered: true});
-        }
-      }
-    };
-    if (id) {
-      fetchDelivered();
-      setAllotment(id);
-    }
-  }, [id]);
+  // useEffect(() => {
+  //   const fetchDelivered = async () => {
+  //     setLoading(false);
+  //     const {data} = await retrieveAllotmentsDelivered(id);
+  //     if (data) {
+  //       setLoading(false);
+  //       const reqdlvd = data;
+  //       if (reqdlvd) {
+  //         setReqDlvd(reqdlvd);
+  //       } else {
+  //         form.setFieldsValue({delivered: true});
+  //       }
+  //     }
+  //   };
+  //   if (id) {
+  //     fetchDelivered();
+  //     setAllotment(id);
+  //   }
+  // }, [id]);
 
   useEffect(() => {
     if (reqDlvd) {
@@ -91,8 +99,8 @@ export const DeliveredForm = ({id, onCancel, onDone, transaction_no}) => {
           reqProd.push(prod.product);
         });
       });
-      console.log(reqProd);
-      setProducts(reqProd);
+      console.log(getUniqueObject(reqProd, 'id'));
+      setProducts(getUniqueObject(reqProd, 'id'));
       setLoading(false);
       form.setFieldsValue({delivered: true});
     }
@@ -221,6 +229,10 @@ export const DeliveredForm = ({id, onCancel, onDone, transaction_no}) => {
       const finalData = toFormData(data);
       finalData.append('no_of_document_files', 0);
       console.log(finalData);
+      for (var pair of finalData.entries()) {
+        console.log(pair[0]+ ', ' + pair[1]); 
+       }
+      console.log(finalData, '2')
       submit(finalData);
     }
   };

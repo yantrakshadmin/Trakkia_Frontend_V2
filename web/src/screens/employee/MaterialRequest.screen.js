@@ -423,7 +423,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
         ExpandBody={ExpandTable}
         modalBody={AddMaterialRequestForm}
         modalWidth="80"
-        hideRightButton={viewType === 'Consignee' ? true : false}
+        hideRightButton={viewType === 'Consignor' ? false : true}
       />
     </NoPermissionAlert>
   );

@@ -40,8 +40,16 @@ const ReturnDocket = ({location, isClient}) => {
       } else {
         const len = location.pathname.length;
         const id = location.pathname.slice(24, len);
-        const {data} = await retrieveReturnDocketCaleder(id);
-        if (data) setReqReturn(data);
+
+        const { data: docketData } = await retrieveReturnDocket(id);
+
+        if(docketData === undefined){
+          const { data } = await retrieveReturnDocketCaleder(id)
+          setReqReturn(data);
+        } else {
+          setReqReturn(docketData);
+        }
+
       }
     };
     fetchReturn();

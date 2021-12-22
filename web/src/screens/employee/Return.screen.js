@@ -96,13 +96,9 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
         return (
           <div className="row align-center justify-evenly">
           
-            <Link
-              to={`../return-docket/${record.id}`}
-              state={{id: record.id}}
-              key={record.id}
-            >
+            <a href={`../return-docket/${record.id}`} target='_blank' rel='noreferrer'>
               <Download />
-            </Link>
+            </a>
 
             <FontAwesomeIcon
               className="mx-2 icon-bg"

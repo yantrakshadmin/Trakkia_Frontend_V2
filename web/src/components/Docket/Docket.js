@@ -30,9 +30,14 @@ const Docket = ({ location,match }) => {
         console.log("Hello3")
         const len = location.pathname.length
         const id = location.pathname.slice(17,len);
-        const { data } = await retrieveAllotmentsCalender(id)
-        console.log(data,id,"ye wala")
-        if (data) setAllotment(data);
+        const { data: docketData } = await retrieveAllotmentsDockets(id);
+
+        if(docketData === undefined){
+          const { data } = await retrieveAllotmentsCalender(id)
+          setAllotment(data);
+        } else {
+          setAllotment(docketData);
+        }
       }
     };
     fetchAllotment();
