@@ -41,11 +41,11 @@ export const ReceivedForm = ({id, onCancel, onDone}) => {
   useEffect(() => {
     const fetch = async () => {
       if (id) {
-        const {data} = await loadAPI(`dispatch-return-validate/?id=${id}`);
+        const {data} = await loadAPI(`return-received/?id=${id}`);
         setLimitsData(data);
       }
     };
-    fetch();
+    // fetch();
   }, [id]);
 
   useEffect(() => {
@@ -73,6 +73,7 @@ export const ReceivedForm = ({id, onCancel, onDone}) => {
         setLoading(false);
         const reqdlvd = data;
         if (reqdlvd) {
+          setLimitsData(data);
           setReturn(reqdlvd);
         } else {
           //form.setFieldsValue({delivered: true});
@@ -115,8 +116,9 @@ export const ReceivedForm = ({id, onCancel, onDone}) => {
     const reqProds = [];
     if (returnn) {
       setReceived(returnn.id);
+      console.log(returnn)
       returnn.kits.forEach((item) => {
-        item.kit.products.forEach((prod) => {
+        item.items.forEach((prod) => {
           reqProds.push(prod.product);
         });
       });
@@ -238,7 +240,6 @@ export const ReceivedForm = ({id, onCancel, onDone}) => {
     } else {
       const finalData = toFormData(data);
       finalData.append('no_of_document_files', 0);
-      console.log(finalData);
       submit(finalData);
     }
   };
@@ -251,12 +252,14 @@ export const ReceivedForm = ({id, onCancel, onDone}) => {
           if (thisField === 'delivered') {
             if (data[0].value === false) {
               const temp = [];
-              _.values(limitsData).forEach((v) => {
-                temp.push({
-                  product: v[1],
-                  actual_quantity: v[0],
-                });
-              });
+              limitsData.kits.map((kit) => {
+                kit.items.map((item) => {
+                  temp.push({
+                    product: item.product.id,
+                    actual_quantity: item.quantity,
+                  });
+                })
+              })
               form.setFieldsValue({items: temp});
             } else {
               form.setFieldsValue({items: []});
@@ -462,7 +465,7 @@ export const ReceivedForm = ({id, onCancel, onDone}) => {
                 <Form.Item>
                   <Button
                     type="dashed"
-                    disabled={true}
+                    disabled={received}
                     onClick={() => {
                       add();
                     }}
