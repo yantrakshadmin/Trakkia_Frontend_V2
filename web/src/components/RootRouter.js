@@ -42,6 +42,9 @@ const RootRouter = ({ user }) => {
     }
 
     if(user.companyId) fetchMenu()
+    else setLoading(false)
+
+    
 
   }, [user])  
 

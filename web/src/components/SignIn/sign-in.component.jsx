@@ -119,7 +119,7 @@ const SignIn = ({user}) => {
       <h1>Welcome to the world of organized returnable transport items management</h1>
       <br />
       <div className="content">
-      TRAKKIA helps you track and manage returnable transport items in Industrial/Manufacturing supply chains efficiently and effectively. Use Trakkia to reduce asset loss and optimise asset utilisation to boost profitability.
+        TRAKKIA helps you track and manage returnable transport items in Industrial/Manufacturing supply chains efficiently and effectively. Use Trakkia to reduce asset loss and optimise asset utilisation to boost profitability.
       </div>
       <br /> <br />
       <Button size="large" type="primary" onClick={() => onSignIn()}>

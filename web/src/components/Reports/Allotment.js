@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import {DEFAULT_BASE_URL} from 'common/constants/enviroment';
@@ -11,6 +11,8 @@ import TableWithTabHoc from 'hocs/TableWithTab.hoc';
 import {FORM_ELEMENT_TYPES} from '../../constants/formFields.constant';
 
 import formItem from '../../hocs/formItem.hoc';
+import { loadAPI } from 'common/helpers/api';
+import { CSVLink } from 'react-csv';
 
 const AllotmentReport = ({currentPage}) => {
   const [all, setAll] = useState(false);
@@ -18,35 +20,27 @@ const AllotmentReport = ({currentPage}) => {
   const [csvData, setCsvData] = useState(null);
   const [reportData, setReportData] = useState(null);
   const [reqAllotments, setReqAllotments] = useState(null);
-  const [client, setClient] = useState('');
   const [clientName, setClientName] = useState(null);
-  const [to, setTo] = useState(null);
-  const [from, setFrom] = useState(null);
   const [form] = Form.useForm();
 
-  const {data: clients} = useAPI('/clients/', {});
+  const {data: clients} = useAPI('/senderclients/', {}, false, true);
 
   const onSubmit = async (data) => {
+
     setLoading(true);
-    if (!data.cname) {
-      data.cname = '';
-      setClient(data.cname);
-    } else {
-      setClient(data.cname);
-      let reqC = null;
-      const {data: clients} = await retrieveClients();
-      clients.forEach((c) => {
-        if (c.user === data.cname) reqC = c.client_name;
-      });
-      setClientName(reqC);
-    }
+    let reqC = null;
+    clients.forEach((c) => {
+      if (c.id === data.cname) reqC = c.name;
+    });
+    setClientName(reqC);
     data.to = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
     data.from = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
-    setTo(data.to);
-    setFrom(data.from);
+
+    const {data: csvD} = await loadAPI(`/allotment-reportsdownload/?cname=${data.cname}&to=${data.to}&from=${data.from}`)
+    setCsvData(csvD)
+
     const {data: report} = await retrieveAllotmentReport(data);
     if (report) {
-      console.log(report);
       setLoading(false);
       setReportData(report);
     }
@@ -55,61 +49,30 @@ const AllotmentReport = ({currentPage}) => {
   useEffect(() => {
     if (reportData) {
       const reqD = reportData.map((alt) => ({
-        id: alt.id,
-        owner: alt.owner,
-        vehicle_type: alt.vehicle_type,
         transaction_no: alt.transaction_no,
         dispatch_date: alt.dispatch_date,
-        material_request_id: alt.sales_order,
         warehouse_name: alt.send_from_warehouse,
-        flows: alt.flows,
-        vehicle_number: alt.vehicle_number,
         transport_by: alt.transport_by,
         is_delivered: alt.is_delivered,
       }));
       setReqAllotments(reqD);
+      console.log(reqAllotments)
     }
   }, [reportData]);
-
-  useEffect(() => {
-    if (reqAllotments) {
-      const csvd = [];
-      reqAllotments.forEach((d) => {
-        const temp = {...d, is_delivered: [d.is_delivered ? 'Yes' : 'No']};
-        delete temp.flows;
-        csvd.push(temp);
-        d.flows.forEach((f) => {
-          const kit = f.kit.kit_name;
-          const aq = f.alloted_quantity;
-          // let s = '';
-          // for (let i = 1; i <= aq; i++) {
-          //   s += `${d.transaction_no}-${kit}-${i}, `;
-          // }
-          // s = s.slice(0, -2);
-          const temp1 = {
-            ...f,
-            kit: f.kit.kit_name,
-            // 'kits assigned': s
-          };
-          csvd.push(temp1);
-          f.kit.products.forEach((p) => {
-            const temp2 = {...p, quantity: p.quantity * aq};
-            csvd.push(temp2);
-          });
-        });
-      });
-      setCsvData(csvd);
-    }
-  }, [reqAllotments]);
 
   const columns = [
     {
       title: 'Sr. No.',
       key: 'srno',
-      render: (text, record, index) => (currentPage - 1) * 10 + index + 1,
+      render: (text, record, index) => {
+        console.log(text, record)
+        return index + 1
+      }
     },
     ...allotmentColumns,
   ];
+
+  console.log(reqAllotments)
 
   const tabs = [
     {
@@ -120,6 +83,19 @@ const AllotmentReport = ({currentPage}) => {
       loading,
     },
   ];
+
+  const DownloadCSVButton = useCallback(() => {
+    return (
+      <Button>
+        <CSVLink
+          data={csvData}
+          filename={'Allotments' + clientName + '.csv'}
+          className='btn btn-primary'>
+          Download
+        </CSVLink>
+      </Button>
+    );
+  }, [csvData]);
 
   return (
     <>
@@ -133,9 +109,9 @@ const AllotmentReport = ({currentPage}) => {
               },
               others: {
                 selectOptions: clients || [],
-                key: 'user',
-                customTitle: 'client_name',
-                dataKeys: ['client_shipping_address'],
+                key: 'id',
+                customTitle: 'name',
+                dataKeys: ['address'],
               },
               type: FORM_ELEMENT_TYPES.SELECT,
               customLabel: 'Client',
@@ -179,16 +155,18 @@ const AllotmentReport = ({currentPage}) => {
       </Form>
       <br />
       <TableWithTabHoc
+        rowKey={(record) => record.id}
         tabs={tabs}
         size="middle"
         title="Allotment Dockets"
         hideRightButton
-        downloadLink={`${DEFAULT_BASE_URL}/allotment-reportsdownload/?cname=${client}&to=${to}&from=${from}`}
-        downloadLink2={`${DEFAULT_BASE_URL}/billing-annexure/?id=${client}&to=${to}&from=${from}`}
-        rowKey="id"
-        expandHandleKey="flows"
-        ExpandBody={AllotFlowTable}
-        expandParams={{loading}}
+        ExtraButtonNextToTitle={csvData && DownloadCSVButton}
+        // downloadLinkButtonTitle="Download"
+        // downloadLink={`${DEFAULT_BASE_URL}allotment-reportsdownload/?cname=${client}&to=${to}&from=${from}`}
+        // downloadLink2={`${DEFAULT_BASE_URL}/billing-annexure/?id=${client}&to=${to}&from=${from}`}
+        // expandHandleKey="flows"
+        // ExpandBody={AllotFlowTable}
+        // expandParams={{loading}}
         // csvdata={csvData}
         // csvname={'Allotments' + clientName + '.csv'}
       />

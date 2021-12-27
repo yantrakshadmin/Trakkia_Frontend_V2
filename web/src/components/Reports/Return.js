@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import {DEFAULT_BASE_URL} from 'common/constants/enviroment';
@@ -11,6 +11,8 @@ import {FORM_ELEMENT_TYPES} from '../../constants/formFields.constant';
 import {RetKitTable} from '../RetKitExp';
 
 import formItem from '../../hocs/formItem.hoc';
+import { CSVLink } from 'react-csv';
+import { loadAPI } from 'common/helpers/api';
 
 const AllotmentReport = ({currentPage}) => {
   const [all, setAll] = useState(false);
@@ -18,28 +20,30 @@ const AllotmentReport = ({currentPage}) => {
   const [csvData, setCsvData] = useState(null);
   const [reportData, setReportData] = useState(null);
   const [reqReturns, setReqAllotments] = useState(null);
-  const [to, setTo] = useState(null);
-  const [from, setFrom] = useState(null);
+  const [clientName, setClientName] = useState(null);
   const [form] = Form.useForm();
 
   const [client, setClient] = useState('');
 
-  const {data: clients} = useAPI('/clients/', {});
+  const {data: clients} = useAPI('/receiverclients/', {}, false, true);
 
   const onSubmit = async (data) => {
     setLoading(true);
 
-    if (data.cname) {
-      setClient(data.cname);
-    }
+    let reqC = null;
+    clients.forEach((c) => {
+      if (c.id === data.cname) reqC = c.name;
+    });
+    setClientName(reqC);
 
     data.to = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
     data.from = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
-    setTo(data.to);
-    setFrom(data.from);
+
+    const {data: csvD} = await loadAPI(`/return-reportsdownload/?cname=${data.cname}&to=${data.to}&from=${data.from}`)
+    setCsvData(csvD)
+
     const {data: report} = await retrieveReturnReport(data);
     if (report) {
-      console.log(report);
       setLoading(false);
       setReportData(report);
     }
@@ -47,49 +51,23 @@ const AllotmentReport = ({currentPage}) => {
 
   useEffect(() => {
     if (reportData) {
-      const reqD = reportData.map((ret) => ({
-        ...ret,
+      const reqD = reportData.map((alt) => ({
+        transaction_no: alt.transaction_no,
+        transaction_date: alt.transaction_date,
+        warehouse: alt.warehouse,
+        transport_by: alt.transport_by,
+        is_delivered: alt.is_delivered,
+        receiver_client: alt.receiver_client,
       }));
       setReqAllotments(reqD);
     }
   }, [reportData]);
 
-  // useEffect(() => {
-  //   if (reqReturns) {
-  //     let csvd = [];
-  //     reqReturns.forEach((d) => {
-  //       let temp = {...d, ['is_delivered']: [d['is_delivered'] ? 'Yes' : 'No']};
-  //       delete temp['flows'];
-  //       csvd.push(temp);
-  //       d.flows.forEach((f) => {
-  //         let kit = f['kit'].kit_name,
-  //           aq = f.alloted_quantity;
-  // let s = '';
-  // for (let i = 1; i <= aq; i++) {
-  //   s += `${d.transaction_no}-${kit}-${i}, `;
-  // }
-  // s = s.slice(0, -2);
-  // let temp1 = {
-  // ...f,
-  // ['kit']: f['kit'].kit_name,
-  // 'kits assigned': s
-  //         };
-  //         csvd.push(temp1);
-  //         f.kit.products.forEach((p) => {
-  //           let temp2 = {...p, ['quantity']: p['quantity'] * aq};
-  //           csvd.push(temp2);
-  //         });
-  //       });
-  //     });
-  //     setCsvData(csvd);
-  //   }
-  // }, [reqReturns]);
-
   const columns = [
     {
       title: 'Sr. No.',
       key: 'srno',
-      render: (text, record, index) => (currentPage - 1) * 10 + index + 1,
+      render: (text, record, index) => index + 1,
     },
     ...returnColumns,
   ];
@@ -104,6 +82,19 @@ const AllotmentReport = ({currentPage}) => {
     },
   ];
 
+  const DownloadCSVButton = useCallback(() => {
+    return (
+      <Button>
+        <CSVLink
+          data={csvData}
+          filename={'Allotments' + clientName + '.csv'}
+          className='btn btn-primary'>
+          Download
+        </CSVLink>
+      </Button>
+    );
+  }, [csvData]);
+
   return (
     <>
       <Form onFinish={onSubmit} form={form} layout="vertical" hideRequiredMark autoComplete="off">
@@ -116,9 +107,9 @@ const AllotmentReport = ({currentPage}) => {
               },
               others: {
                 selectOptions: clients || [],
-                key: 'user',
-                customTitle: 'client_name',
-                dataKeys: ['client_shipping_address'],
+                key: 'id',
+                customTitle: 'name',
+                dataKeys: ['address'],
               },
               type: FORM_ELEMENT_TYPES.SELECT,
               customLabel: 'Client',
@@ -162,15 +153,15 @@ const AllotmentReport = ({currentPage}) => {
       </Form>
       <br />
       <TableWithTabHoc
+        rowKey={(record) => record.id}
         tabs={tabs}
         size="middle"
         title="Return Dockets"
         hideRightButton
-        downloadLink={`${DEFAULT_BASE_URL}/return-reportsdownload/?cname=${client}&to=${to}&from=${from}`}
-        rowKey="id"
-        expandHandleKey="kits"
-        ExpandBody={RetKitTable}
-        expandParams={{loading}}
+        ExtraButtonNextToTitle={csvData && DownloadCSVButton}
+        // expandHandleKey="kits"
+        // ExpandBody={RetKitTable}
+        // expandParams={{loading}}
         // csvdata={csvData}
         // csvname={'Allotments' + clientName + '.csv'}
       />

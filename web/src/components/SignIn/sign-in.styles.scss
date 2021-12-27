@@ -9,11 +9,15 @@
   font-family: 'Open Sans', sans-serif;
   padding-left: 50px;
   padding-right: 50px;
-  margin-top: 20vh;
+  margin-top: 18vh;
   text-align: center;
+
+  h1{
+    font-weight: bold;
+  }
 
   .content {
     width: 35vw;
-    font-size: 20px;
+    font-size: 18px;
   }
 }
