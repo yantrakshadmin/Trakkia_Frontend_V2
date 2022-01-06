@@ -1,16 +1,16 @@
 import moment from 'moment';
 
 export default [
-  {
-    title: 'Owner',
-    key: 'owner',
-    dataIndex: 'owner',
-  },
-  {
-    title: 'Material Request ID',
-    key: 'material_request_id',
-    dataIndex: 'material_request_id',
-  },
+  // {
+  //   title: 'Owner',
+  //   key: 'owner',
+  //   dataIndex: 'owner',
+  // },
+  // {
+  //   title: 'Material Request ID',
+  //   key: 'material_request_id',
+  //   dataIndex: 'material_request_id',
+  // },
   {
     title: 'Delivery Status',
     key: 'is_delivered',
@@ -19,7 +19,6 @@ export default [
       return 'Pending';
     },
   },
-
   {
     title: 'Created On',
     key: 'dispatch_date',
@@ -46,19 +45,19 @@ export default [
     key: 'warehouse_name',
     dataIndex: 'warehouse_name',
   },
-  {
-    title: 'Vehicle Number',
-    key: 'vehicle_number',
-    dataIndex: 'vehicle_number',
-  },
-  {
-    title: 'Vehicle Type',
-    key: 'vehicle_type',
-    dataIndex: 'vehicle_type',
-  },
-  {
-    title: 'Transporter Name',
-    key: 'transport_by',
-    dataIndex: 'transport_by',
-  },
+  // {
+  //   title: 'Vehicle Number',
+  //   key: 'vehicle_number',
+  //   dataIndex: 'vehicle_number',
+  // },
+  // {
+  //   title: 'Vehicle Type',
+  //   key: 'vehicle_type',
+  //   dataIndex: 'vehicle_type',
+  // },
+  // {
+  //   title: 'Transporter Name',
+  //   key: 'transport_by',
+  //   dataIndex: 'transport_by',
+  // },
 ];

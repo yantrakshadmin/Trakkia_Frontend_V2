@@ -2,6 +2,19 @@ import moment from 'moment';
 
 export default [
   {
+    title: 'Delivery Status',
+    key: 'is_delivered',
+    render: (text, record) => {
+      if (record.is_delivered) return 'Delivered';
+      return 'Pending';
+    },
+  },
+  {
+    title: 'Transaction No.',
+    key: 'transaction_no',
+    dataIndex: 'transaction_no',
+  },
+  {
     title: 'Warehouse',
     key: 'warehouse',
     dataIndex: 'warehouse',

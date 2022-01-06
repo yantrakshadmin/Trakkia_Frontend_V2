@@ -1056,7 +1056,7 @@ export const retrieveGRNBarCodes = (id) =>
   });
 
 export const retrieveAllotmentReport = ({cname, to, from}) =>
-  loadAPI(`/allotment-reports/`, {
+  loadAPI(`/allotment-report/`, {
     method: 'GET',
     secure: true,
     params: {
@@ -1078,7 +1078,7 @@ export const retrieveStockingReport = ({to, from, cname}) =>
   });
 
 export const retrieveReturnReport = ({cname, to, from}) =>
-  loadAPI(`/return-reports/`, {
+  loadAPI(`/return-report/`, {
     method: 'GET',
     secure: true,
     params: {

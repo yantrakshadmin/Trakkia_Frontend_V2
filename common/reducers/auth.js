@@ -22,7 +22,7 @@ export const auth = (state = initialState, action) => {
     case SIGN_UP_FAILURE:
       return $({loading: false, userMeta: {type: 'public'}, error: action.payload});
     case SIGN_UP_SUCCESS:
-      return $({loading: false, error: '', userMeta: action.payload});
+      return $({loading: false, error: '', userMeta: {...state.userMeta}});
     case USER_AUTHENTICATED:
       return $({loading: false, userMeta: action.payload, error: ''});
     case SIGN_OUT_USER:

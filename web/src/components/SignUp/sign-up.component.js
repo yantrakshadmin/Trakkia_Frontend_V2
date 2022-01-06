@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Button, Form, Card, Typography, Divider,Col,Row, Input  } from 'antd';
 import { connect } from 'react-redux';
 import { signUpCompany } from 'common/actions/signUp';
-import { redirectTo } from '@reach/router';
+import { navigate, redirectTo } from '@reach/router';
 import { useHandleForm } from 'hooks/form';
 import { signUpFormFields } from 'common/formFields/signUp.formFields'
 import formItem from 'hocs/formItem.hoc';
@@ -12,22 +12,23 @@ import './sign-up.styles.scss';
 const { Text } = Typography;
 
 const SignUp = ({ user,signUpCompany:signUp }) => {
+
   const { form, submit } = useHandleForm({
     create: signUp,
     edit: ()=>{},
     retrieve: ()=>{},
     success: 'Vendor created/edited successfully.',
     failure: 'Error in creating/editing vendor.',
-    done: ()=>{console.log('created')},
+    done: ()=>{navigate('/');},
     close: ()=>{},
   });
 
-  const preProcess = (data) => {
+  const preProcess = async (data) => {
 
-    data.first_name = data.name.substr(0, data.name.indexOf(' '))
-    data.last_name = data.name.substr(data.name.indexOf(' ') + 1)
+    data.first_name = data.name.split(' ')[0]
+    data.last_name = data.name.split(' ').slice(1,).join(' ')
 
-    submit(data)
+    await submit(data)
 
   }
   

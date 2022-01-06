@@ -5,7 +5,7 @@ import {getJWTTokens} from 'common/api/auth';
 import {getUserMeta} from 'common/helpers/auth';
 import {useDispatch} from 'react-redux';
 import {connect} from 'react-redux';
-import {navigate} from '@reach/router';
+import {Link, navigate} from '@reach/router';
 
 import './sign-in.styles.scss';
 
@@ -122,8 +122,12 @@ const SignIn = ({user}) => {
         TRAKKIA helps you track and manage returnable transport items in Industrial/Manufacturing supply chains efficiently and effectively. Use Trakkia to reduce asset loss and optimise asset utilisation to boost profitability.
       </div>
       <br /> <br />
-      <Button size="large" type="primary" onClick={() => onSignIn()}>
+      <Button size="middle" type="primary" onClick={() => onSignIn()}>
         Sign In
+      </Button>
+      <br/>
+      <Button style={{marginTop: "20px"}} size="middle" type="primary">
+        <Link to='/sign-up/' >Create Company</Link>
       </Button>
     </div>
   );

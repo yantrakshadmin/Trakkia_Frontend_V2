@@ -1,6 +1,6 @@
 import React, { lazy, useEffect, useState } from 'react';
-import { Router } from '@reach/router';
-import { connect } from 'react-redux';
+import { navigate, Router } from '@reach/router';
+import { connect, useDispatch } from 'react-redux';
 import {
   publicRoutes,
   employeeRoutes,
@@ -17,9 +17,11 @@ import { useAPI } from 'common/hooks/api';
 import { userPoolOperatorChoices } from 'common/formFields/employeeProfile.formFields';
 import { loadAPI } from 'common/helpers/api';
 import { Loading } from './Loading';
+import { signOutUser } from 'common/actions/signIn';
 
 const RootRouter = ({ user }) => {
 
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(true)
   
   const [employeesRoutes, setEmployeesRoutes] = useState([{
@@ -33,7 +35,12 @@ const RootRouter = ({ user }) => {
     
     const fetchMenu = async () => {
 
-      const {data: companyProfile} = await loadAPI(`/company-profile/${user.companyId}/`)
+      const {data: companyProfile, error} = await loadAPI(`/company-profile/${user.companyId}/`)
+
+      if(error) {
+        await dispatch(signOutUser())
+        await navigate('/')
+      }
   
       setEmployeesRoutes(employeeRoutes.filter(route => route.name === 'Dashboard' || route.name === 'Reports' || companyProfile[userPoolOperatorChoices[route.name]]))
 
@@ -43,8 +50,6 @@ const RootRouter = ({ user }) => {
 
     if(user.companyId) fetchMenu()
     else setLoading(false)
-
-    
 
   }, [user])  
 

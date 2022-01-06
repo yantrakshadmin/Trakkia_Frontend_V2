@@ -51,7 +51,16 @@ export const signUpFormFields = [
   },
   {
     key: 'email',
-    // rules: [{required: true, message: 'Please upload bill!'}],
+    rules: [
+      {
+        required: true,
+        message: 'Please input your email!',
+      },
+      {
+        type: 'email',
+        message: 'Please enter a valid email',
+      },
+    ],
     kwargs: {
       type:'email',
       placeholder: 'Email',
@@ -63,7 +72,7 @@ export const signUpFormFields = [
   },
   {
     key: 'phone',
-    // rules: [{required: true, message: 'Required!'}],
+    rules: [{required: true, message: 'Please input your Phone No.!'}],
     kwargs: {
       placeholder: 'Phone',
     },
