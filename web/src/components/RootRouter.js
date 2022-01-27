@@ -42,7 +42,7 @@ const RootRouter = ({ user }) => {
         await navigate('/')
       }
   
-      setEmployeesRoutes(employeeRoutes.filter(route => route.name === 'Dashboard' || route.name === 'Reports' || companyProfile[userPoolOperatorChoices[route.name]]))
+      setEmployeesRoutes(employeeRoutes.filter(route => route.name === 'Dashboard' || route.name === 'Reports' || route.name === 'DEPS' || companyProfile[userPoolOperatorChoices[route.name]]))
 
       setLoading(false)
 

@@ -73,38 +73,42 @@ const SignUp = ({ user,signUpCompany:signUp }) => {
               {
                 signUpFormFields.slice(0,3).map((item,idx) => (
                   <Col span={24} key={idx.toString()}>
-                    <div className='p-2'>
+                    <div>
                       {formItem(item)}
                     </div>
                   </Col>
                 ))
               }
-              <Form.Item
-                name='confirm'
-                label='Confirm Password'
-                dependencies={['password']}
-                hasFeedback
-                rules={[
-                  {
-                    required: true,
-                    message: 'Please confirm your password!',
-                  },
-                  ({getFieldValue}) => ({
-                    validator(rule, value) {
-                      if (!value || getFieldValue('password') === value) {
-                        return Promise.resolve();
-                      }
+              <Col span={24} key="8">
+                <div>
+                  <Form.Item
+                    name='confirm'
+                    label='Confirm Password'
+                    dependencies={['password']}
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: 'Please confirm your password!',
+                      },
+                      ({getFieldValue}) => ({
+                        validator(rule, value) {
+                          if (!value || getFieldValue('password') === value) {
+                            return Promise.resolve();
+                          }
 
-                      return Promise.reject('The two passwords that you entered do not match!');
-                    },
-                  }),
-                ]}>
-                <Input.Password />
-              </Form.Item>
+                          return Promise.reject('The two passwords that you entered do not match!');
+                        },
+                      }),
+                    ]}>
+                    <Input.Password />
+                  </Form.Item>
+                </div>
+              </Col>
               {
                 signUpFormFields.slice(3,7).map((item,idx) => (
                   <Col span={24} key={idx.toString()}>
-                    <div className='p-2'>
+                    <div>
                       {formItem(item)}
                     </div>
                   </Col>

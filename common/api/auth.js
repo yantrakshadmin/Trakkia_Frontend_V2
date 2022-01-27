@@ -1337,6 +1337,24 @@ export const createMRStatus = (data) => {
   });
 };
 
+// DEPS
+
+export const retrieveDEPS = () =>
+  loadAPI('/deps/', {
+    method: 'GET',
+    secure: true,
+  });
+
+export const createDEPS = (src) =>
+  loadAPI('/create-deps/', {
+    method: 'POST',
+    data: src,
+    secure: true,
+    headers: {
+      'Content-Type': `multipart/form-data  boundary=${Math.random().toString().substr(2)}`,
+    },
+  });
+
 export const createExpense = (src) =>
   loadAPI('/create-expense/', {
     method: 'POST',

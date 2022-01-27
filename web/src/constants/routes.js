@@ -155,6 +155,19 @@ export const employeeRoutes = [
     ],
   },
   {
+    name: 'DEPS',
+    icon: ['fas', 'ticket-alt'],
+    path: '/deps/',
+    isSubMenu: true,
+    subMenu: [
+      {
+        name: 'Tickets',
+        path: '/deps/tickets/',
+        Component: lazy(() => import('screens/employee/Tickets.screen')),
+      },
+    ],
+  },
+  {
     name: 'Masters',
     icon: ['fas', 'layer-group'],
     path: '/masters/',

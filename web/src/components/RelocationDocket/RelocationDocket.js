@@ -7,12 +7,19 @@ import {retrieveAllotments, retrieveRelocationDocketData} from 'common/api/auth'
 
 import '../Docket/docket.styles.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { loadAPI } from 'common/helpers/api';
+import { useSelector } from 'react-redux';
+import _ from 'lodash';
+import ColumnGroup from 'antd/lib/table/ColumnGroup';
 
 const {Title} = Typography;
 
 const Docket = ({location, match}) => {
   const [allotment, setAllotment] = useState(null);
   const [total, setTotal] = useState(0);
+  const [products, setProducts] = useState([])
+
+  const { companyId } = useSelector(s => s.user.userMeta)
 
   useEffect(async () => {
     const fetchAllotment = async () => {
@@ -30,7 +37,14 @@ const Docket = ({location, match}) => {
         if (data) setAllotment(data);
       }
     };
+    const fetchProducts = async () => {
+
+      const {data} = await loadAPI(`/company-products/?id=${companyId}`)
+      setProducts(data)
+
+    }
     fetchAllotment();
+    fetchProducts();
   }, [location]);
 
   //   useEffect(() => {
@@ -241,14 +255,17 @@ const Docket = ({location, match}) => {
             </thead>
             <tbody>
               {allotment.items.map((item) => {
-                if (item.quantity_parts > 0) {
+                console.log(item)
+                if (products && item.quantity > 0) {
+                  const product = _.find(products, (prod) => prod.id == item.id);
+                  console.log(products)
                   return (
                     <tr>
-                      <td>{item.product.short_code}</td>
-                      <td>{item.product.name}</td>
-                      <td>{item.product.description}</td>
-                      <td>{item.product.hsn_code}</td>
-                      <td>{item.quantity_parts}</td>
+                      <td>{product.short_code}</td>
+                      <td>{product.name}</td>
+                      <td>{product.description}</td>
+                      <td>{product.hsn_code}</td>
+                      <td>{item.quantity}</td>
                     </tr>
                   );
                 } else {
