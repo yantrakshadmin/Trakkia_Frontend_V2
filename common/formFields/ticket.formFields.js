@@ -3,6 +3,7 @@ import {FORM_ELEMENT_TYPES} from '../../web/src/constants/formFields.constant';
 const transactionTypeOptions = ['Allotment', 'Return', 'GRN', 'Delivered', 'Received', 'Relocation'];
 const criticalityOptions = ['Normal', 'Urgent', 'Critical'];
 const statusOptions = ['Hold', 'assigned', 'unassigned', 'Resolved'];
+const faultOptions = ['Pilferage', 'Damage', 'Others', 'Excess', 'Lost', 'Shortage']
 
 export const ticketFormFields = [
   {
@@ -39,6 +40,20 @@ export const ticketFormFields = [
     type: FORM_ELEMENT_TYPES.SELECT,
     others: null,
     customLabel: 'Assigned To',
+    colSpan: 6,
+  },
+  {
+    key: 'a_t_no',
+    rules: [{required: true, message: 'Please select Transaction No.!'}],
+    kwargs: {
+      placeholder: 'Select',
+      showSearch: true,
+      filterOption: (input, option) =>
+        option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: null,
+    customLabel: 'Transaction Number',
     colSpan: 6,
   },
   {
@@ -110,6 +125,17 @@ export const ticketFlowFormFields = [
     type: FORM_ELEMENT_TYPES.INPUT,
     others: null,
     customLabel: 'Quantity',
+    colSpan: 3,
+  },
+  {
+    key: 'fault',
+    rules: [{required: true, message: 'Please select fault!'}],
+    kwargs: {
+      placeholder: 'Select',
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: {selectOptions: faultOptions},
+    customLabel: 'Fault',
     colSpan: 3,
   },
 ];

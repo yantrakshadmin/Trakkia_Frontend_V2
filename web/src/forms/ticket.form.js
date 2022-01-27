@@ -4,10 +4,11 @@ import { Form, Col, Row, Button, Divider, Spin, message, Alert } from 'antd';
 import { ticketFormFields, ticketFlowFormFields } from 'common/formFields/ticket.formFields';
 import { useAPI } from 'common/hooks/api';
 import { useHandleForm } from 'hooks/form';
-import { createDEPS, createExpense, editExpenseTest, retrieveExpense } from 'common/api/auth';
+import { createDEPS, createExpense, editExpenseTest, retrieveAllotmentsDockets, retrieveExpense } from 'common/api/auth';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 import { ifNanReturnZero , filterActive } from 'common/helpers/mrHelper';
+import { getUniqueObject } from 'common/helpers/getUniqueValues';
 
 import moment from 'moment';
 
@@ -52,10 +53,20 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
 
   useEffect(() => {
     console.log(allotExp, 'allot')
+    const setData = async () => {
+
+      const {data: products} = await retrieveAllotmentsDockets(4)
+      setTicketData(getUniqueObject(
+        products.flows.map((flow) => flow.items.map((item) => item.product)),
+        'id',
+      )[0])
+
+    }
     if(transactionType == 'Allotment' && allotExp) {
-      setTitle('transaction_no')
-      setDataKeys(['dispatch_date'])
-      setTicketData(allotExp)
+      setTitle('name')
+      setDataKeys(['short_code'])
+      setData()
+      
     }
     if(transactionType == 'Return' && returnExp) {
       setTitle('transaction_no')
@@ -233,7 +244,22 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
               </div>
             </Col>
           ))}
-          {ticketFormFields.slice(3).map((item, idx) => (
+          {ticketFormFields.slice(3, 4).map((item, idx) => (
+            <Col span={item.colSpan}>
+              <div key={idx} className='p-2'>
+                {formItem({
+                  ...item,
+                  others: {
+                    selectOptions: allotExp || [],
+                    key: 'id',
+                    dataKeys: ['transaction_no'],
+                    customTitle: 'despatch_date',
+                  },
+                })}
+              </div>
+            </Col>
+          ))}
+          {ticketFormFields.slice(4).map((item, idx) => (
             <Col span={item.colSpan}>
               <div key={idx} className='p-2'>
                 {formItem(item)}
@@ -311,13 +337,31 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
                         </div>
                       </Col>
                     ))}
-                    {ticketFlowFormFields.slice(2).map((item, idx) => (
+                    {ticketFlowFormFields.slice(2,3).map((item, idx) => (
                       <Col key={idx} span={item.colSpan}>
                         <div className='p-2'>
                           {formItem({
                             ...item,
                             noLabel: index != 0,
                             others: {
+                              formOptions: {
+                                ...field,
+                                name: [field.name, item.key],
+                                fieldKey: [field.fieldKey, item.key],
+                              },
+                            },
+                          })}
+                        </div>
+                      </Col>
+                    ))}
+                    {ticketFlowFormFields.slice(3, 4).map((item, idx) => (
+                      <Col key={idx} span={item.colSpan}>
+                        <div className='p-2'>
+                          {formItem({ ...item,
+                            noLabel: index != 0,
+                            others: {
+                              ...item.others,
+                              key: 'id',
                               formOptions: {
                                 ...field,
                                 name: [field.name, item.key],
