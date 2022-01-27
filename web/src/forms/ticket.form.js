@@ -116,8 +116,8 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
 
   const preProcess = (data) => {
 
-    const finalData = toFormData(data)
-    submit(finalData);
+    // const finalData = toFormData(data)
+    submit(data);
 
   };
 
@@ -270,7 +270,7 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
 
         <Divider orientation='left'>Transaction Details</Divider>
 
-        <Form.List name='transactions'>
+        <Form.List name='items'>
           {(fields, { add, remove }) => {
             return (
               <div>
