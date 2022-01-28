@@ -105,16 +105,32 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
   }, [transactionId])
 
   useEffect(() => {
-    if(id && form){
+    if(id && !loading){
 
-      console.log(form.getFieldsValue())
+      setTransactionType(form.getFieldValue('transaction_type'))
+
+      if(form.getFieldValue('transaction_type') == 'Allotment'){
+        form.setFieldsValue({'t_no': form.getFieldValue('a_t_no')})
+      } else if(form.getFieldValue('transaction_type') == 'Return') {
+        form.setFieldsValue({'t_no': form.getFieldValue('r_t_no')})
+      } else if(form.getFieldValue('transaction_type') == 'GRN') {
+        form.setFieldsValue({'t_no': form.getFieldValue('g_t_no')})
+      } else if(form.getFieldValue('transaction_type') == 'Delivered') {
+        form.setFieldsValue({'t_no': form.getFieldValue('d_t_no')})
+      } else if(form.getFieldValue('transaction_type') == 'Received') {
+        form.setFieldsValue({'t_no': form.getFieldValue('rec_t_no')})
+      } else if(form.getFieldValue('transaction_type') == 'Relocation') {
+        form.setFieldsValue({'t_no': form.getFieldValue('rel_t_no')})
+      }
+
+      setTransactionId(form.getFieldValue('t_no'))
 
     }
-  }, [])
+  }, [id, loading, form])
 
   const preProcess = (data) => {
 
-    if(transactionType == 'allotment'){
+    if(transactionType == 'Allotment'){
       data.a_t_no = data.t_no
     } else if(transactionType == 'Return') {
       data.r_t_no = data.t_no
@@ -177,7 +193,13 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
           {ticketFormFields.slice(1, 2).map((item, idx) => (
             <Col span={item.colSpan}>
               <div key={idx} className='p-2'>
-                {formItem(item)}
+                {formItem({
+                  ...item,
+                  kwargs: {
+                    ...item.kwargs,
+                    disabled: !!id,
+                  },
+                })}
               </div>
             </Col>
           ))}
@@ -186,6 +208,10 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
               <div key={idx} className='p-2'>
                 {formItem({
                   ...item,
+                  kwargs: {
+                    ...item.kwargs,
+                    disabled: !!id,
+                  },
                   others: {
                     selectOptions: transactionData || [],
                     key: 'id',

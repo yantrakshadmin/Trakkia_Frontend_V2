@@ -25,11 +25,6 @@ export default [
     dataIndex: 'status',
   },
   {
-    title: 'Criticality',
-    key: 'criticality',
-    dataIndex: 'criticality',
-  },
-  {
     title: 'Remarks',
     key: 'remarks',
     dataIndex: 'remarks',

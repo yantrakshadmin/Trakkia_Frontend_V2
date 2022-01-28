@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
 import ticketColumns from 'common/columns/ticket.column';
-import {Popconfirm, Button, Input} from 'antd';
+import {Popconfirm, Button, Input, Popover} from 'antd';
 import {deleteExpense, retrieveDEPS} from 'common/api/auth';
 import {connect} from 'react-redux';
 import {useTableSearch} from 'hooks/useTableSearch';
 import {useAPI} from 'common/hooks/api';
-import {mergeArray} from 'common/helpers/mrHelper';
+import {mergeArray, statusCheck} from 'common/helpers/mrHelper';
 import {TicketForm} from 'forms/ticket.form';
 import TableWithTabHOC from 'hocs/TableWithTab.hoc';
 import ExpandTable from 'components/ExpenseExpandTable';
@@ -40,6 +40,62 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
 
   const columns = [
     ...ticketColumns,
+    {
+      title: 'Criticality',
+      key: 'criticality',
+      className: 'align-center',
+      render: (text, record) => {
+        if (record.criticality == 'Normal')
+          return (
+            <Button
+              type='primary'
+              style={{
+                backgroundColor: '#00FF00',
+                outline: 'none',
+                border: 'none',
+                borderRadius: '7%',
+              }}
+              onClick={(e) => e.stopPropagation()}>
+              Normal
+            </Button>
+          );
+        if (record.criticality == 'Urgent') {
+          return (
+            <Button
+              type='primary'
+              style={{
+                backgroundColor: '#ad4e00',
+                outline: 'none',
+                border: 'none',
+                borderRadius: '7%',
+                color: 'rgba(255,255,255,0.9)',
+              }}
+              onClick={(e) => e.stopPropagation()}>
+              Urgent
+              {'  '}
+            </Button>
+          );
+        }
+        if (record.criticality == 'Critical') {
+          return (
+            <Button
+              type='primary'
+              style={{
+                backgroundColor: 'red',
+                outline: 'none',
+                border: 'none',
+                borderRadius: '7%',
+                color: 'rgba(255,255,255,0.9)',
+              }}
+              onClick={(e) => e.stopPropagation()}>
+              Critical
+              {'  '}
+            </Button>
+          );
+        }
+        return <div />;
+      },
+    },
     {
       title: 'Action',
       key: 'operation',
