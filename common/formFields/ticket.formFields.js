@@ -2,7 +2,7 @@ import {FORM_ELEMENT_TYPES} from '../../web/src/constants/formFields.constant';
 
 const transactionTypeOptions = ['Allotment', 'Return', 'GRN', 'Delivered', 'Received', 'Relocation'];
 const criticalityOptions = ['Normal', 'Urgent', 'Critical'];
-const statusOptions = ['Hold', 'assigned', 'unassigned', 'Resolved'];
+const statusOptions = ['Hold', 'Assigned', 'Unassigned', 'Resolved'];
 const faultOptions = ['Pilferage', 'Damage', 'Others', 'Excess', 'Lost', 'Shortage']
 
 export const ticketFormFields = [
@@ -38,7 +38,7 @@ export const ticketFormFields = [
       placeholder: 'Select',
       showSearch: true,
       filterOption: (input, option) =>
-        option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+        option.search ? option.search.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 : false,
     },
     type: FORM_ELEMENT_TYPES.SELECT,
     others: null,
@@ -71,11 +71,11 @@ export const ticketFormFields = [
     key: 'remarks',
     rules: [{required: true, message: 'Please enter Remarks!'}],
     kwargs: {
-      placeholder: 'remarks',
+      placeholder: 'Remarks',
     },
     type: FORM_ELEMENT_TYPES.INPUT,
     others: null,
-    customLabel: 'remarks',
+    customLabel: 'Remarks',
     colSpan: 8,
   },
 

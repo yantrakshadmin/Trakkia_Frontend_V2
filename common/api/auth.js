@@ -1345,6 +1345,12 @@ export const retrieveDEPS = () =>
     secure: true,
   });
 
+export const retrieveDEP = (id) =>
+  loadAPI(`/edit-deps/${id}/`, {
+    method: 'GET',
+    secure: true,
+  });
+
 export const createDEPS = (src) =>
   loadAPI('/create-deps/', {
     method: 'POST',
@@ -1353,6 +1359,13 @@ export const createDEPS = (src) =>
     // headers: {
     //   'Content-Type': `multipart/form-data  boundary=${Math.random().toString().substr(2)}`,
     // },
+  });
+
+export const editDEPS = (id, src) =>
+  loadAPI(`/edit-deps/${id}/`, {
+    method: 'PATCH',
+    data: src,
+    secure: true,
   });
 
 export const createExpense = (src) =>

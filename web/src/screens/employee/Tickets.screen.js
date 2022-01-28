@@ -46,10 +46,10 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
       width: '7vw',
       render: (text, record) => (
         <div className="row justify-evenly">
-          <FilesViewModal
+          {/* <FilesViewModal
             documentAvail={record.bill ? (record.bill.length > 0 ? true : false) : false}
             getDocuments={() => record.bill}
-          />
+          /> */}
           {/* <Button
             style={{
               backgroundColor: 'transparent',

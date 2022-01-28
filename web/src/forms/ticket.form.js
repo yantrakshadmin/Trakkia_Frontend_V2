@@ -4,7 +4,7 @@ import { Form, Col, Row, Button, Divider, Spin } from 'antd';
 import { ticketFormFields, ticketFlowFormFields } from 'common/formFields/ticket.formFields';
 import { useAPI } from 'common/hooks/api';
 import { useHandleForm } from 'hooks/form';
-import { createDEPS, editExpenseTest, retrieveAllotmentsDockets, retrieveDEPS, retrieveGRNs, retrieveReturnDocket } from 'common/api/auth';
+import { createDEPS, editDEPS, editExpenseTest, retrieveAllotmentsDockets, retrieveDEP, retrieveDEPS, retrieveGRNs, retrieveReturnDocket } from 'common/api/auth';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
 import { getUniqueObject } from 'common/helpers/getUniqueValues';
@@ -12,6 +12,7 @@ import { getUniqueObject } from 'common/helpers/getUniqueValues';
 import _ from 'lodash';
 
 import formItem from '../hocs/formItem.hoc';
+import moment from 'moment';
 
 export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
   const [ticketData, setTicketData] = useState([]);
@@ -26,21 +27,20 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
   const {companyId} = userMeta;
 
 
-  const { data: users } = useAPI(`/company-list`);
+  const { data: users } = useAPI(`/employees-wp/${companyId}/`);
   const { data: allotExp } = useAPI(`/allot-exp/?id=${companyId}`);
   const { data: grnExp } = useAPI(`/grn-exp/?id=${companyId}`);
   const { data: returnExp } = useAPI(`/return-exp/?id=${companyId}`);
 
   const { form, submit, loading } = useHandleForm({
     create: createDEPS,
-    edit: editExpenseTest,
-    retrieve: retrieveDEPS,
+    edit: editDEPS,
+    retrieve: retrieveDEP,
     success: 'Ticket created/edited successfully',
     failure: 'Error in creating/editing Ticket.',
     done: onDone,
     close: onCancel,
-    id,
-    dates: ['invoice_date'],
+    id
   });
 
 
@@ -51,15 +51,15 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
       if(transactionType == 'Allotment' && allotExp) {
         setTitle('transaction_no')
         setDataKeys(['dispatch_date'])
-        setTransactionData(allotExp)
+        setTransactionData(allotExp.map((i) => ({ ...i, dispatch_date: moment(i.dispatch_date).format('L') })))
       } else if(transactionType == 'Return' && returnExp) {
         setTitle('transaction_no')
         setDataKeys(['transaction_date'])
-        setTransactionData(returnExp)
+        setTransactionData(returnExp.map((i) => ({ ...i, transaction_date: moment(i.transaction_date).format('L') })))
       } else if(transactionType == 'GRN' && grnExp) {
         setTitle('invoice_no')
         setDataKeys(['inward_date'])
-        setTransactionData(grnExp)
+        setTransactionData(grnExp.map((i) => ({ ...i, inward_date: moment(i.inward_date).format('L') })))
       }
       
     }
@@ -104,6 +104,14 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
 
   }, [transactionId])
 
+  useEffect(() => {
+    if(id && form){
+
+      console.log(form.getFieldsValue())
+
+    }
+  }, [])
+
   const preProcess = (data) => {
 
     if(transactionType == 'allotment'){
@@ -112,6 +120,12 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
       data.r_t_no = data.t_no
     } else if(transactionType == 'GRN') {
       data.g_t_no = data.t_no
+    } else if(transactionType == 'Delivered') {
+      data.d_t_no = data.t_no
+    } else if(transactionType == 'Received') {
+      data.rec_t_no = data.t_no
+    } else if(transactionType == 'Relocation') {
+      data.rel_t_no = data.t_no
     }
 
     delete data.t_no
@@ -151,9 +165,9 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
                 {formItem({
                   ...item,
                   others: {
-                    selectOptions: users?.results || [],
-                    key: 'id',
-                    dataKeys: ['address'],
+                    selectOptions: users || [],
+                    key: 'user',
+                    dataKeys: ['city'],
                     customTitle: 'name',
                   },
                 })}
