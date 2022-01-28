@@ -1,31 +1,25 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSelector } from 'react-redux';
-import { Form, Col, Row, Button, Divider, Spin, message, Alert } from 'antd';
+import { Form, Col, Row, Button, Divider, Spin } from 'antd';
 import { ticketFormFields, ticketFlowFormFields } from 'common/formFields/ticket.formFields';
 import { useAPI } from 'common/hooks/api';
 import { useHandleForm } from 'hooks/form';
-import { createDEPS, createExpense, editExpenseTest, retrieveAllotmentsDockets, retrieveExpense } from 'common/api/auth';
+import { createDEPS, editExpenseTest, retrieveAllotmentsDockets, retrieveDEPS, retrieveGRNs, retrieveReturnDocket } from 'common/api/auth';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 
-import { ifNanReturnZero , filterActive } from 'common/helpers/mrHelper';
 import { getUniqueObject } from 'common/helpers/getUniqueValues';
-
-import moment from 'moment';
 
 import _ from 'lodash';
 
 import formItem from '../hocs/formItem.hoc';
-import { useControlledSelect } from '../hooks/useControlledSelect';
 
 export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
   const [ticketData, setTicketData] = useState([]);
   const [transactionType, setTransactionType] = useState([]);
+  const [transactionId, setTransactionId] = useState(0);
+  const [transactionData, setTransactionData] = useState([]);
   const [title, setTitle] = useState('id');
   const [dataKeys, setDataKeys] = useState([]);
-
-  // const {data: flows} = useAPI('/myflows/', {});
-  // const {data: kits} = useControlledSelect(flowId);
-
 
   const {user} = useSelector((s) => s);
   const {userMeta} = user;
@@ -37,11 +31,10 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
   const { data: grnExp } = useAPI(`/grn-exp/?id=${companyId}`);
   const { data: returnExp } = useAPI(`/return-exp/?id=${companyId}`);
 
-  const [refreshTransactionNumber,setRefreshTransactionNumber] = useState(0)
   const { form, submit, loading } = useHandleForm({
     create: createDEPS,
     edit: editExpenseTest,
-    retrieve: retrieveExpense,
+    retrieve: retrieveDEPS,
     success: 'Ticket created/edited successfully',
     failure: 'Error in creating/editing Ticket.',
     done: onDone,
@@ -52,149 +45,79 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
 
 
   useEffect(() => {
-    console.log(allotExp, 'allot')
+
     const setData = async () => {
 
-      const {data: products} = await retrieveAllotmentsDockets(4)
-      setTicketData(getUniqueObject(
-        products.flows.map((flow) => flow.items.map((item) => item.product)),
-        'id',
-      )[0])
-
-    }
-    if(transactionType == 'Allotment' && allotExp) {
-      setTitle('name')
-      setDataKeys(['short_code'])
-      setData()
+      if(transactionType == 'Allotment' && allotExp) {
+        setTitle('transaction_no')
+        setDataKeys(['dispatch_date'])
+        setTransactionData(allotExp)
+      } else if(transactionType == 'Return' && returnExp) {
+        setTitle('transaction_no')
+        setDataKeys(['transaction_date'])
+        setTransactionData(returnExp)
+      } else if(transactionType == 'GRN' && grnExp) {
+        setTitle('invoice_no')
+        setDataKeys(['inward_date'])
+        setTransactionData(grnExp)
+      }
       
     }
-    if(transactionType == 'Return' && returnExp) {
-      setTitle('transaction_no')
-      setDataKeys(['transaction_date'])
-      setTicketData(returnExp)
-    }
-    if(transactionType == 'GRN' && grnExp) {
-      setTitle('invoice_no')
-      setDataKeys(['inward_date'])
-      setTicketData(grnExp)
-    }
+
+    setData()
+    
   }, [transactionType])
 
   useEffect(() => {
-    if (id && !loading) {
-      const transactions = form.getFieldValue('transactions');
-      const newT = transactions.map((t) => ({
-        ...t,
-        t_no: t.a_t_no || t.r_t_no || t.g_t_no,
-      }));
-      form.setFieldsValue({ transactions: newT });
-    }
-  }, [loading]);
 
-  const renderAlert = useCallback(() => {
-    if (id && !loading) {
-      return (
-        <Alert message='Your previous bill documents will be replaced!' type='warning' closable />
-      );
-    }
-  }, [loading]);
+    const setData = async () => {
 
-  const toFormData = useCallback((data) => {
-    const req = new FormData();
-    for (const key in data) {
-      if (key === 'transactions') {
-        req.append('items', JSON.stringify(data.transactions));
-      } else if (key === 'invoice_date') {
-        req.append(key.toString(), data[key].format());
-      } else if (key === 'bill') {
-      } else {
-        req.append(key.toString(), data[key]);
+      if(transactionType == 'Allotment' && allotExp) {
+        const {data: products} = await retrieveAllotmentsDockets(transactionId)
+        setTicketData(getUniqueObject(
+          products.flows.map((flow) => flow.items.map((item) => item.product)),
+          'id',
+        )[0])
+      } else if(transactionType == 'Return' && returnExp) {
+        const {data: products} = await retrieveReturnDocket(transactionId)
+        setTicketData(getUniqueObject(
+          products.kits.map((kit) => kit.items.map((item) => item.product)),
+          'id',
+        )[0])
+      } else if(transactionType == 'GRN' && grnExp) {
+        const {data: products} = await retrieveGRNs()
+        console.log(transactionId)
+        setTicketData(getUniqueObject(
+          products.filter(product => product.id == transactionId)[0].items.map((item) => item.item),
+          'id',
+        ))
+        console.log(products.filter(product => product.id == transactionId), products.filter(product => product.id == transactionId)[0].items.map((item) => item.item))
+        console.log(getUniqueObject(
+          products.filter(product => product.id == transactionId)[0].items.map((item) => item.item),
+          'id',
+        ))
       }
+      
     }
-    return req;
-  }, []);
+
+    setData()
+
+  }, [transactionId])
 
   const preProcess = (data) => {
 
-    // const finalData = toFormData(data)
+    if(transactionType == 'allotment'){
+      data.a_t_no = data.t_no
+    } else if(transactionType == 'Return') {
+      data.r_t_no = data.t_no
+    } else if(transactionType == 'GRN') {
+      data.g_t_no = data.t_no
+    }
+
+    delete data.t_no
     submit(data);
 
   };
-
-  const getTranastionSelectOptions = useCallback((index) => {
-    const transactions = form.getFieldValue('transactions');
-    const tt = transactions[index]?.transaction_type;
-    if (tt === 'Allot') {
-      if (allotExp)
-        return allotExp.map((i) => ({ ...i, dispatch_date: moment(i.dispatch_date).format('L') }));
-    } else if (tt === 'Return') {
-      if (returnExp)
-        return returnExp.map((i) => ({
-          ...i,
-          transaction_date: moment(i.transaction_date).format('L'),
-        }));
-    } else if(tt === 'GRN'){
-      if (grnExp){return grnExp.map((i) => ({
-        ...i,
-        inward_date: moment(i.inward_date).format('L'),
-      }));}
-    }
-    return [];
-  }, [form, allotExp, returnExp, grnExp, refreshTransactionNumber]);
-
-  const getDataKeys = useCallback((index) => {
-    const transactions = form.getFieldValue('transactions');
-    const tt = transactions[index]?.transaction_type;
-    if (tt === 'Allot') {
-      return ['dispatch_date'];
-    }
-    if (tt === 'Return') {
-      return ['transaction_date'];
-    }
-    if(tt ==='GRN') {
-       return ['inward_date']
-    }
-
-
-    return [];
-  }, [form, refreshTransactionNumber]);
-
-  const getCustomTitleKeys = useCallback((index) => {
-    const transactions = form.getFieldValue('transactions');
-    const tt = transactions[index]?.transaction_type;
-    if (tt === 'Allot' || tt === 'Return' ) {
-      return ['transaction_no'];
-    }
-    if(tt ==='GRN') {
-       return ['invoice_no']
-    }
-
-
-    return [];
-  }, [form, refreshTransactionNumber]);
-
-  // const [ttTouched, setTTTouched] = useState(false);
-
-  useEffect(() => {
-    if (id && !loading) {
-      try {
-        const tr = form.getFieldValue('transactions');
-        const newTr = tr.map((t) => {
-          const s =
-            ifNanReturnZero(t.f_mile) +
-            ifNanReturnZero(t.long_haul) +
-            ifNanReturnZero(t.l_mile) +
-            ifNanReturnZero(t.labour) +
-            ifNanReturnZero(t.others);
-          return {
-            ...t,
-            total_cost: s,
-          };
-        });
-        form.setFieldsValue({ transactions: newTr });
-      } catch (err) {}
-    }
-  }, [loading]);
 
   const handleFieldsChange = useCallback(
     (data) => {
@@ -202,7 +125,8 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
         if (data[0].name) {
           const thisField = data[0].name[0];
           console.log(form.getFieldValue(thisField), thisField);
-          setTransactionType(form.getFieldValue(thisField))
+          if(thisField == 'transaction_type') setTransactionType(form.getFieldValue(thisField))
+          if(thisField == 't_no') setTransactionId(form.getFieldValue(thisField))
         }
       }
     },
@@ -211,25 +135,17 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
 
   return (
     <Spin spinning={loading}>
-      <Divider orientation='left'>Expense Details</Divider>
-      {renderAlert()}
+      <Divider orientation='left'>Ticket Details</Divider>
       <Form
         onFinish={preProcess}
-        initialValues={{ status: 'Hold', gst: 0 }}
+        initialValues={{ status: 'Hold', criticality: 'Normal' }}
         form={form}
         layout='vertical'
         hideRequiredMark
         autoComplete='off'
         onFieldsChange={handleFieldsChange}>
         <Row style={{ justifyContent: 'left' }}>
-          {ticketFormFields.slice(0, 2).map((item, idx) => (
-            <Col span={item.colSpan}>
-              <div key={idx} className='p-2'>
-                {formItem({...item,})}
-              </div>
-            </Col>
-          ))}
-          {ticketFormFields.slice(2, 3).map((item, idx) => (
+          {ticketFormFields.slice(0, 1).map((item, idx) => (
             <Col span={item.colSpan}>
               <div key={idx} className='p-2'>
                 {formItem({
@@ -244,22 +160,29 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
               </div>
             </Col>
           ))}
-          {ticketFormFields.slice(3, 4).map((item, idx) => (
+          {ticketFormFields.slice(1, 2).map((item, idx) => (
+            <Col span={item.colSpan}>
+              <div key={idx} className='p-2'>
+                {formItem(item)}
+              </div>
+            </Col>
+          ))}
+          {ticketFormFields.slice(2, 3).map((item, idx) => (
             <Col span={item.colSpan}>
               <div key={idx} className='p-2'>
                 {formItem({
                   ...item,
                   others: {
-                    selectOptions: allotExp || [],
+                    selectOptions: transactionData || [],
                     key: 'id',
-                    dataKeys: ['transaction_no'],
-                    customTitle: 'despatch_date',
+                    dataKeys: dataKeys,
+                    customTitle: title,
                   },
                 })}
               </div>
             </Col>
           ))}
-          {ticketFormFields.slice(4).map((item, idx) => (
+          {ticketFormFields.slice(3).map((item, idx) => (
             <Col span={item.colSpan}>
               <div key={idx} className='p-2'>
                 {formItem(item)}
@@ -325,8 +248,8 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
                             others: {
                               selectOptions: ticketData || [],
                               key: 'id',
-                              customTitle: title,
-                              dataKeys: dataKeys,
+                              customTitle: 'name',
+                              dataKeys: ['short_code'],
                               formOptions: {
                                 ...field,
                                 name: [field.name, item.key],

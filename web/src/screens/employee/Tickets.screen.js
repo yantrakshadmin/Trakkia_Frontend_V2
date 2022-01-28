@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import expenseColumns from 'common/columns/expense.column';
+import ticketColumns from 'common/columns/ticket.column';
 import {Popconfirm, Button, Input} from 'antd';
 import {deleteExpense, retrieveDEPS} from 'common/api/auth';
 import {connect} from 'react-redux';
@@ -39,7 +39,7 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
   };
 
   const columns = [
-    ...expenseColumns,
+    ...ticketColumns,
     {
       title: 'Action',
       key: 'operation',
@@ -147,7 +147,7 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
         editingId={editingId}
         cancelEditing={cancelEditing}
         modalBody={TicketForm}
-        modalWidth={98}
+        modalWidth={80}
         formParams={{isEmployee}}
         //expandHandleKey="transactions"
         //expandParams={{loading}}

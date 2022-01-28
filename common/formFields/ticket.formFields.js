@@ -7,28 +7,6 @@ const faultOptions = ['Pilferage', 'Damage', 'Others', 'Excess', 'Lost', 'Shorta
 
 export const ticketFormFields = [
   {
-    key: 'invoice_date',
-    rules: [{required: true, message: 'Please select invoice date!'}],
-    kwargs: {
-      placeholder: 'Select',
-    },
-    type: FORM_ELEMENT_TYPES.DATE,
-    others: null,
-    customLabel: 'Invoice Date',
-    colSpan: 6,
-  },
-  {
-    key: 'remarks',
-    rules: [{required: true, message: 'Please enter Remarks!'}],
-    kwargs: {
-      placeholder: 'remarks',
-    },
-    type: FORM_ELEMENT_TYPES.INPUT,
-    others: null,
-    customLabel: 'remarks',
-    colSpan: 6,
-  },
-  {
     key: 'assigned_to',
     rules: [{required: true, message: 'Please select User!'}],
     kwargs: {
@@ -40,43 +18,7 @@ export const ticketFormFields = [
     type: FORM_ELEMENT_TYPES.SELECT,
     others: null,
     customLabel: 'Assigned To',
-    colSpan: 6,
-  },
-  {
-    key: 'a_t_no',
-    rules: [{required: true, message: 'Please select Transaction No.!'}],
-    kwargs: {
-      placeholder: 'Select',
-      showSearch: true,
-      filterOption: (input, option) =>
-        option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
-    },
-    type: FORM_ELEMENT_TYPES.SELECT,
-    others: null,
-    customLabel: 'Transaction Number',
-    colSpan: 6,
-  },
-  {
-    key: 'status',
-    rules: [{required: true, message: 'Please select status!'}],
-    kwargs: {
-      placeholder: 'Select',
-    },
-    type: FORM_ELEMENT_TYPES.SELECT,
-    others: {selectOptions: statusOptions},
-    customLabel: 'Status',
-    colSpan: 6,
-  },
-  {
-    key: 'criticality',
-    rules: [{required: true, message: 'Please select Criticality!'}],
-    kwargs: {
-      placeholder: 'Select',
-    },
-    type: FORM_ELEMENT_TYPES.SELECT,
-    others: {selectOptions: criticalityOptions},
-    customLabel: 'Criticality',
-    colSpan: 6,
+    colSpan: 8,
   },
   {
     key: 'transaction_type',
@@ -87,8 +29,56 @@ export const ticketFormFields = [
     type: FORM_ELEMENT_TYPES.SELECT,
     others: {selectOptions: transactionTypeOptions},
     customLabel: 'Transaction Type',
-    colSpan: 6,
+    colSpan: 8,
   },
+  {
+    key: 't_no',
+    rules: [{required: true, message: 'Please select Transaction No.!'}],
+    kwargs: {
+      placeholder: 'Select',
+      showSearch: true,
+      filterOption: (input, option) =>
+        option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: null,
+    customLabel: 'Transaction Number',
+    colSpan: 8,
+  },
+  {
+    key: 'status',
+    rules: [{required: true, message: 'Please select status!'}],
+    kwargs: {
+      placeholder: 'Select',
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: {selectOptions: statusOptions},
+    customLabel: 'Status',
+    colSpan: 8,
+  },
+  {
+    key: 'criticality',
+    rules: [{required: true, message: 'Please select Criticality!'}],
+    kwargs: {
+      placeholder: 'Select',
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: {selectOptions: criticalityOptions},
+    customLabel: 'Criticality',
+    colSpan: 8,
+  },
+  {
+    key: 'remarks',
+    rules: [{required: true, message: 'Please enter Remarks!'}],
+    kwargs: {
+      placeholder: 'remarks',
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    others: null,
+    customLabel: 'remarks',
+    colSpan: 8,
+  },
+
 ];
 
 export const ticketFlowFormFields = [
@@ -101,18 +91,18 @@ export const ticketFlowFormFields = [
     type: FORM_ELEMENT_TYPES.SELECT,
     others: {selectOptions: transactionTypeOptions},
     customLabel: 'Transaction Type',
-    colSpan: 3,
+    colSpan: 6,
   },
   {
     key: 'item',
-    rules: [{required: true, message: 'Please select transaction!'}],
+    rules: [{required: true, message: 'Please select product!'}],
     kwargs: {
       placeholder: 'Select',
     },
     type: FORM_ELEMENT_TYPES.SELECT,
     others: null,
-    customLabel: 'Transaction Number',
-    colSpan: 3,
+    customLabel: 'Product',
+    colSpan: 6,
   },
   {
     key: 'item_quantity',
@@ -125,7 +115,7 @@ export const ticketFlowFormFields = [
     type: FORM_ELEMENT_TYPES.INPUT,
     others: null,
     customLabel: 'Quantity',
-    colSpan: 3,
+    colSpan: 6,
   },
   {
     key: 'fault',
@@ -136,6 +126,6 @@ export const ticketFlowFormFields = [
     type: FORM_ELEMENT_TYPES.SELECT,
     others: {selectOptions: faultOptions},
     customLabel: 'Fault',
-    colSpan: 3,
+    colSpan: 6,
   },
 ];
