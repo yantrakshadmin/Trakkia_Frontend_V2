@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import ticketColumns from 'common/columns/ticket.column';
-import {Popconfirm, Button, Input, Popover} from 'antd';
+import {Popconfirm, Button, Input, Popover, Modal} from 'antd';
 import {deleteDEPS, deleteExpense, retrieveAllotmentsDockets, retrieveDEPS, retrieveGRNs, retrieveReturnDocket} from 'common/api/auth';
 import {connect} from 'react-redux';
 import {useTableSearch} from 'hooks/useTableSearch';
@@ -12,6 +12,7 @@ import ExpandTable from 'components/ExpenseExpandTable';
 import {deleteHOC} from 'hocs/deleteHoc';
 import Delete from 'icons/Delete';
 import Edit from 'icons/Edit';
+import Upload from 'icons/Upload';
 import {yantraColors} from '../../helpers/yantraColors';
 import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
@@ -19,6 +20,7 @@ import FilesViewModal from '../../components/FilesViewModal';
 import DeleteWithPassword from '../../components/DeleteWithPassword';
 import {DEFAULT_PASSWORD} from 'common/constants/passwords';
 import NoPermissionAlert from 'components/NoPermissionAlert';
+import {TicketUploadForm} from 'forms/ticketUpload.form';
 
 import _ from 'lodash';
 
@@ -27,11 +29,13 @@ const {Search} = Input;
 const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
+  const [ticketID, setTicketID] = useState(null);
   const [ticketData, setTicketData] = useState(null);
   const [assignedTicketData, setAssignedTicketData] = useState(null);
   const [unassignedTicketData, setUnassignedTicketData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [isAssigned, setIsAssigned] = useState(false);
+  const [visibleUpload, setVisibleUpload] = useState(false);
 
   const {filteredData, reload, hasPermission} = useTableSearch({
     searchVal,
@@ -95,7 +99,7 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
             type='primary'
             onClick={(e) => {
               e.stopPropagation();
-              setIsAssigned(true);
+              setIsAssigned(true)
               setEditingId(record.id);
             }}>
               Assigned To
@@ -135,6 +139,20 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
               style={{fontSize: 20, color: yantraColors['primary']}}
             />
           </Button> */}
+          <Button
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              boxShadow: 'none',
+              padding: '1px',
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+              setTicketID(record.id);
+              setVisibleUpload(true)
+            }}>
+            <Upload />
+          </Button>
           <Button
             style={{
               backgroundColor: 'transparent',
@@ -234,6 +252,28 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
         </div>
       </div>
       <br />
+      <Modal
+        maskClosable={false}
+        visible={visibleUpload}
+        destroyOnClose
+        style={{minWidth: `80vw`}}
+        title=""
+        onCancel={() => {
+          setVisibleUpload(false);
+        }}
+        footer={null}>
+        <TicketUploadForm
+          onCancel={() => {
+            setVisibleUpload(false);
+          }}
+          onDone={() => {
+            setVisibleUpload(false);
+          }}
+          lead={ticketID}
+          // create={leadFileUpload}
+          varName="lead_no"
+        />
+      </Modal>
       <TableWithTabHOC
         rowKey={(record) => record.id}
         refresh={reload}

@@ -232,7 +232,7 @@ export const TicketForm = ({ id, onCancel, onDone, isAssigned }) => {
                   ...item,
                   kwargs: {
                     ...item.kwargs,
-                    disabled: isAssigned,
+                    disabled: (!!id && isAssigned),
                   },
                 })}
               </div>
@@ -287,7 +287,7 @@ export const TicketForm = ({ id, onCancel, onDone, isAssigned }) => {
                             noLabel: index != 0,
                             kwargs: {
                               ...item.kwargs,
-                              disabled: isAssigned,
+                              disabled: (!!id && isAssigned),
                               showSearch: true,
                               filterOption: (input, option) =>
                                 option.search
@@ -318,7 +318,7 @@ export const TicketForm = ({ id, onCancel, onDone, isAssigned }) => {
                             noLabel: index != 0,
                             kwargs: {
                               ...item.kwargs,
-                              disabled: isAssigned,
+                              disabled: (!!id && isAssigned),
                             },
                             others: {
                               formOptions: {
@@ -338,7 +338,7 @@ export const TicketForm = ({ id, onCancel, onDone, isAssigned }) => {
                             noLabel: index != 0,
                             kwargs: {
                               ...item.kwargs,
-                              disabled: isAssigned,
+                              disabled: (!!id && isAssigned),
                             },
                             others: {
                               ...item.others,
@@ -356,7 +356,7 @@ export const TicketForm = ({ id, onCancel, onDone, isAssigned }) => {
                     <Col span={1}>
                       <Button
                         // style={{ width: '9vw' }}
-                        disabled={isAssigned}
+                        disabled={(!!id && isAssigned)}
                         style={index != 0 ? { top: '-2vh' } : null}
                         type='danger'
                         onClick={() => {
@@ -370,7 +370,7 @@ export const TicketForm = ({ id, onCancel, onDone, isAssigned }) => {
                 <Form.Item>
                   <Button
                     type='dashed'
-                    disabled={isAssigned}
+                    disabled={(!!id && isAssigned)}
                     onClick={() => {
                       add();
                     }}
