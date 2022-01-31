@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import ticketColumns from 'common/columns/ticket.column';
 import {Popconfirm, Button, Input, Popover} from 'antd';
-import {deleteExpense, retrieveDEPS} from 'common/api/auth';
+import {deleteDEPS, deleteExpense, retrieveAllotmentsDockets, retrieveDEPS, retrieveGRNs, retrieveReturnDocket} from 'common/api/auth';
 import {connect} from 'react-redux';
 import {useTableSearch} from 'hooks/useTableSearch';
 import {useAPI} from 'common/hooks/api';
@@ -27,8 +27,13 @@ const {Search} = Input;
 const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
+  const [ticketData, setTicketData] = useState(null);
+  const [assignedTicketData, setAssignedTicketData] = useState(null);
+  const [unassignedTicketData, setUnassignedTicketData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [isAssigned, setIsAssigned] = useState(false);
 
-  const {filteredData, loading, reload, hasPermission} = useTableSearch({
+  const {filteredData, reload, hasPermission} = useTableSearch({
     searchVal,
     retrieve: retrieveDEPS,
     usePaginated : false
@@ -38,63 +43,65 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
     setEditingId(null);
   };
 
+  useEffect(() => {
+
+    const fetchTN = async () => {
+
+      setTicketData(
+        await Promise.all(filteredData.map(async (deps) => {
+          if(deps.transaction_type == 'Allotment') {
+            const {data: products} = await retrieveAllotmentsDockets(deps.a_t_no)
+            return {...deps, transaction_no: products.transaction_no}
+          } else if(deps.transaction_type == 'Return') {
+            const {data: products} = await retrieveReturnDocket(deps.r_t_no)
+            return {...deps, transaction_no: products.transaction_no}
+          } else if(deps.transaction_type == 'GRN') {
+            const {data: products} = await retrieveGRNs(deps.g_t_no)
+            return {...deps, transaction_no: products.transaction_no}
+          }
+          return deps
+        }))
+      )
+
+      setTimeout(() => {
+        setLoading(false)
+      }, 1000)
+      
+    }
+    if(filteredData) fetchTN()
+
+  }, [filteredData])
+
+  useEffect(() => {
+
+    if(ticketData){
+
+      setAssignedTicketData(ticketData.filter((ticket) => ticket.status == 'Assigned'))
+      setUnassignedTicketData(ticketData.filter((ticket) => ticket.status == 'Unassigned'))
+
+    }
+
+  }, [ticketData])
+
   const columns = [
     ...ticketColumns,
     {
-      title: 'Criticality',
-      key: 'criticality',
-      className: 'align-center',
-      render: (text, record) => {
-        if (record.criticality == 'Normal')
-          return (
-            <Button
-              type='primary'
-              style={{
-                backgroundColor: '#00FF00',
-                outline: 'none',
-                border: 'none',
-                borderRadius: '7%',
-              }}
-              onClick={(e) => e.stopPropagation()}>
-              Normal
-            </Button>
-          );
-        if (record.criticality == 'Urgent') {
-          return (
-            <Button
-              type='primary'
-              style={{
-                backgroundColor: '#ad4e00',
-                outline: 'none',
-                border: 'none',
-                borderRadius: '7%',
-                color: 'rgba(255,255,255,0.9)',
-              }}
-              onClick={(e) => e.stopPropagation()}>
-              Urgent
-              {'  '}
-            </Button>
-          );
-        }
-        if (record.criticality == 'Critical') {
-          return (
-            <Button
-              type='primary'
-              style={{
-                backgroundColor: 'red',
-                outline: 'none',
-                border: 'none',
-                borderRadius: '7%',
-                color: 'rgba(255,255,255,0.9)',
-              }}
-              onClick={(e) => e.stopPropagation()}>
-              Critical
-              {'  '}
-            </Button>
-          );
-        }
-        return <div />;
-      },
+      title: 'Option',
+      key: 'option',
+      width: '7vw',
+      render: (text, record) => (
+        <div className="row justify-evenly">
+          <Button
+            type='primary'
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsAssigned(true);
+              setEditingId(record.id);
+            }}>
+              Assigned To
+          </Button>
+        </div>
+      ),
     },
     {
       title: 'Action',
@@ -136,21 +143,40 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
               padding: '1px',
             }}
             onClick={(e) => {
-              setEditingId(record.id);
               e.stopPropagation();
+              setEditingId(record.id);
+              setIsAssigned(false);
             }}>
             <Edit />
           </Button>
-          <DeleteWithPassword
+          {/* <DeleteWithPassword
             password={DEFAULT_PASSWORD}
             deleteHOC={deleteHOC({
               record,
               reload,
-              api: deleteExpense,
+              api: deleteDEPS,
               success: 'Deleted Expense successfully',
               failure: 'Error in deleting Expense',
             })}
-          />
+          /> */}
+          <Button
+              style={{
+                backgroundColor: 'transparent',
+                boxShadow: 'none',
+                border: 'none',
+                padding: '1px',
+              }}
+              onClick={(e) => {
+                e.stopPropagation()
+                deleteHOC({
+                record,
+                reload,
+                api: deleteDEPS,
+                success: 'Deleted Expense successfully',
+                failure: 'Error in deleting Expense',
+              })()}}>
+              <Delete />
+          </Button>
           {/* <Popconfirm
             title="Confirm Delete"
             onConfirm={deleteHOC({
@@ -180,9 +206,23 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
     {
       name: 'All Tickets',
       key: 'allTickets',
-      data: filteredData || [],
+      data: ticketData || [],
       columns,
-      loading,
+      loading: loading,
+    },
+    {
+      name: 'Assigned Tickets',
+      key: 'assignedTickets',
+      data: assignedTicketData || [],
+      columns,
+      loading: loading,
+    },
+    {
+      name: 'Unassigned Tickets',
+      key: 'unassignedTickets',
+      data: unassignedTicketData || [],
+      columns,
+      loading: loading,
     },
   ];
 
@@ -204,7 +244,7 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
         cancelEditing={cancelEditing}
         modalBody={TicketForm}
         modalWidth={80}
-        formParams={{isEmployee}}
+        formParams={{isAssigned}}
         //expandHandleKey="transactions"
         //expandParams={{loading}}
         // ExpandBody={ExpandTable}

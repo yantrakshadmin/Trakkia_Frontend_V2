@@ -33,7 +33,7 @@ const ReturnForm = ({location, user}) => {
   const [receiverClient, setReceiverClient] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
 
-  const {data: receiverClients} = useAPI('/company-list/', {});
+  const {data: receiverClients} = useAPI('/receiverclients/', {}, false, true);
   const {data: warehouses} = useAPI(`/company-warehouse/?id=${user.companyId}`, {});
   // const {data: flows} = useAPI(`/company-flows/?id=${user.companyId}`, {});
   const {data: vendors} = useAPI(`/company-vendor/?id=${user.companyId}`, {});
@@ -273,9 +273,9 @@ const ReturnForm = ({location, user}) => {
                 },
                 others: {
                   // selectOptions: filterActive(_, receiverClients) || [],
-                  selectOptions: receiverClients?.results || [],
+                  selectOptions: receiverClients || [],
                   key: 'id',
-                  dataKeys: ['address', 'city'],
+                  dataKeys: ['address', 'email'],
                   customTitle: 'name',
                 },
               })}

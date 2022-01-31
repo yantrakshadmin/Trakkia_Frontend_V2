@@ -8,7 +8,6 @@ const faultOptions = ['Pilferage', 'Damage', 'Others', 'Excess', 'Lost', 'Shorta
 export const ticketFormFields = [
   {
     key: 'assigned_to',
-    rules: [{required: true, message: 'Please select User!'}],
     kwargs: {
       placeholder: 'Select',
       showSearch: true,

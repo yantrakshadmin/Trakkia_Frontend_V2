@@ -12,6 +12,11 @@ export default [
     dataIndex: 'transaction_type',
   },
   {
+    title: 'Transaction No.',
+    key: 'transaction_no',
+    dataIndex: 'transaction_no',
+  },
+  {
     title: 'Created On',
     key: 'created_on',
     sorter: (a, b) => moment(a.created_on).unix() - moment(b.created_on).unix(),
@@ -28,5 +33,10 @@ export default [
     title: 'Remarks',
     key: 'remarks',
     dataIndex: 'remarks',
+  },
+  {
+    title: 'Criticality',
+    key: 'criticality',
+    dataIndex: 'criticality',
   },
 ];

@@ -14,7 +14,8 @@ import _ from 'lodash';
 import formItem from '../hocs/formItem.hoc';
 import moment from 'moment';
 
-export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
+export const TicketForm = ({ id, onCancel, onDone, isAssigned }) => {
+  console.log(isAssigned)
   const [ticketData, setTicketData] = useState([]);
   const [transactionType, setTransactionType] = useState([]);
   const [transactionId, setTransactionId] = useState(0);
@@ -91,11 +92,6 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
           products.filter(product => product.id == transactionId)[0].items.map((item) => item.item),
           'id',
         ))
-        console.log(products.filter(product => product.id == transactionId), products.filter(product => product.id == transactionId)[0].items.map((item) => item.item))
-        console.log(getUniqueObject(
-          products.filter(product => product.id == transactionId)[0].items.map((item) => item.item),
-          'id',
-        ))
       }
       
     }
@@ -145,6 +141,13 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
     }
 
     delete data.t_no
+
+    if(data.assigned_to){
+      if(data.status == 'Unassigned') data.status = 'Assigned'
+    } else {
+      if(data.status == 'Assigned') data.status = 'Unassigned'
+    }
+
     submit(data);
 
   };
@@ -225,7 +228,13 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
           {ticketFormFields.slice(3).map((item, idx) => (
             <Col span={item.colSpan}>
               <div key={idx} className='p-2'>
-                {formItem(item)}
+                {formItem({
+                  ...item,
+                  kwargs: {
+                    ...item.kwargs,
+                    disabled: isAssigned,
+                  },
+                })}
               </div>
             </Col>
           ))}
@@ -278,6 +287,7 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
                             noLabel: index != 0,
                             kwargs: {
                               ...item.kwargs,
+                              disabled: isAssigned,
                               showSearch: true,
                               filterOption: (input, option) =>
                                 option.search
@@ -306,6 +316,10 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
                           {formItem({
                             ...item,
                             noLabel: index != 0,
+                            kwargs: {
+                              ...item.kwargs,
+                              disabled: isAssigned,
+                            },
                             others: {
                               formOptions: {
                                 ...field,
@@ -322,6 +336,10 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
                         <div className='p-2'>
                           {formItem({ ...item,
                             noLabel: index != 0,
+                            kwargs: {
+                              ...item.kwargs,
+                              disabled: isAssigned,
+                            },
                             others: {
                               ...item.others,
                               key: 'id',
@@ -338,6 +356,7 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
                     <Col span={1}>
                       <Button
                         // style={{ width: '9vw' }}
+                        disabled={isAssigned}
                         style={index != 0 ? { top: '-2vh' } : null}
                         type='danger'
                         onClick={() => {
@@ -351,6 +370,7 @@ export const TicketForm = ({ id, onCancel, onDone, isEmployee }) => {
                 <Form.Item>
                   <Button
                     type='dashed'
+                    disabled={isAssigned}
                     onClick={() => {
                       add();
                     }}

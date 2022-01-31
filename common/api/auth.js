@@ -1368,6 +1368,12 @@ export const editDEPS = (id, src) =>
     secure: true,
   });
 
+export const deleteDEPS = (id) =>
+  loadAPI(`/edit-deps/${id}/`, {
+    method: 'DELETE',
+    secure: true,
+  });
+
 export const createExpense = (src) =>
   loadAPI('/create-expense/', {
     method: 'POST',
