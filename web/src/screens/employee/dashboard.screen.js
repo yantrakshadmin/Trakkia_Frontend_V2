@@ -2,14 +2,14 @@ import React, {useState, useEffect} from 'react';
 import {Row, Col, Typography, Card, Button, Menu, Dropdown} from 'antd';
 import {useAPI} from 'common/hooks/api';
 import {Bar} from 'react-chartjs-2';
-import Column from 'common/columns/dashboard.column';
 import {FilterOutlined} from '@ant-design/icons';
 import {chartConfigs, chartOptions, initialChart} from 'common/constants/dashboardConstants';
 import {Cal} from './events.screen';
 import {Map} from './map.screen';
-import {MasterHOC} from '../../hocs/Master.hoc';
-
+import Chart from "react-apexcharts";
 import _ from 'lodash';
+import './dashboard.scss'
+import DataCard from '../../components/Dashboard/DataCard'
 
 const {Paragraph} = Typography;
 const kitTypes = ['FLC', 'FSC', 'Crate', 'PP Box'];
@@ -410,8 +410,146 @@ export const DashboardScreen = () => {
       <Menu.Item danger>No Data</Menu.Item>
     </Menu>
   );
+
+    const chartData = {
+      height: 250,
+      type: 'bar',
+      options: {
+        title: {
+          text: 'Allotment and Return Stats',
+          align: 'left',
+          margin: 10,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize:  '14px',
+            fontWeight:  'bold',
+            fontFamily:  undefined,
+            color:  '#263238'
+          },
+         },
+          chart: {
+              id: 'bar-chart',
+              stacked: true,
+              toolbar: {
+                  show: true
+              },
+              zoom: {
+                  enabled: true
+              }
+          },
+          responsive: [
+              {
+                  breakpoint: 480,
+                  options: {
+                      legend: {
+                          position: 'bottom',
+                          offsetX: -10,
+                          offsetY: 0
+                      }
+                  }
+              }
+          ],
+          plotOptions: {
+              bar: {
+                  horizontal: false,
+                  columnWidth: '50%'
+              }
+          },
+          xaxis: {
+              type: 'category',
+              categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+          },
+          legend: {
+              show: true,
+              fontSize: '12px',
+              fontFamily: `'Roboto', sans-serif`,
+              position: 'bottom',
+              offsetX: 20,
+              labels: {
+                  useSeriesColors: false
+              },
+              markers: {
+                  width: 16,
+                  height: 16,
+                  radius: 5,
+                  fillColors: ['#90CAF9', '#2196F3', '#1E88E5', '#1565C0'],
+              },
+              itemMargin: {
+                  horizontal: 10,
+                  vertical: 2
+              }
+          },
+          fill: {
+            colors: ['#90CAF9', '#2196F3', '#1E88E5', '#1565C0'],
+            type: 'solid'
+          },
+          dataLabels: {
+              enabled: false,
+          },
+          grid: {
+              show: true
+          }
+      },
+      series: [
+          {
+              name: 'Investment',
+              data: [35, 125, 35, 35, 35, 80, 35, 20, 35, 45, 15, 75]
+          },
+          {
+              name: 'Loss',
+              data: [35, 15, 15, 35, 65, 40, 80, 25, 15, 85, 25, 75]
+          },
+          {
+              name: 'Profit',
+              data: [35, 145, 35, 35, 20, 105, 100, 10, 65, 45, 30, 10]
+          },
+          {
+              name: 'Maintenance',
+              data: [0, 0, 75, 0, 0, 115, 0, 0, 0, 0, 150, 0]
+          }
+      ]
+  };
+
   return (
     <>
+      <Row gutter={10} style={{margin: '5px', marginTop: '20px'}}>
+        <Col span={6}>
+          <DataCard />
+        </Col>
+        <Col span={6}>
+          <DataCard />
+        </Col>
+        <Col span={6}>
+          <DataCard />
+        </Col>
+        <Col span={6}>
+          <DataCard />
+        </Col>
+      </Row>
+      <Row>
+        <Col span={12}>
+          <Card style={{borderRadius: '10px', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px', margin: '10px'}}>
+            <Chart
+              options={chartData.options}
+              series={chartData.series}
+              type={chartData.type}
+              height={chartData.height}
+            />
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Card style={{borderRadius: '10px', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px', margin: '10px'}}>
+            <Chart
+              options={chartData.options}
+              series={chartData.series}
+              type={chartData.type}
+              height={chartData.height}
+            />
+          </Card>
+        </Col>
+      </Row>
       <Card type="inner" title="Allotment and Return Stats">
         <Row justify="center" gutter={32}>
           <Col span={12}>

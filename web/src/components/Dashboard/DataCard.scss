@@ -1,0 +1,30 @@
+.data-card {
+    position: relative;
+    text-align: right;
+    border-radius: 10px;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+    .ant-card-body {
+        padding: 15px;
+    }
+}
+
+.icon-card {
+    background: #2196F3;
+    width: fit-content;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: -15px;
+    border-radius: 8px;
+    color: white;
+}
+
+.line {
+    height: 1px;
+    background: linear-gradient(to right,  rgba(0,0,0,0) 0%,rgba(240,242,245,1) 50%,rgba(0,0,0,0) 100%);
+    border: none;
+}

@@ -64,6 +64,9 @@ export const TicketUploadForm = ({
       data.document = reqFile.originFileObj;
     } else delete data.document;
     const req = toFormData({...data, [varName]: lead});
+    for(var pair of req.entries()) {
+      console.log(pair[0]+ ', '+ pair[1]);
+    }
     submit(req);
   };
 

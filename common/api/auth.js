@@ -1374,6 +1374,16 @@ export const deleteDEPS = (id) =>
     secure: true,
   });
 
+export const ticketFileUpload = (req) =>
+  loadAPI('/upload-deps/', {
+    method: 'POST',
+    data: req,
+    secure: true,
+    headers: {
+      'Content-Type': `multipart/form-data  boundary=${Math.random().toString().substr(2)}`,
+    },
+  });
+
 export const createExpense = (src) =>
   loadAPI('/create-expense/', {
     method: 'POST',

@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import ticketColumns from 'common/columns/ticket.column';
 import {Popconfirm, Button, Input, Popover, Modal} from 'antd';
-import {deleteDEPS, deleteExpense, retrieveAllotmentsDockets, retrieveDEPS, retrieveGRNs, retrieveReturnDocket} from 'common/api/auth';
+import {deleteDEPS, deleteExpense, leadFileUpload, retrieveAllotmentsDockets, retrieveDEPS, retrieveGRNs, retrieveReturnDocket, ticketFileUpload} from 'common/api/auth';
 import {connect} from 'react-redux';
 import {useTableSearch} from 'hooks/useTableSearch';
 import {useAPI} from 'common/hooks/api';
@@ -270,8 +270,8 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
             setVisibleUpload(false);
           }}
           lead={ticketID}
-          // create={leadFileUpload}
-          varName="lead_no"
+          create={ticketFileUpload}
+          varName="deps"
         />
       </Modal>
       <TableWithTabHOC

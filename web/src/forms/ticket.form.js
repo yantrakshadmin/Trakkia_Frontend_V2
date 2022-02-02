@@ -144,6 +144,9 @@ export const TicketForm = ({ id, onCancel, onDone, isAssigned }) => {
 
     if(data.assigned_to){
       if(data.status == 'Unassigned') data.status = 'Assigned'
+      else if(!!isAssigned) {
+        data.status = 'Assigned'
+      }
     } else {
       if(data.status == 'Assigned') data.status = 'Unassigned'
     }
@@ -171,7 +174,7 @@ export const TicketForm = ({ id, onCancel, onDone, isAssigned }) => {
       <Divider orientation='left'>Ticket Details</Divider>
       <Form
         onFinish={preProcess}
-        initialValues={{ status: 'Hold', criticality: 'Normal' }}
+        initialValues={{ status: 'Unassigned', criticality: 'Normal' }}
         form={form}
         layout='vertical'
         hideRequiredMark
