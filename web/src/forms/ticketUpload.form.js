@@ -60,15 +60,55 @@ export const TicketUploadForm = ({
   }
 
   const preProcess = (data) => {
-    if (reqFile) {
-      data.document = reqFile.originFileObj;
-    } else delete data.document;
-    const req = toFormData({...data, [varName]: lead});
-    for(var pair of req.entries()) {
-      console.log(pair[0]+ ', '+ pair[1]);
+
+    let failed = false;
+    const {document} = data;
+    if (document) {
+      try {
+        const {fileList} = data.document;
+        if (fileList) {
+          const newFileList = fileList.map((f) => {
+            if (f.status !== 'done') {
+              message.error(`${f.name} has not been uploaded yet!`);
+              failed = true;
+            } else {
+              return f.originFileObj;
+            }
+          });
+          data.document = newFileList;
+          if (!failed) {
+            const finalData = toFormData({...data, [varName]: lead});
+            submit(finalData);
+          }
+        } else {
+          if (!failed) {
+            const finalData = toFormData({...data, [varName]: lead});
+            submit(finalData);
+          }
+        }
+      } catch (err) {
+        alert(err);
+        message.error(`Something went wrong!`);
+      }
+    } else {
+      const finalData = toFormData({...data, [varName]: lead});
+      finalData.append('no_of_document_files', 0);
+      submit(finalData);
     }
-    submit(req);
   };
+
+  // const preProcess = (data) => {
+  //   console.log(data.document)
+  //   if (reqFile) {
+  //     data.document = reqFile.originFileObj;
+  //   } else delete data.document;
+  //   const req = toFormData({...data, [varName]: lead});
+  //   for(var values of req.values()) console.log(values)
+  //   for(var pair of req.entries()) {
+  //     console.log(pair[0]+ ', '+ pair[1]);
+  //   }
+  //   // submit(req);
+  // };
 
   return (
     <Spin spinning={loading}>
@@ -79,7 +119,7 @@ export const TicketUploadForm = ({
             {formItem({
               ...item,
               kwargs: {
-                multiple: false,
+                multiple: true,
                 onChange(info) {
                   const {status} = info.file;
                   if (status === 'done') {
