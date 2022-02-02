@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Form, Col, Row, Button, Divider, Spin, message} from 'antd';
 import {useHandleForm} from 'hooks/form';
 import formItem from '../hocs/formItem.hoc';
@@ -51,13 +51,32 @@ export const TicketUploadForm = ({
     id: isReUpload ? newID : id,
   });
 
-  function toFormData(obj) {
-    const FD = new FormData();
-    Object.keys(obj).map((property) => {
-      return FD.append(property, obj[property]);
-    });
-    return FD;
-  }
+  // function toFormData(obj) {
+  //   const FD = new FormData();
+  //   Object.keys(obj).map((property) => {
+  //     return FD.append(property, obj[property]);
+  //   });
+  //   return FD;
+  // }
+  const toFormData = useCallback((data) => {
+    const req = new FormData();
+    for (const key in data) {
+      if (key === 'document') {
+        if (data[key]) {
+          let c = 0;
+          req.append(key.toString(), data[key]);
+          data[key].forEach((el) => {
+            req.append(`document${c}`, el);
+            c = c + 1;
+          });
+          req.set('no_of_document_files', c);
+        }
+      } else {
+        req.append(key.toString(), data[key]);
+      }
+    }
+    return req;
+  }, []);
 
   const preProcess = (data) => {
 
@@ -77,12 +96,14 @@ export const TicketUploadForm = ({
           });
           data.document = newFileList;
           if (!failed) {
-            const finalData = toFormData({...data, [varName]: lead});
+            const finalData = toFormData(data);
+            finalData.append(varName, lead)
             submit(finalData);
           }
         } else {
           if (!failed) {
-            const finalData = toFormData({...data, [varName]: lead});
+            const finalData = toFormData(data);
+            finalData.append(varName, lead)
             submit(finalData);
           }
         }
@@ -91,7 +112,8 @@ export const TicketUploadForm = ({
         message.error(`Something went wrong!`);
       }
     } else {
-      const finalData = toFormData({...data, [varName]: lead});
+      const finalData = toFormData(data);
+      finalData.append(varName, lead)
       finalData.append('no_of_document_files', 0);
       submit(finalData);
     }
