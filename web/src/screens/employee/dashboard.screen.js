@@ -8,8 +8,7 @@ import {Cal} from './events.screen';
 import {Map} from './map.screen';
 import Chart from "react-apexcharts";
 import _ from 'lodash';
-import './dashboard.scss'
-import DataCard from '../../components/Dashboard/DataCard'
+import KPICard from '../../components/Dashboard/KPICard'
 import moment from 'moment';
 
 const {Paragraph} = Typography;
@@ -537,16 +536,16 @@ export const DashboardScreen = () => {
     <>
       <Row gutter={10} style={{margin: '5px', marginTop: '20px'}}>
         <Col span={6}>
-          <DataCard />
+          <KPICard title={`Bookings`} count={281} change={55} icon={'fas fa-couch'} color={'#212121'} />
         </Col>
         <Col span={6}>
-          <DataCard />
+          <KPICard title={`Today's Users`} count={2300} change={3} icon={'fas fa-users'} color={'#1E88E5'} />
         </Col>
         <Col span={6}>
-          <DataCard />
+          <KPICard title={`Revenue`} count={34000} change={1} icon={'fas fa-home'} color={'#00C853'} />
         </Col>
         <Col span={6}>
-          <DataCard />
+          <KPICard title={`Followers`} count={91} change={2} icon={'fas fa-user-plus'} color={'#C62828'} />
         </Col>
       </Row>
       <Row>

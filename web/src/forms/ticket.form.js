@@ -4,18 +4,15 @@ import { Form, Col, Row, Button, Divider, Spin } from 'antd';
 import { ticketFormFields, ticketFlowFormFields } from 'common/formFields/ticket.formFields';
 import { useAPI } from 'common/hooks/api';
 import { useHandleForm } from 'hooks/form';
-import { createDEPS, editDEPS, editExpenseTest, retrieveAllotmentsDockets, retrieveDEP, retrieveDEPS, retrieveGRNs, retrieveReturnDocket } from 'common/api/auth';
+import { createDEPS, editDEPS, retrieveAllotmentsDockets, retrieveDEP, retrieveGRNs, retrieveReturnDocket } from 'common/api/auth';
 import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
-
 import { getUniqueObject } from 'common/helpers/getUniqueValues';
-
 import _ from 'lodash';
-
 import formItem from '../hocs/formItem.hoc';
 import moment from 'moment';
 
 export const TicketForm = ({ id, onCancel, onDone, isAssigned }) => {
-  console.log(isAssigned)
+
   const [ticketData, setTicketData] = useState([]);
   const [transactionType, setTransactionType] = useState([]);
   const [transactionId, setTransactionId] = useState(0);

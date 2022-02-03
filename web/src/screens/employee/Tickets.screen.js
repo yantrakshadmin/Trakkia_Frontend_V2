@@ -1,28 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import ticketColumns from 'common/columns/ticket.column';
-import {Popconfirm, Button, Input, Popover, Modal} from 'antd';
-import {deleteDEPS, deleteExpense, leadFileUpload, retrieveAllotmentsDockets, retrieveDEPS, retrieveGRNs, retrieveReturnDocket, ticketFileUpload} from 'common/api/auth';
+import { Button, Input, Modal} from 'antd';
+import {deleteDEPS, retrieveAllotmentsDockets, retrieveDEPS, retrieveGRNs, retrieveReturnDocket, ticketFileUpload} from 'common/api/auth';
 import {connect} from 'react-redux';
 import {useTableSearch} from 'hooks/useTableSearch';
-import {useAPI} from 'common/hooks/api';
-import {mergeArray, statusCheck} from 'common/helpers/mrHelper';
 import {TicketForm} from 'forms/ticket.form';
 import TableWithTabHOC from 'hocs/TableWithTab.hoc';
-import ExpandTable from 'components/ExpenseExpandTable';
 import {deleteHOC} from 'hocs/deleteHoc';
 import Delete from 'icons/Delete';
 import Edit from 'icons/Edit';
 import Upload from 'icons/Upload';
-import {yantraColors} from '../../helpers/yantraColors';
-import {faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import FilesViewModal from '../../components/FilesViewModal';
-import DeleteWithPassword from '../../components/DeleteWithPassword';
-import {DEFAULT_PASSWORD} from 'common/constants/passwords';
 import NoPermissionAlert from 'components/NoPermissionAlert';
 import {TicketUploadForm} from 'forms/ticketUpload.form';
-
 import _ from 'lodash';
+import { loadAPI } from 'common/helpers/api';
 
 const {Search} = Input;
 
@@ -139,6 +131,28 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
               style={{fontSize: 20, color: yantraColors['primary']}}
             />
           </Button> */}
+          <FilesViewModal
+            documentAvail={true}
+            getDocuments={async () => {
+              const { data: req } = await loadAPI(
+                `/deps-images/?pk=${record.id}`,
+                {},
+              );
+              if (req)
+                if (req.document) {
+                  return [{ document: req.document, span: 24 }];
+                }
+              try {
+                if (req.pod.length > 0) {
+                  const d = [];
+                  req.pod.forEach((f) => {
+                    d.push({ document: f.document, span: req.pod.length > 1 ? 12 : 24 });
+                  });
+                  return d;
+                }
+              } catch (err) {}
+            }}
+          />
           <Button
             style={{
               backgroundColor: 'transparent',
@@ -173,8 +187,8 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
               record,
               reload,
               api: deleteDEPS,
-              success: 'Deleted Expense successfully',
-              failure: 'Error in deleting Expense',
+              success: 'Deleted Ticket successfully',
+              failure: 'Error in deleting Ticket',
             })}
           /> */}
           <Button
@@ -190,8 +204,8 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
                 record,
                 reload,
                 api: deleteDEPS,
-                success: 'Deleted Expense successfully',
-                failure: 'Error in deleting Expense',
+                success: 'Deleted Ticket successfully',
+                failure: 'Error in deleting Ticket',
               })()}}>
               <Delete />
           </Button>
