@@ -30,7 +30,7 @@ export const LogisticCreateCPForm = ({ id, onCancel,onDone,active,onNext }) => {
           notification.warning({
             message: 'Unable To Edit.',
             description:
-              'Something went wrong CP editing failed.',
+              'Something went wrong Commercial Proposal editing failed.',
           });
           onCancel();
         } else {
@@ -43,13 +43,13 @@ export const LogisticCreateCPForm = ({ id, onCancel,onDone,active,onNext }) => {
           notification.warning({
             message: 'Unable To Create.',
             description:
-              'Something went wrong CP creation failed.',
+              'Something went wrong Commercial Proposal creation failed.',
           });
           onCancel();
         } else {
           onDone();
           notification.success({
-            message: 'CP Created/Edited Successfully.',
+            message: 'Commercial Proposal Created/Edited Successfully.',
           });
         }
       }

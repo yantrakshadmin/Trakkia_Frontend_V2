@@ -281,7 +281,7 @@ const CreateCPScreen = ({currentPage}) => {
             });
             e.stopPropagation();
           }}>
-          Merge CP
+          Merge Commercial Proposal
         </Button>
         <div style={{width: '15vw', display: 'flex', alignItems: 'flex-end'}}>
           <Search onChange={(e) => setSearchVal(e.target.value)} placeholder="Search" enterButton />

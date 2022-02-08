@@ -565,7 +565,7 @@ export const DashboardScreen = () => {
         <Col span={12}>
           <Card style={{borderRadius: '10px', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px', margin: '10px'}}>
             <Chart
-              options={chartData.options}
+              options={{...chartData.options, title:{...chartData.options.title, text: 'Return Stats'}}}
               series={chartData.series}
               type={chartData.type}
               height={chartData.height}
@@ -573,7 +573,7 @@ export const DashboardScreen = () => {
           </Card>
         </Col>
       </Row>
-      <Card type="inner" title="Allotment and Return Stats">
+      {/* <Card type="inner" title="Allotment and Return Stats">
         <Row justify="center" gutter={32}>
           <Col span={12}>
             <div className="row">
@@ -584,9 +584,9 @@ export const DashboardScreen = () => {
             <Bar data={allotmentChartData} height={125} options={chartOptions} />
             <div className="row justify-center">
               <Paragraph>
-                {sClientSelected ? sClientSelected.replaceAll('%26', '&') : 'All Clients'}
+                {sClientSelected ? sClientSelected.replaceAll('%26', '&') : 'All Clients'} */}
                 {/* eslint-disable-next-line no-nested-ternary */}
-                {sKitType && sClientSelected
+                {/* {sKitType && sClientSelected
                   ? ` - ${sKitType}`
                   : sKitType
                   ? sKitType.replaceAll('%26', '&')
@@ -609,7 +609,7 @@ export const DashboardScreen = () => {
             </div>
           </Col>
         </Row>
-      </Card>
+      </Card> */}
       <br />
       <br />
       <Card type="inner" title="Location and Planning">

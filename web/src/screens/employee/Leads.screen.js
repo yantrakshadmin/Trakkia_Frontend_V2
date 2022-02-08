@@ -237,8 +237,8 @@ const WarehouseEmployeeScreen = ({currentPage}) => {
         ExpandBody={PersonTable}
         expandParams={{loading}}
         scroll={{x: 1200}}
-        csvdata={csvData}
-        csvname={`Leads${searchVal}.csv`}
+        // csvdata={csvData}
+        // csvname={`Leads${searchVal}.csv`}
       />
     </NoPermissionAlert>
   );

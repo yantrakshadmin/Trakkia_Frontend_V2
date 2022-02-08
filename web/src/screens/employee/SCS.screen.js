@@ -154,10 +154,10 @@ const PFEPEmployeeScreen = ({currentPage}) => {
       width: '8vw',
       render: (record) => (
         <HideShowTag>
-          {record.tp_shared ? <Tag>TP shared</Tag> : null}
-          {record.cp_shared ? <Tag>CP shared</Tag> : null}
-          {record.tp_approved ? <Tag>TP Approved</Tag> : null}
-          {record.cp_approved ? <Tag>CP Approved</Tag> : null}
+          {record.tp_shared ? <Tag>Technical Proposal shared</Tag> : null}
+          {record.cp_shared ? <Tag>Commercial Proposal shared</Tag> : null}
+          {record.tp_approved ? <Tag>Technical Proposal Approved</Tag> : null}
+          {record.cp_approved ? <Tag>Commercial Proposal Approved</Tag> : null}
           {record.trials_done ? <Tag>Trials Done</Tag> : null}
           {record.trials_approved ? <Tag>Trials Approved</Tag> : null}
           {record.esa_signed ? <Tag>Esa Signed</Tag> : null}
@@ -214,7 +214,7 @@ const PFEPEmployeeScreen = ({currentPage}) => {
             buttonList={[
               {
                 Icon: DiffOutlined,
-                title: 'Create CP',
+                title: 'Create Commercial Proposal',
                 onClick: async (e) => {
                   setCreateCPVisible(true);
                   setCpSCSid(record.id);
@@ -240,7 +240,7 @@ const PFEPEmployeeScreen = ({currentPage}) => {
               },
               {
                 Icon: ToTopOutlined,
-                title: record.tp_uploaded ? 'Re-Upload TP' : 'Upload TP',
+                title: record.tp_uploaded ? 'Re-Upload Technical Proposal' : 'Upload Technical Proposal',
                 onClick: (e) => {
                   // setPopover(false);
                   setUploadTP(true);
@@ -321,7 +321,7 @@ const PFEPEmployeeScreen = ({currentPage}) => {
         visible={createCPVisible}
         destroyOnClose
         style={{minWidth: `80vw`}}
-        title="Create CP"
+        title="Create Commercial Proposal"
         onCancel={() => {
           setCreateCPVisible(false);
         }}
@@ -339,7 +339,7 @@ const PFEPEmployeeScreen = ({currentPage}) => {
         visible={uploadTPVisible}
         destroyOnClose
         style={{minWidth: `80vw`}}
-        title="Upload TP"
+        title="Upload Technical Proposal"
         onCancel={() => {
           setUploadTP(false);
         }}

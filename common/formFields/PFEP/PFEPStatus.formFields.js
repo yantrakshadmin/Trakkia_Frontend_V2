@@ -23,7 +23,7 @@ export const PFEPStatusFormFields = [
       defaultValue:false,
       formOptions:{ noStyle:true }
     },
-    customLabel: 'TP Shared',
+    customLabel: 'Technical Proposal Shared',
   },
   {
     key: 'cp_shared',
@@ -32,7 +32,7 @@ export const PFEPStatusFormFields = [
       defaultValue:false,
       formOptions:{ noStyle:true }
     },
-    customLabel: 'CP Shared',
+    customLabel: 'Commercial Proposal Shared',
   },
   {
     key: 'tp_approved',
@@ -41,7 +41,7 @@ export const PFEPStatusFormFields = [
       defaultValue:false,
       formOptions:{ noStyle:true }
     },
-    customLabel: 'TP Approved',
+    customLabel: 'Technical Proposal Approved',
   },
   {
     key: 'cp_approved',
@@ -50,7 +50,7 @@ export const PFEPStatusFormFields = [
       defaultValue:false,
       formOptions:{ noStyle:true }
     },
-    customLabel: 'CP Approved',
+    customLabel: 'Commercial Proposal Approved',
   },
   {
     key: 'trials_done',
