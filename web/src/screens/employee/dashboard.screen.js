@@ -61,6 +61,9 @@ export const DashboardScreen = () => {
     {},
   );
 
+  const {data: allotmentKPI} = useAPI('/allotcount-kpi/')
+  const {data: ticketKPI} = useAPI('/ticketcount-kpi/')
+
   const {data: rClients} = useAPI('/receiverclients/', {}, false, true);
   const {data: sClients} = useAPI('/senderclients/', {}, false, true);
   const {data: clientStats, loading} = useAPI('/cycledays-graph/', {});
@@ -536,7 +539,7 @@ export const DashboardScreen = () => {
     <>
       <Row gutter={10} style={{margin: '5px', marginTop: '20px'}}>
         <Col span={6}>
-          <KPICard title={`Bookings`} count={281} change={55} icon={'fas fa-couch'} color={'#212121'} />
+          {allotmentKPI ? <KPICard title={`Allotments`} count={allotmentKPI['this month']} change={allotmentKPI['last month'] == 0 ? (allotmentKPI['this month'] - allotmentKPI['last month'])*100 : (allotmentKPI['this month'] - allotmentKPI['last month'])/allotmentKPI['last month']*100} icon={'fas fa-truck-loading'} color={'#212121'} /> : <KPICard title={`Allotments`} count={'...'} change={0} icon={'fas fa-truck-loading'} color={'#212121'} />}
         </Col>
         <Col span={6}>
           <KPICard title={`Today's Users`} count={2300} change={3} icon={'fas fa-users'} color={'#1E88E5'} />

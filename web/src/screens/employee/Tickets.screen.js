@@ -15,6 +15,7 @@ import NoPermissionAlert from 'components/NoPermissionAlert';
 import {TicketUploadForm} from 'forms/ticketUpload.form';
 import _ from 'lodash';
 import { loadAPI } from 'common/helpers/api';
+import ExpandTable from '../../components/TicketExpandTable'
 
 const {Search} = Input;
 
@@ -299,9 +300,9 @@ const TicketsEmployeeScreen = ({currentPage, isEmployee}) => {
         modalBody={TicketForm}
         modalWidth={80}
         formParams={{isAssigned}}
-        //expandHandleKey="transactions"
-        //expandParams={{loading}}
-        // ExpandBody={ExpandTable}
+        expandHandleKey="items"
+        // expandParams={(record) => record.id}
+        ExpandBody={ExpandTable}
       />
     </NoPermissionAlert>
   );

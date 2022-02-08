@@ -424,6 +424,11 @@ export const employeeRoutes = [
         path: '/reports/loss-excess/',
         Component: lazy(() => import('components/Reports/LossExcess.js')),
       },
+      {
+        name: 'Report-beta',
+        path: '/reports/report-beta/',
+        Component: lazy(() => import('components/Reports/Report-beta.js')),
+      },
     ],
   },
 ];
