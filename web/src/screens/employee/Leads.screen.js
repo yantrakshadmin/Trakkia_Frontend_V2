@@ -227,6 +227,7 @@ const WarehouseEmployeeScreen = ({currentPage}) => {
         refresh={reload}
         tabs={tabs}
         size="middle"
+        modelTitle="Add Lead"
         title="Leads"
         editingId={editingId}
         cancelEditing={cancelEditing}

@@ -381,8 +381,8 @@ const PFEPEmployeeScreen = ({currentPage}) => {
         // ExpandBody={PersonTable}
         // expandParams={{ loading }}
         scroll={{x: 1200}}
-        csvdata={csvData}
-        csvname={`SCS${searchVal}.csv`}
+        // csvdata={csvData}
+        // csvname={`SCS${searchVal}.csv`}
       />
     </NoPermissionAlert>
   );

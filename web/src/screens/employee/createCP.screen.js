@@ -110,10 +110,10 @@ const CreateCPScreen = ({currentPage}) => {
     //   showSorterTooltip: false,
     // },
     {
-      title: 'Direct Cost',
-      key: 'direct_cost',
-      dataIndex: 'direct_cost',
-      sorter: (a, b) => a.direct_cost - b.direct_cost,
+      title: 'Trip Cost',
+      key: 'trip_cost',
+      dataIndex: 'trip_cost',
+      sorter: (a, b) => a.trip_cost - b.trip_cost,
       showSorterTooltip: false,
     },
     {
@@ -202,8 +202,8 @@ const CreateCPScreen = ({currentPage}) => {
               record,
               reload,
               api: deleteCP,
-              success: 'Deleted CP Successfully',
-              failure: 'Error in deleting CP',
+              success: 'Deleted Commercial Proposal Successfully',
+              failure: 'Error in deleting Commercial Proposal',
             })}>
             <Button
               style={{
@@ -293,7 +293,7 @@ const CreateCPScreen = ({currentPage}) => {
         refresh={reload}
         tabs={tabs}
         size="middle"
-        title="CP"
+        title="Commercial Proposal"
         rowSelection={rowSelection}
         editingId={editingId}
         cancelEditing={() => {
@@ -308,8 +308,8 @@ const CreateCPScreen = ({currentPage}) => {
         formParams={{
           scs: scsID,
         }}
-        csvdata={csvData}
-        csvname={`CP${searchVal}.csv`}
+        // csvdata={csvData}
+        // csvname={`CP${searchVal}.csv`}
       />
     </NoPermissionAlert>
   );

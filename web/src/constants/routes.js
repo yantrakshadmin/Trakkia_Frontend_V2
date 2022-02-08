@@ -138,7 +138,7 @@ export const employeeRoutes = [
         Component: lazy(() => import('screens/employee/SCS.screen')),
       },
       {
-        name: 'TP',
+        name: 'Technical Proposal',
         path: '/pfep/tp/',
         Component: lazy(() => import('screens/employee/TP.screen')),
       },
@@ -148,7 +148,7 @@ export const employeeRoutes = [
       //   Component: lazy(() => import('screens/employee/PFEP.screen')),
       // },
       {
-        name: 'CP',
+        name: 'Commercial Proposal',
         path: '/cp/',
         Component: lazy(() => import('screens/employee/createCP.screen')),
       },

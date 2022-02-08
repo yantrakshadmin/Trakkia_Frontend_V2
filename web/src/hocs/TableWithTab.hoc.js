@@ -268,7 +268,7 @@ const TableWithTabHOC = ({
                 onClick={() => {
                   if (!newPage) setModalVisible(true);
                 }}>
-                {`Add ${title}`}
+                {modelTitle || `Add ${title}`}
               </Button>
             </>
           )}

@@ -125,8 +125,8 @@ const ExpenseEmployeeScreen = () => {
 
   const tabs = [
     {
-      name: 'All TPs',
-      key: 'allTPs',
+      name: 'All Technical Proposals',
+      key: 'allTechnical Proposals',
       data: filteredData || [],
       columns,
       loading,
@@ -146,7 +146,7 @@ const ExpenseEmployeeScreen = () => {
         refresh={reload}
         tabs={tabs}
         size="middle"
-        title="TPs"
+        title="Technical Proposals"
         hideRightButton={true}
         //editingId={editingId}
         //cancelEditing={cancelEditing}
