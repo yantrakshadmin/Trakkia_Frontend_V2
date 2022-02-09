@@ -22,13 +22,19 @@ const ReportBeta = ({currentPage}) => {
   const [reportData, setReportData] = useState(null);
   const [reqAllotments, setReqAllotments] = useState(null);
   const [clientName, setClientName] = useState(null);
-  const [categories, setCategories] = useState(null);
-  const [seriesData, setSeriesData] = useState(null);
+  const [columnOptions, setColumnOptions] = useState([]);
+  const [selectAllClients, setSelectAllClients] = useState(false);
   const [form] = Form.useForm();
 
   const {data: clients} = useAPI('/senderclients/', {}, false, true);
 
   const onSubmit = async (data) => {
+
+    data.to = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
+    data.from = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
+    if(selectAllClients) data.cname = ['all']
+    console.log(data)
+    return
 
     setLoading(true);
     let reqC = null;
@@ -75,8 +81,6 @@ const ReportBeta = ({currentPage}) => {
     ...allotmentColumns,
   ];
 
-  console.log(reqAllotments)
-
   const tabs = [
     {
       name: 'Allotment Dockets',
@@ -100,137 +104,57 @@ const ReportBeta = ({currentPage}) => {
     );
   }, [csvData]);
 
-  useEffect(() => {
-    if(reqAllotments){
-      let temp = reqAllotments.map((d) => d.dispatch_date)
-      temp.sort(function(a, b) { 
-        return new Date(a) - new Date(b);  
-      })
-      temp = temp.filter((v, i, a) => a.indexOf(v) === i);
-      setCategories(temp.map((t) => moment(t).format('DD-MM-YY')))
-
-      let arr = []
-      for(let i = 0; i < temp.length; i++){
-
-        let cnt = 0;
-        reqAllotments.forEach((x) => {
-          if(x.dispatch_date == temp[i]) cnt++
-        });
-
-        arr.push(cnt)
-
+  const handleFieldsChange = useCallback(
+    (data) => {
+      if (data) {
+        if (data[0]) {
+          if (data[0].name[0] === 'module') {
+            if(form.getFieldValue('module') == 'Allotment') setColumnOptions(['Transaction No.',	'Dispatch Date',	'Narration',	'Kit Name',	'Kit Description',	'SKU Type',	'Alloted Quantity',	'Rate',	'Amount',	'POD'])
+            else if(form.getFieldValue('module') == 'Return') setColumnOptions(['transaction_no',	'is_delivered',	'flow',	'transaction_date',	'receiver_client',	'warehouse',	'kit_name',	'kit_type',	'quantity',	'id',	'kit_info',	'transport_by',	'product1',	'quantity1',	'product2',	'quantity2',	'product3',	'quantity3',	'product4',	'quantity4',	'product5',	'quantity5',	'product6',	'quantity6',	'POD'])
+            else setColumnOptions([])
+          }
+        }
       }
-
-      console.log(arr)
-
-      setSeriesData(arr)
-
-    }
-  }, [reqAllotments])
-
-  const chartData = {
-    height: 250,
-    type: 'bar',
-    options: {
-      title: {
-        text: 'Allotment Stats',
-        align: 'left',
-        margin: 10,
-        offsetX: 0,
-        offsetY: 0,
-        floating: false,
-        style: {
-          fontSize:  '14px',
-          fontWeight:  'bold',
-          fontFamily:  undefined,
-          color:  '#263238'
-        },
-       },
-        chart: {
-            id: 'bar-chart',
-            stacked: true,
-            toolbar: {
-                show: true
-            },
-            zoom: {
-                enabled: true
-            }
-        },
-        responsive: [
-            {
-                breakpoint: 480,
-                options: {
-                    legend: {
-                        position: 'bottom',
-                        offsetX: -10,
-                        offsetY: 0
-                    }
-                }
-            }
-        ],
-        plotOptions: {
-            bar: {
-                horizontal: false,
-                columnWidth: '50%'
-            }
-        },
-        xaxis: {
-            type: 'category',
-            categories: categories || [moment().format('DD-MM-YY')],
-            tickAmount: 20,
-            labels: {
-              show: true,
-              rotate: 0
-            },
-        },
-        legend: {
-            show: true,
-            fontSize: '12px',
-            fontFamily: `'Roboto', sans-serif`,
-            position: 'bottom',
-            offsetX: 20,
-            labels: {
-                useSeriesColors: false
-            },
-            markers: {
-                width: 16,
-                height: 16,
-                radius: 5,
-                fillColors: ['#1565C0'],
-            },
-            itemMargin: {
-                horizontal: 10,
-                vertical: 2
-            }
-        },
-        fill: {
-          colors: ['#1565C0'],
-          type: 'solid'
-        },
-        dataLabels: {
-            enabled: false,
-        },
-        grid: {
-            show: true
-        }
     },
-    series: [
-        {
-            name: 'Allotments',
-            data: seriesData || []
-        }
-    ]
-  };
+    [],
+  );
 
   return (
     <>
-      <Form onFinish={onSubmit} form={form} layout="vertical" hideRequiredMark autoComplete="off">
+      <Form onFinish={onSubmit} onFieldsChange={handleFieldsChange} form={form} layout="vertical" hideRequiredMark autoComplete="off">
         <Row>
-          <Col span={10}>
+          <Col offset={1} span={10}>
+            {formItem({
+              key: 'module',
+              kwargs: {
+                placeholder: 'Select',
+              },
+              others: {
+                selectOptions: ['Allotment', 'Return']
+              },
+              type: FORM_ELEMENT_TYPES.SELECT,
+              customLabel: 'Module',
+            })}
+          </Col>
+          <Col offset={1} span={2}>
+            {formItem({
+              key: 'select_all_clients',
+              kwargs: {
+                onChange: (val) => {
+                  setSelectAllClients(val);
+                },
+              },
+              type: FORM_ELEMENT_TYPES.SWITCH,
+              customLabel: 'All Clients',
+            })}
+          </Col>
+          <Col offset={1} span={9}>
             {formItem({
               key: 'cname',
               kwargs: {
                 placeholder: 'Select',
+                mode: 'multiple',
+                disabled: selectAllClients,
               },
               others: {
                 selectOptions: clients || [],
@@ -242,9 +166,23 @@ const ReportBeta = ({currentPage}) => {
               customLabel: 'Client',
             })}
           </Col>
+          <Col offset={1} span={22}>
+            {formItem({
+              key: 'column',
+              kwargs: {
+                placeholder: 'Select',
+                mode:'multiple',
+              },
+              others: {
+                selectOptions: columnOptions || []
+              },
+              type: FORM_ELEMENT_TYPES.SELECT,
+              customLabel: 'Columns',
+            })}
+          </Col>
         </Row>
         <Row>
-          <Col span={3}>
+          <Col offset={6} span={4}>
             {formItem({
               key: 'from',
               rules: [{required: true, message: 'Please select From date!'}],
@@ -257,8 +195,7 @@ const ReportBeta = ({currentPage}) => {
               customLabel: 'From',
             })}
           </Col>
-          <Col span={4} />
-          <Col span={3}>
+          <Col offset={4} span={4}>
             {formItem({
               key: 'to',
               rules: [{required: true, message: 'Please select To date!'}],
@@ -272,19 +209,13 @@ const ReportBeta = ({currentPage}) => {
             })}
           </Col>
         </Row>
-        <Row>
+        <Row align='center'>
           <Button type="primary" htmlType="submit">
             Submit
           </Button>
         </Row>
       </Form>
       <br />
-      <Chart
-        options={chartData.options}
-        series={chartData.series}
-        type={chartData.type}
-        height={chartData.height}
-      />
       <TableWithTabHoc
         rowKey={(record) => record.id}
         tabs={tabs}
