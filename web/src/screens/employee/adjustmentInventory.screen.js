@@ -64,7 +64,7 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee}) => {
             }}>
             <FontAwesomeIcon
               icon={record.files ? (record.files.length > 0 ? faEye : faEyeSlash) : faEyeSlash}
-              style={{fontSize: 20, color: yantraColors['primary']}}
+              style={{fontSize: 15, margin:'auto 5px', color: yantraColors['primary']}}
             />
           </Button>
 

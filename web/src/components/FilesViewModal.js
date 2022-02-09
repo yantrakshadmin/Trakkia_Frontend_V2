@@ -78,7 +78,7 @@ const FilesViewModal = ({documentAvail, getDocuments}) => {
         disabled={documentAvail ? false : true}>
         <FontAwesomeIcon
           icon={documentAvail ? faEye : faEyeSlash}
-          style={{fontSize: 20, color: yantraColors['primary']}}
+          style={{fontSize: 15, margin:'auto 5px', color: yantraColors['primary']}}
         />
       </Button>
       <Modal

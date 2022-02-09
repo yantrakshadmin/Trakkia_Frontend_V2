@@ -117,7 +117,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
                 setAltId(record.id);
                 setVisible(true);
               }}
-              style={{ fontSize: 20 }}
+              style={{ fontSize: 15, margin:'auto 5px' }}
             />
           </div>
         );

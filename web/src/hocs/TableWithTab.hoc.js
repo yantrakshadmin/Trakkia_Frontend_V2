@@ -287,7 +287,7 @@ const TableWithTabHOC = ({
                   ) : (
                     <Table
                       id='mastertable'
-                      bordered
+                      // bordered
                       rowKey={rowKey}
                       expandRowByClick
                       expandIconColumnIndex={-1}

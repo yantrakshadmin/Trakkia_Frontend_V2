@@ -215,7 +215,7 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
             }}>
             <FontAwesomeIcon
               icon={record.is_delivered ? faEye : faEyeSlash}
-              style={{fontSize: 20, color: yantraColors['primary']}}
+              style={{fontSize: 15, margin:'auto 5px', color: yantraColors['primary']}}
             />
           </Button>
           <Button

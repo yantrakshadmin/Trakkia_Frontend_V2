@@ -12,6 +12,7 @@ export default [
     dataIndex: 'transaction_type',
   },
   {
+    
     title: 'Transaction No.',
     key: 'transaction_no',
     dataIndex: 'transaction_no',

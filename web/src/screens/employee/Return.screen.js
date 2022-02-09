@@ -108,7 +108,7 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
                 setReturnNo(record.id);
                 setVisible(true);
               }}
-              style={{fontSize: 20}}
+              style={{fontSize: 15, margin:'auto 5px'}}
             />
           </div>
         );
@@ -149,7 +149,7 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
               }}>
               <FontAwesomeIcon
                 icon={record.is_delivered ? faEye : faEyeSlash}
-                style={{fontSize: 20, color: yantraColors['primary']}}
+                style={{fontSize: 15, margin:'auto 5px', color: yantraColors['primary']}}
               />
             </Button>
           </a>
