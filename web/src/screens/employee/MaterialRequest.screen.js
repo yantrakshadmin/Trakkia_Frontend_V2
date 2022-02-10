@@ -29,6 +29,10 @@ import Delete from '../../icons/Delete';
 import { ActionsPopover } from '../../components/ActionsPopover';
 import { MRRejectionForm } from '../../forms/MRRejection.form';
 import DeleteWithPassword from '../../components/DeleteWithPassword';
+import { AgGridReact } from 'ag-grid-react';
+
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
 
 const { Search } = Input;
 const { Title } = Typography;
@@ -113,6 +117,22 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
       // setCsvData(csvd);
     }
   }, [filteredData]);
+
+  const columnDefs = [
+    { headerName: 'ID', field: "id", filter: true, sortable: true },
+    { headerName: 'Linked', field: "linked", filter: true, sortable: true },
+    { headerName: 'Owner', field: "owner", filter: true, sortable: true },
+    { headerName: 'Raised By', field: "raised_by", filter: true, sortable: true },
+    { headerName: 'Reason', field: "reason", filter: true, sortable: true },
+    { headerName: 'Remarks', field: "remarks", filter: true, sortable: true },
+    { headerName: 'Delivery Required On', field: "delivery_required_on", filter: true, sortable: true },
+  ];  
+
+  const rowData = [
+    {make: "Toyota", model: "Celica", price: 35000},
+    {make: "Ford", model: "Mondeo", price: 32000},
+    {make: "Porsche", model: "Boxter", price: 72000}
+  ];
 
   const columns = [
     ...materialEmployeecolumns,
@@ -425,6 +445,16 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
         modalWidth="80"
         hideRightButton={viewType === 'Consignor' ? false : true}
       />
+      <div className="ag-theme-alpine">
+        <AgGridReact
+            rowData={filteredData}
+            columnDefs={columnDefs}
+            domLayout={'autoHeight'}
+            animateRows={true} 
+            >
+        </AgGridReact>
+      </div>      
+      
     </NoPermissionAlert>
   );
 };
