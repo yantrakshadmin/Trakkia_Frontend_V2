@@ -32,7 +32,7 @@ import DeleteWithPassword from '../../components/DeleteWithPassword';
 import { AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
-import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+import 'ag-grid-community/dist/styles/ag-theme-material.css';
 
 const { Search } = Input;
 const { Title } = Typography;
@@ -445,12 +445,12 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
         modalWidth="80"
         hideRightButton={viewType === 'Consignor' ? false : true}
       />
-      <div className="ag-theme-alpine">
+      <div className="ag-theme-material">
         <AgGridReact
             rowData={filteredData}
             columnDefs={columnDefs}
             domLayout={'autoHeight'}
-            animateRows={true} 
+            // animateRows={true} 
             >
         </AgGridReact>
       </div>      
