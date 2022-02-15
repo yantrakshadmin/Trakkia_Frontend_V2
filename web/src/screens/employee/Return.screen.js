@@ -1,20 +1,20 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import returnColumns from 'common/columns/Return.column';
 import ReturnForm from 'forms/return.form';
-import {ReceivedForm} from 'forms/received.form';
-import {Popconfirm, Input, Button, Row, Col, Modal} from 'antd';
-import {connect} from 'react-redux';
-import {useTableSearch} from 'hooks/useTableSearch';
-import {deleteReturn} from 'common/api/auth';
-import {Link, useNavigate} from '@reach/router';
+import { ReceivedForm } from 'forms/received.form';
+import { Popconfirm, Input, Button, Row, Col, Modal } from 'antd';
+import { connect } from 'react-redux';
+import { useTableSearch } from 'hooks/useTableSearch';
+import { deleteReturn } from 'common/api/auth';
+import { Link, useNavigate } from '@reach/router';
 import Delete from 'icons/Delete';
 import Edit from 'icons/Edit';
 import Delivery from 'icons/Delivery';
 import Download from 'icons/Download';
 import Document from 'icons/Document';
-import {useAPI} from 'common/hooks/api';
-import {GetUniqueValue} from 'common/helpers/getUniqueValues';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { useAPI } from 'common/hooks/api';
+import { GetUniqueValue } from 'common/helpers/getUniqueValues';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faMoneyCheck,
   faTruckLoading,
@@ -22,25 +22,25 @@ import {
   faEye,
   faEyeSlash,
 } from '@fortawesome/free-solid-svg-icons';
-import {BarcodeReturnDocket} from 'components/barcodeReturnDocket';
-import {loadAPI} from 'common/helpers/api';
-import {DEFAULT_BASE_URL} from 'common/constants/enviroment';
-import {deleteHOC} from '../../hocs/deleteHoc';
+import { BarcodeReturnDocket } from 'components/barcodeReturnDocket';
+import { loadAPI } from 'common/helpers/api';
+import { DEFAULT_BASE_URL } from 'common/constants/enviroment';
+import { deleteHOC } from '../../hocs/deleteHoc';
 import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
-import {LineGraph} from '../../components/graphComponent/lineGraph';
-import {yantraColors} from '../../helpers/yantraColors';
+import { LineGraph } from '../../components/graphComponent/lineGraph';
+import { yantraColors } from '../../helpers/yantraColors';
 import ExpandTable from '../../components/ReturnsExpandTable';
 
 import DeleteWithPassword from '../../components/DeleteWithPassword';
-import {DEFAULT_PASSWORD} from 'common/constants/passwords';
+import { DEFAULT_PASSWORD } from 'common/constants/passwords';
 import NoPermissionAlert from 'components/NoPermissionAlert';
 import KPICard from '../../components/Dashboard/KPICard'
 
 
 
-const {Search} = Input;
+const { Search } = Input;
 
-const ReturnDocketsScreen = ({currentPage, user}) => {
+const ReturnDocketsScreen = ({ currentPage, user }) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [reqData, setReqData] = useState(null);
@@ -53,13 +53,13 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
 
 
 
- 
 
-  const {data: returns, loading, reload: reloadFull, status} = useAPI('/return-table/', {}, true, );
 
-  const {filteredData, reload} = useTableSearch({
+  const { data: returns, loading, reload: reloadFull, status } = useAPI('/return-table/', {}, true,);
+
+  const { filteredData, reload } = useTableSearch({
     searchVal,
-    reqData,  
+    reqData,
     usePaginated: false
   });
 
@@ -67,8 +67,8 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
 
   useEffect(() => {
     if (returns) {
-      console.log(returns,"backsodi")
-      const reqD = (returns?.results||[]).map((ret) => ({
+      console.log(returns, "backsodi")
+      const reqD = (returns?.results || []).map((ret) => ({
         ...ret,
       }));
       setReqData(reqD);
@@ -101,7 +101,7 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
       render: (text, record) => {
         return (
           <div className="row align-center justify-evenly">
-          
+
             <a href={`../return-docket/${record.id}`} target='_blank' rel='noreferrer'>
               <Download />
             </a>
@@ -114,7 +114,7 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
                 setReturnNo(record.id);
                 setVisible(true);
               }}
-              style={{fontSize: 15, margin:'auto 5px'}}
+              style={{ fontSize: 15, margin: 'auto 5px' }}
             />
           </div>
         );
@@ -137,7 +137,7 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
               // disabled={!record.document}
               onClick={async (e) => {
                 e.stopPropagation();
-                const {data: req} = await loadAPI(
+                const { data: req } = await loadAPI(
                   `/received-docket/?pk=${record.id}`,
                   {},
                 );
@@ -151,11 +151,11 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
                       window.open(f.document);
                     });
                   }
-                } catch (err) {}
+                } catch (err) { }
               }}>
               <FontAwesomeIcon
                 icon={record.is_delivered ? faEye : faEyeSlash}
-                style={{fontSize: 15, margin:'auto 5px', color: yantraColors['primary']}}
+                style={{ fontSize: 15, margin: 'auto 5px', color: yantraColors['primary'] }}
               />
             </Button>
           </a>
@@ -279,23 +279,36 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
       </Row> */}
 
 
-
-      
       <Row gutter={10} style={{ margin: '5px', marginTop: '20px' }}>
-        <Col span={6}>
+        {/* <Col span={6}>
           {allotmentKPI ? <KPICard title={`Allotments`} count={allotmentKPI['this month']} change={allotmentKPI['last month'] == 0 ? (allotmentKPI['this month'] - allotmentKPI['last month']) * 100 : (allotmentKPI['this month'] - allotmentKPI['last month']) / allotmentKPI['last month'] * 100} icon={'fas fa-truck-loading'} color={'#212121'} /> : <KPICard title={`Allotments`} count={'...'} change={0} icon={'fas fa-truck-loading'} color={'#212121'} />}
-        </Col>
+        </Col> */}
         <Col span={6}>
-          <KPICard title={`Today's Users`} count={2300} change={3} icon={'fas fa-users'} color={'#1E88E5'} /> 
+          <KPICard
+            // {...{ title: 'Total Received', count: deliveredCount, width: 230 }}
+            title={`Total Return`}
+            count={(reqData || []).length}
+            change={3} icon={'fas fa-users'} color={'#1E88E5'} width={230}
+          />
+
+        </Col>
+
+        <Col span={6}>
+          <KPICard
+            // {...{ title: 'Total Received', count: deliveredCount, width: 230 }}
+            title={`Total Received`}
+            count={deliveredCount}
+            change={3} icon={'fas fa-users'} color={'#1E88E5'} width={230}
+          />
 
         </Col>
         <Col span={6}>
-          <KPICard title={`Revenue`} count={ '1'} change={1} icon={'fas fa-home'} color={'#00C853'} />
+          <KPICard title={`In-transit`} count={pendingCount} change={1} icon={'fas fa-home'} color={'#00C853'} width={230} />
         </Col>
         <Col span={6}>
           <KPICard
-            title={"followers"}
-            count={'9'}  
+            title={"DEPS Reported"}
+            count={'5'}
             change={2}
             icon={'fas fa-user-plus'}
             color={'#C62828'}
@@ -307,8 +320,8 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
       </Row>
 
       <br />
-      <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-        <div style={{width: '15vw', display: 'flex', alignItems: 'flex-end'}}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ width: '15vw', display: 'flex', alignItems: 'flex-end' }}>
           <Search onChange={(e) => setSearchVal(e.target.value)} placeholder="Search" enterButton />
         </div>
       </div>
@@ -318,7 +331,7 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
         maskClosable={false}
         visible={visible}
         destroyOnClose
-        style={{minWidth: `80vw`}}
+        style={{ minWidth: `80vw` }}
         title={TN}
         onCancel={() => {
           setVisible(false);
@@ -346,7 +359,7 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
 };
 
 const mapStateToProps = (state) => {
-  return {currentPage: state.page.currentPage, user: state.user.userMeta};
+  return { currentPage: state.page.currentPage, user: state.user.userMeta };
 };
 
 export default connect(mapStateToProps)(ReturnDocketsScreen);
