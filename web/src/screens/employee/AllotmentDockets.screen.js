@@ -42,6 +42,8 @@ import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
 import { LineGraph } from '../../components/graphComponent/lineGraph';
 import DeleteWithPassword from '../../components/DeleteWithPassword';
 import { yantraColors } from '../../helpers/yantraColors';
+import KPICard from '../../components/Dashboard/KPICard'
+
 
 const { Search } = Input;
 const { Title } = Typography;
@@ -60,6 +62,11 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
     reqData,
     usePaginated: false
   });
+  const { data: allotmentKPI } = useAPI('/allotcount-kpi/')
+ 
+
+
+
   useEffect(() => {
     if (allotments) {
       const reqD = allotments.map((alt) => ({
@@ -280,7 +287,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
   const pendingCount = reqData.length - deliveredCount;
   return (
     <NoPermissionAlert hasPermission={status !== 403}>
-      <Row className='mr-auto ml-auto' gutter={24}>
+      {/* <Row className='mr-auto ml-auto' gutter={24}>
         <Col span={6}>
           <LineGraph {...{ tagName: materialRequest, count:0, width: 230 }} />
         </Col>
@@ -292,6 +299,23 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
         </Col>
         <Col span={6}>
           <LineGraph {...{ tagName: pending, count: pendingCount, width: 230 }} />
+        </Col>
+      </Row> */}
+
+
+      <Row gutter={10} style={{ margin: '5px', marginTop: '20px' }}>
+        <Col span={6}>
+          {allotmentKPI ? <KPICard title={`Allotments`} count={allotmentKPI['this month']} change={allotmentKPI['last month'] == 0 ? (allotmentKPI['this month'] - allotmentKPI['last month']) * 100 : (allotmentKPI['this month'] - allotmentKPI['last month']) / allotmentKPI['last month'] * 100} icon={'fas fa-truck-loading'} color={'#212121'} /> : <KPICard title={`Allotments`} count={'...'} change={0} icon={'fas fa-truck-loading'} color={'#212121'} />}
+        </Col>
+        <Col span={6}>
+          <KPICard title={`Today's Users`} count={2300} change={3} icon={'fas fa-users'} color={'#1E88E5'} />
+
+        </Col>
+        <Col span={6}>
+          <KPICard title={`Revenue`} count={34000} change={1} icon={'fas fa-home'} color={'#00C853'} />
+        </Col>
+        <Col span={6}>
+          <KPICard title={`Followers`} count={91} change={2} icon={'fas fa-user-plus'} color={'#C62828'} />
         </Col>
       </Row>
       <br />

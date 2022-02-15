@@ -34,6 +34,9 @@ import ExpandTable from '../../components/ReturnsExpandTable';
 import DeleteWithPassword from '../../components/DeleteWithPassword';
 import {DEFAULT_PASSWORD} from 'common/constants/passwords';
 import NoPermissionAlert from 'components/NoPermissionAlert';
+import KPICard from '../../components/Dashboard/KPICard'
+
+
 
 const {Search} = Input;
 
@@ -46,6 +49,9 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
   const [returnNo, setReturnNo] = useState(null);
   const [TN, setTN] = useState(null);
   const navigate = useNavigate();
+  const { data: allotmentKPI } = useAPI('/allotcount-kpi/')
+
+
 
  
 
@@ -251,7 +257,7 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
 
   return (
     <NoPermissionAlert hasPermission={status === 403 ? false : true}>
-      <Row className="mr-auto ml-auto" gutter={24}>
+      {/* <Row className="mr-auto ml-auto" gutter={24}>
         <Col span={6}>
           <LineGraph {...{tagName: 'Total Return', count: (reqData || []).length, width: 230}} />
         </Col>
@@ -270,7 +276,36 @@ const ReturnDocketsScreen = ({currentPage, user}) => {
             }}
           />
         </Col>
+      </Row> */}
+
+
+
+      
+      <Row gutter={10} style={{ margin: '5px', marginTop: '20px' }}>
+        <Col span={6}>
+          {allotmentKPI ? <KPICard title={`Allotments`} count={allotmentKPI['this month']} change={allotmentKPI['last month'] == 0 ? (allotmentKPI['this month'] - allotmentKPI['last month']) * 100 : (allotmentKPI['this month'] - allotmentKPI['last month']) / allotmentKPI['last month'] * 100} icon={'fas fa-truck-loading'} color={'#212121'} /> : <KPICard title={`Allotments`} count={'...'} change={0} icon={'fas fa-truck-loading'} color={'#212121'} />}
+        </Col>
+        <Col span={6}>
+          <KPICard title={`Today's Users`} count={2300} change={3} icon={'fas fa-users'} color={'#1E88E5'} /> 
+
+        </Col>
+        <Col span={6}>
+          <KPICard title={`Revenue`} count={ '1'} change={1} icon={'fas fa-home'} color={'#00C853'} />
+        </Col>
+        <Col span={6}>
+          <KPICard
+            title={"followers"}
+            count={'9'}  
+            change={2}
+            icon={'fas fa-user-plus'}
+            color={'#C62828'}
+            width={230}
+          />
+          <Col span={6}>
+          </Col>
+        </Col>
       </Row>
+
       <br />
       <div style={{display: 'flex', justifyContent: 'flex-end'}}>
         <div style={{width: '15vw', display: 'flex', alignItems: 'flex-end'}}>
