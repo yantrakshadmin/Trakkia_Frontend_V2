@@ -1,35 +1,39 @@
-import React, {useState, useEffect} from 'react';
-import {Input, Button, Popconfirm} from 'antd';
-import {connect, useSelector} from 'react-redux';
-import {useTableSearch} from 'hooks/useTableSearch';
-import {Link} from '@reach/router';
-import {useAPI} from 'common/hooks/api';
-import {deleteOutward, retrieveOutward, retrieveOutwardDocket} from 'common/api/auth';
-import {outwardDocketColumn} from 'common/columns/outwardDocket.column';
-import {GetUniqueValue} from 'common/helpers/getUniqueValues';
-import {loadAPI} from 'common/helpers/api';
-import {DEFAULT_BASE_URL} from 'common/constants/enviroment';
+import React, { useState, useEffect } from 'react';
+import { Input, Button, Popconfirm, Row ,Col } from 'antd';
+import { connect, useSelector } from 'react-redux';
+import { useTableSearch } from 'hooks/useTableSearch';
+import { Link } from '@reach/router';
+import { useAPI } from 'common/hooks/api';
+import { deleteOutward, retrieveOutward, retrieveOutwardDocket } from 'common/api/auth';
+import { outwardDocketColumn } from 'common/columns/outwardDocket.column';
+import { GetUniqueValue } from 'common/helpers/getUniqueValues';
+import { loadAPI } from 'common/helpers/api';
+import { DEFAULT_BASE_URL } from 'common/constants/enviroment';
 import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
-import {OutwardDocketForm} from '../../forms/OutwardDocket.form';
+import { OutwardDocketForm } from '../../forms/OutwardDocket.form';
 import Edit from '../../icons/Edit';
-import {deleteHOC} from '../../hocs/deleteHoc';
+import { deleteHOC } from '../../hocs/deleteHoc';
 import Delete from '../../icons/Delete';
 import Delivery from '../../icons/Delivery';
 import Download from '../../icons/Download';
-import {OutwardDeliveredDocketForm} from '../../forms/OutwardDeliveredDocket.form';
+import { OutwardDeliveredDocketForm } from '../../forms/OutwardDeliveredDocket.form';
 import Document from '../../icons/Document';
 import TableWithTabHoc from '../../hocs/TableWithTab.hoc';
 import moment from 'moment';
 
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {faBarcode, faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons';
-import {yantraColors} from '../../helpers/yantraColors';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBarcode, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+import { yantraColors } from '../../helpers/yantraColors';
 import NoPermissionAlert from 'components/NoPermissionAlert';
 import ExpandTable from 'components/OutwardsExpandTable';
 
-const {Search} = Input;
 
-const OutwardDocketScreen = ({currentPage, isEmployee}) => {
+import KPICard from '../../components/Dashboard/KPICard'
+
+
+const { Search } = Input;
+
+const OutwardDocketScreen = ({ currentPage, isEmployee }) => {
 
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
@@ -37,10 +41,12 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
   const [deliveryId, setDeliveryId] = useState(null);
   const [TN, setTN] = useState(null);
   const user = useSelector((s) => s.user.userMeta);
-  const {viewType} = user
+  const { viewType } = user
   console.log(user, viewType, isEmployee, 'Props');
+  const { data: allotmentKPI } = useAPI('/allotcount-kpi/')
 
-  const {filteredData, loading, reload, status} = useTableSearch({
+
+  const { filteredData, loading, reload, status } = useTableSearch({
     searchVal,
     retrieve: retrieveOutwardDocket,
     useCompanyIdAndViewType: true
@@ -119,15 +125,15 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
           //   </a>
           <div className="row align-center justify-evenly">
             <Link
-              to={`../outward-docket/${record.id}` }
+              to={`../outward-docket/${record.id}`}
               target="_blank"
               rel="noreferrer"
-              state={{id: record.id}}
+              state={{ id: record.id }}
               key={record.id}
-              style={{textDecoration: 'none'}}>
+              style={{ textDecoration: 'none' }}>
               <Download />
             </Link>
-          
+
           </div>
         );
       },
@@ -203,7 +209,7 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
             }}
             // disabled={!record.document}
             onClick={async (e) => {
-              const {data: req} = await loadAPI(`${DEFAULT_BASE_URL}/inward/?pk=${record.id}`, {});
+              const { data: req } = await loadAPI(`${DEFAULT_BASE_URL}/inward/?pk=${record.id}`, {});
               if (req) {
                 if (req[0]) {
                   if (req[0].document) {
@@ -215,7 +221,7 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
             }}>
             <FontAwesomeIcon
               icon={record.is_delivered ? faEye : faEyeSlash}
-              style={{fontSize: 15, margin:'auto 5px', color: yantraColors['primary']}}
+              style={{ fontSize: 15, margin: 'auto 5px', color: yantraColors['primary'] }}
             />
           </Button>
           <Button
@@ -300,8 +306,24 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
 
   return (
     <NoPermissionAlert hasPermission={isEmployee ? (status === 403 ? false : true) : true}>
-      <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-        <div style={{width: '15vw', display: 'flex', alignItems: 'flex-end'}}>
+
+
+      <Row gutter={10} style={{ margin: '5px', marginTop: '20px' }}>
+        <Col span={6}>
+          {allotmentKPI ? <KPICard title={`Allotments`} count={allotmentKPI['this month']} change={allotmentKPI['last month'] == 0 ? (allotmentKPI['this month'] - allotmentKPI['last month']) * 100 : (allotmentKPI['this month'] - allotmentKPI['last month']) / allotmentKPI['last month'] * 100} icon={'fas fa-truck-loading'} color={'#212121'} /> : <KPICard title={`Allotments`} count={'...'} change={0} icon={'fas fa-truck-loading'} color={'#212121'} />}
+        </Col>
+        <Col span={6}>
+          <KPICard title={`Today's Users`} count={2300} change={3} icon={'fas fa-users'} color={'#1E88E5'} />
+        </Col>
+        <Col span={6}>
+          <KPICard title={`Revenue`} count={34000} change={1} icon={'fas fa-home'} color={'#00C853'} />
+        </Col>
+        <Col span={6}>
+          <KPICard title={`Followers`} count={91} change={2} icon={'fas fa-user-plus'} color={'#C62828'} />
+        </Col>
+      </Row>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ width: '15vw', display: 'flex', alignItems: 'flex-end' }}>
           <Search onChange={(e) => setSearchVal(e.target.value)} placeholder="Search" enterButton />
         </div>
       </div>
@@ -318,17 +340,17 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
         title={deliveryId ? 'Delivered Docket ' : 'Outward Docket '}
         modalBody={deliveryId ? OutwardDeliveredDocketForm : OutwardDocketForm}
         modalWidth={98}
-        formParams={{transaction_no: TN}}
+        formParams={{ transaction_no: TN }}
         cancelEditing={cancelEditing}
         ExpandBody={ExpandTable}
-        // hideRightButton={viewType !== 'Consignor'}
+      // hideRightButton={viewType !== 'Consignor'}
       />
     </NoPermissionAlert>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {currentPage: state.page.currentPage};
+  return { currentPage: state.page.currentPage };
 };
 
 export default connect(mapStateToProps)(OutwardDocketScreen);
