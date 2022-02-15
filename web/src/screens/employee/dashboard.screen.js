@@ -432,7 +432,8 @@ export const DashboardScreen = () => {
       if(allotment.flows[0] && moment(allotment.dispatch_date).format('YYYY') == '2021') box[allotment.flows[0].kit][Number(moment(allotment.dispatch_date).format('M')) - 1] += allotment.flows[0].alloted_quantity
       // allotment.flows[0] && console.log(moment(allotment.dispatch_date).format('M'))
     })
-    console.log(box)
+  console.log(box)
+  console.log(allotmentData ,"allllllllotttttttttttt");
 
     const chartData = {
       height: 250,

@@ -10,7 +10,8 @@ import {changePage} from 'common/actions/changePage';
 import logo from 'common/assets/Yantraksh Logo.png';
 
 import {Loading} from 'components/Loading';
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import UserImg from "../icons/userImg.jpg"
 
 const {SubMenu} = Menu;
 const {Header, Content, Sider, Footer} = Layout;
@@ -67,8 +68,8 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
         <div className="bg-white m-0 row align-center">
           <img
             style={{
-              height: '33px',
-              width: '135px',
+              height: '50px',
+              width: '200px',
               position: 'absolute',
             }}
             alt="Yantraksh"
@@ -93,7 +94,7 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
               )}
             />
             
-            <Avatar size="large" src={user.dp} />
+            <Avatar size="large" src={UserImg} />
           </div>
         </Dropdown>
       </Header>
