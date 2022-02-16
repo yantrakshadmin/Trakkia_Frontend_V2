@@ -33,7 +33,8 @@ const ReportBeta = ({currentPage}) => {
     data.to = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
     data.from = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
     if(selectAllClients) data.cname = ['all']
-    console.log(data)
+    const {data: reportAl} = await loadAPI(`/allotment-report-beta/?cname=${data.cname}&columns=${data.column}&to=${data.to}&from=${data.from}`)
+    console.log(reportAl)
     return
 
     setLoading(true);
@@ -109,7 +110,7 @@ const ReportBeta = ({currentPage}) => {
       if (data) {
         if (data[0]) {
           if (data[0].name[0] === 'module') {
-            if(form.getFieldValue('module') == 'Allotment') setColumnOptions(['Transaction No.',	'Dispatch Date',	'Narration',	'Kit Name',	'Kit Description',	'SKU Type',	'Alloted Quantity',	'Rate',	'Amount',	'POD'])
+            if(form.getFieldValue('module') == 'Allotment') setColumnOptions(['id', 'flows', 'send_from_warehouse', 'transport_by', 'transaction_no', 'dispatch_date', 'is_delivered', 'document_available', 'model', 'driver_name', 'driver_number', 'lr_number', 'vehicle_number', 'freight_charges', 'vehicle_type', 'expected_delivery', 'remarks', 'sales_order', 'owner'])
             else if(form.getFieldValue('module') == 'Return') setColumnOptions(['transaction_no',	'is_delivered',	'flow',	'transaction_date',	'receiver_client',	'warehouse',	'kit_name',	'kit_type',	'quantity',	'id',	'kit_info',	'transport_by',	'product1',	'quantity1',	'product2',	'quantity2',	'product3',	'quantity3',	'product4',	'quantity4',	'product5',	'quantity5',	'product6',	'quantity6',	'POD'])
             else setColumnOptions([])
           }

@@ -67,9 +67,10 @@ export const GroupForm = ({id, onCancel, onDone}) => {
 
   const preProcess = useCallback(
     (data) => {
-      console.log(data, selectedModels)
+      // console.log(data, selectedModels)
       const temp = {};
       temp.name = data.name;
+      temp.description = data.description;
       temp.employees = data.employees.map((c) => ({pk: c}));
       let s = [];
       selectedModels.forEach((i) => {
@@ -143,6 +144,13 @@ export const GroupForm = ({id, onCancel, onDone}) => {
                     customTitle: 'name',
                   },
                 })}
+              </div>
+            </Col>
+          ))}
+          {groupFormFields.slice(2, 3).map((item, idx) => (
+            <Col span={item.colSpan}>
+              <div key={idx} className="p-2">
+                {formItem(item)}
               </div>
             </Col>
           ))}

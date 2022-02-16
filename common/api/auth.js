@@ -90,31 +90,11 @@ export const deleteProduct = (id) =>
     secure: true,
   });
 
-export const createKit = ({
-  kit_name,
-  kit_info,
-  components_per_kit,
-  kit_client,
-  part_name,
-  part_number,
-  kit_type,
-  products,
-  active,
-}) =>
+export const createKit = (data) =>
   loadAPI('/create-kit/', {
     method: 'POST',
     secure: true,
-    data: {
-      kit_name,
-      kit_info,
-      components_per_kit,
-      kit_client,
-      part_name,
-      part_number,
-      kit_type,
-      products,
-      active,
-    },
+    data: data,
   });
 
 export const editKit = (

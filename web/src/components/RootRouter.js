@@ -70,7 +70,7 @@ const RootRouter = ({ user }) => {
       case 'employee':
         return (
           <PrivateRoutes
-            routes={[ ...(user.isAdmin?superUserRoutes:[]), ...employeesRoutes]}
+            routes={[ ...employeesRoutes, ...(user.isAdmin?superUserRoutes:[])]}
             extraRoutes={[...(user.isAdmin?extraRoutesSuperUser:[]), ...extraRoutesEmployee]}
             outerRoutes={[...(user.isAdmin?outerRoutesSuperUser:[]), ...outerRoutesEmployee]}
             user={user}

@@ -63,11 +63,12 @@ export const groupFormFields = [
     key: 'name',
     rules: [{ required: true, message: 'Please enter Group Name!' }],
     kwargs: {
-      placeholder: 'Enter',
+      placeholder: 'Name',
     },
     type: FORM_ELEMENT_TYPES.INPUT,
     others: null,
     customLabel: 'Group Name',
+    colSpan: 6,
   },
   {
     key: 'employees',
@@ -82,7 +83,18 @@ export const groupFormFields = [
     type: FORM_ELEMENT_TYPES.SELECT,
     others: null,
     customLabel: 'Employee',
-    colSpan: 18,
+    colSpan: 6,
+  },
+  {
+    key: 'description',
+    rules: [{ required: true, message: 'Please enter Group Description!' }],
+    kwargs: {
+      placeholder: 'Description',
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    others: null,
+    customLabel: 'Group Description',
+    colSpan: 12,
   },
   {
     // key: 'solution_palletized_box',

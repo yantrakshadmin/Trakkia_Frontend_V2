@@ -64,7 +64,7 @@ export const kitFormFields = [
   },
   {
     key: 'kit_type',
-    rules: [{required: true, message: 'Please select kit kit type!'}],
+    rules: [{required: true, message: 'Please select kit type!'}],
     kwargs: {
       placeholder: 'Select',
     },
@@ -89,6 +89,20 @@ export const kitFormFields = [
       ],
     },
     customLabel: 'Kit Type',
+  },
+  {
+    key: 'kit_category',
+    rules: [{required: true, message: 'Please select kit category!'}],
+    kwargs: {
+      placeholder: 'Select',
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: {
+      selectOptions: [
+        'FLC', 'FSC', 'Crate', 'PP Box'
+      ],
+    },
+    customLabel: 'Kit Category',
   },
   {
     key: 'active',

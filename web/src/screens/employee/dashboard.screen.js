@@ -542,13 +542,13 @@ export const DashboardScreen = () => {
           {allotmentKPI ? <KPICard title={`Allotments`} count={allotmentKPI['this month']} change={allotmentKPI['last month'] == 0 ? (allotmentKPI['this month'] - allotmentKPI['last month'])*100 : (allotmentKPI['this month'] - allotmentKPI['last month'])/allotmentKPI['last month']*100} icon={'fas fa-truck-loading'} color={'#212121'} /> : <KPICard title={`Allotments`} count={'...'} change={0} icon={'fas fa-truck-loading'} color={'#212121'} />}
         </Col>
         <Col span={6}>
-          <KPICard title={`Today's Users`} count={2300} change={3} icon={'fas fa-users'} color={'#1E88E5'} />
+          <KPICard title={`Tickets`} count={23} change={3} icon={'fas fa-ticket-alt'} color={'#1E88E5'} />
         </Col>
         <Col span={6}>
-          <KPICard title={`Revenue`} count={34000} change={1} icon={'fas fa-home'} color={'#00C853'} />
+          <KPICard title={`Average Cycle Time`} count={30} change={1} icon={'fas fa-clock'} color={'#00C853'} />
         </Col>
         <Col span={6}>
-          <KPICard title={`Followers`} count={91} change={2} icon={'fas fa-user-plus'} color={'#C62828'} />
+          <KPICard title={`Asset Utilizaton`} count={98} change={2} icon={'fas fa-users'} color={'#C62828'} />
         </Col>
       </Row>
       <Row>
