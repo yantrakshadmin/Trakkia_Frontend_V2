@@ -33,6 +33,8 @@ import { AgGridReact } from 'ag-grid-react';
 
 import 'ag-grid-community/dist/styles/ag-grid.css';
 import 'ag-grid-community/dist/styles/ag-theme-material.css';
+import { filter } from 'lodash';
+import { render } from 'less';
 
 const { Search } = Input;
 const { Title } = Typography;
@@ -220,7 +222,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
       title: 'Status',
       key: 'status',
       className: 'align-center',
-      filters: [
+      filters : [
         {
           text: 'Allocated',
           value: 'Allocated',
@@ -448,7 +450,23 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
       columns,
       loading,
     },
+    {
+      name: 'Pending',
+      key: 'PendingRequests',
+      data: mergeArray(filteredData || []).filter(item =>( !item.is_allocated && !item.is_rejected )),
+      columns,
+      loading,
+    },
+    {
+      name: 'Allocated ',
+      key: 'allocatedRequests',
+      data: mergeArray(filteredData || []).filter(item => (item.is_allocated && !item.is_rejected)),
+      columns,
+      loading,
+    },
   ];
+  console.log(filteredData , "Filterrdatttaaaaaaa") 
+
 
   const cancelEditing = () => {
     setEditingId(null);
