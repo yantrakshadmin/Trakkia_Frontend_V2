@@ -34,6 +34,8 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
     window.location.reload('/')
 
   }
+  // user.name.split('')
+  const splitstr = user.name.split('')
 
   const menu = (
     <Menu>
@@ -65,11 +67,11 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
       <Header
         className="header row align-center justify-between"
         style={{backgroundColor: '#fff', paddingLeft: 20, paddingRight: 20}}>
-        <div className="bg-white m-0 row align-center">
+        <div className="bg-white m-0  row align-center ">
           <img
             style={{
-              height: '50px',
-              width: '200px',
+              height: '40px',
+              width: '180px',
               position: 'absolute',
             }}
             alt="Yantraksh"
@@ -94,7 +96,9 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
               )}
             />
             
-            <Avatar size="large" src={UserImg} />
+            <Avatar style={{ textTransform: "uppercase", backgroundColor: "#5986c2"}} size="large" src=""> <span>{splitstr[0][0]}</span> <span> {splitstr[7][0]}</span>
+            </Avatar>
+
           </div>
         </Dropdown>
       </Header>
