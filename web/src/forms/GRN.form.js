@@ -14,6 +14,7 @@ import _ from 'lodash';
 import {filterActive} from 'common/helpers/mrHelper';
 
 export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
+  console.log(createGrnWithPO)
   const [reqFile, setFile] = useState(null);
 
   const {user} = useSelector((s) => s);
@@ -45,7 +46,7 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
     failure: 'Error in creating/editing GRN.',
     done: onDone,
     close: onCancel,
-    id,
+    id: createGrnWithPO ? null : id,
     dates: ['inward_date'],
     customHandling: createGrnWithPO ? handleGrnWithPO : undefined,
   });

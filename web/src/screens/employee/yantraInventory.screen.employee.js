@@ -12,12 +12,18 @@ import {deleteHOC} from '../../hocs/deleteHoc';
 import Delete from '../../icons/Delete';
 import {useTableSearch} from '../../hooks/useTableSearch';
 import {CSVLink} from 'react-csv';
+import { useSelector } from 'react-redux';
 
 const {Search} = Input;
 
 export const TestInventoryScreen = () => {
-  const {data: products} = useAPI('/products/', {});
+  const { companyId } = useSelector((s) => s.user.userMeta);
+
+  const {data: products} = useAPI('/products/', {}, false, true);
+  const { data: warehouses } = useAPI(`/company-warehouse/?id=${companyId}`);
   const [details, setDetails] = useState([]);
+  const [warehouseData, setWarehouseData] = useState([]);
+  const [warehouseLoading, setWarehouseLoading] = useState(true);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState('');
   const [searchVal, setSearchVal] = useState(null);
@@ -54,11 +60,36 @@ export const TestInventoryScreen = () => {
   const DownloadCSVButton = useCallback(() => {
     const t = generateCSVData();
     return (
-      <Button>
-        <CSVLink filename={'warehouse-inventory.csv'} data={t.data} headers={t.headers}>
-          Download CSV
-        </CSVLink>
-      </Button>
+      <Row style={{display: 'inline-flex'}}>
+        <Col span={12}>
+          <Button>
+            <CSVLink filename={'warehouse-inventory.csv'} data={t.data} headers={t.headers}>
+              Download CSV
+            </CSVLink>
+          </Button>
+        </Col>
+        <Col span={24} style={{marginTop: '10px'}}>
+          {formItem({
+            key: 'warehouse',
+            kwargs: {
+              placeholder: 'Select',
+              onChange: async (val) => {
+                const {data} = await loadAPI(`/inv-items/?id=${val}`)
+                setWarehouseData(data)
+                setWarehouseLoading(false)
+              },
+            },
+            others: {
+              selectOptions: warehouses || [],
+              key: 'id',
+              customTitle: 'name',
+              dataKeys: ['address'],
+            },
+            type: FORM_ELEMENT_TYPES.SELECT,
+            customLabel: 'Warehouse',
+          })}
+        </Col>
+      </Row>
     );
   }, [invData, generateCSVData]);
 
@@ -201,12 +232,12 @@ export const TestInventoryScreen = () => {
           <MasterHOC
             refresh={reload}
             size="small"
-            data={invData}
+            data={warehouseData}
             columns={column}
             title="Inventory"
             ExtraButtonNextToTitle={DownloadCSVButton}
             hideRightButton
-            loading={loading || invLoading}
+            loading={warehouseLoading}
           />
         </Col>
         <Col lg={12}>

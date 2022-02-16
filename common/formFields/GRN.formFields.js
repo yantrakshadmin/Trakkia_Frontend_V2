@@ -3,7 +3,7 @@ import {FORM_ELEMENT_TYPES} from '../../web/src/constants/formFields.constant';
 export const PoGRNFields = [
   {
     key: 'po_number',
-    rules: [{message: 'Please enter purchase order number!'}],
+    rules: [{required: true, message: 'Please enter purchase order number!'}],
     kwargs: {
       placeholder: 'Enter',
     },
@@ -13,7 +13,7 @@ export const PoGRNFields = [
   },
   {
     key: 'id',
-    rules: [{message: 'Please enter purchase order ID!'}],
+    rules: [{required: true, message: 'Please enter purchase order ID!'}],
     kwargs: {
       placeholder: 'Enter',
     },
