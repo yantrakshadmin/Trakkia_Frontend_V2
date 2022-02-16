@@ -2,8 +2,8 @@ import moment from 'moment';
 
 export default [
   {
-    headerName: 'Sales Order ID',
-    field: 'id',
+    title: 'Sales Order ID',
+    key: 'id',
     dataIndex: 'id',
   },
 ];

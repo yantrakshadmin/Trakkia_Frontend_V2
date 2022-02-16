@@ -118,99 +118,107 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
     }
   }, [filteredData]);
 
-  const columnDefs = [
-    { headerName: 'ID', field: "id", filter: true, sortable: true },
-    { headerName: 'Linked', field: "linked", filter: true, sortable: true },
-    { headerName: 'Owner', field: "owner", filter: true, sortable: true },
-    { headerName: 'Raised By', field: "raised_by", filter: true, sortable: true },
-    { headerName: 'Reason', field: "reason", filter: true, sortable: true },
-    { headerName: 'Remarks', field: "remarks", filter: true, sortable: true },
-    { headerName: 'Delivery Required On', field: "delivery_required_on", filter: true, sortable: true },
-    { 
-      headerName: 'Action', 
-      field: "operation", 
-      cellRenderer: params => 
+  // const columnDefs = [
+  //   { headerName: 'ID', field: "id", filter: true, sortable: true },
+  //   { headerName: 'Linked', field: "linked", filter: true, sortable: true },
+  //   { headerName: 'Owner', field: "owner", filter: true, sortable: true },
+  //   { headerName: 'Raised By', field: "raised_by", filter: true, sortable: true },
+  //   { headerName: 'Reason', field: "reason", filter: true, sortable: true },
+  //   { headerName: 'Remarks', field: "remarks", filter: true, sortable: true },
+  //   { headerName: 'Delivery Required On', field: "delivery_required_on", filter: true, sortable: true },
+  //   { 
+  //     headerName: 'Action', 
+  //     field: "operation", 
+  //     cellRenderer: params => 
       
-      <div className='row justify-evenly'>
-      <Button
-        style={{
-          backgroundColor: 'transparent',
-          border: 'none',
-          boxShadow: 'none',
-          padding: '1px',
-        }}
-        onClick={(e) => {
-          setEditingId(params.data.id);
-          setPopoverEditVisible(true);
-          e.stopPropagation();
-        }}>
-        <Edit />
-      </Button>
-      <DeleteWithPassword
-        password={DEFAULT_PASSWORD}
-        deleteHOC={deleteHOC({
-          record: params.data,
-          reload,
-          api: deleteAddMr,
-          success: 'Deleted MR successfully',
-          failure: 'Error in deleting MR',
-        })}
-      />
-      {/* <Popconfirm
-        title="Confirm Delete"
-        onCancel={(e) => e.stopPropagation()}
-        onConfirm={deleteHOC({
-          record,
-          reload,
-          api: deleteAddMr,
-          success: 'Deleted Material Request Successfully',
-          failure: 'Error in deleting Material Request',
-        })}>
-        <Button
-          style={{
-            backgroundColor: 'transparent',
-            boxShadow: 'none',
-            border: 'none',
-            padding: '1px',
-          }}
-          onClick={(e) => e.stopPropagation()}>
-          <Delete />
-        </Button>
-      </Popconfirm> */}
-    </div>
-    },
-  ];  
+  //     <div className='row justify-evenly'>
+  //     <Button
+  //       style={{
+  //         backgroundColor: 'transparent',
+  //         border: 'none',
+  //         boxShadow: 'none',
+  //         padding: '1px',
+  //       }}
+  //       onClick={(e) => {
+  //         setEditingId(params.data.id);
+  //         setPopoverEditVisible(true);
+  //         e.stopPropagation();
+  //       }}>
+  //       <Edit />
+  //     </Button>
+  //     <DeleteWithPassword
+  //       password={DEFAULT_PASSWORD}
+  //       deleteHOC={deleteHOC({
+  //         record: params.data,
+  //         reload,
+  //         api: deleteAddMr,
+  //         success: 'Deleted MR successfully',
+  //         failure: 'Error in deleting MR',
+  //       })}
+  //     />
+  //     {/* <Popconfirm
+  //       title="Confirm Delete"
+  //       onCancel={(e) => e.stopPropagation()}
+  //       onConfirm={deleteHOC({
+  //         record,
+  //         reload,
+  //         api: deleteAddMr,
+  //         success: 'Deleted Material Request Successfully',
+  //         failure: 'Error in deleting Material Request',
+  //       })}>
+  //       <Button
+  //         style={{
+  //           backgroundColor: 'transparent',
+  //           boxShadow: 'none',
+  //           border: 'none',
+  //           padding: '1px',
+  //         }}
+  //         onClick={(e) => e.stopPropagation()}>
+  //         <Delete />
+  //       </Button>
+  //     </Popconfirm> */}
+  //   </div>
+  //   },
+  // ];  
 
-  const rowData = [
-    {make: "Toyota", model: "Celica", price: 35000},
-    {make: "Ford", model: "Mondeo", price: 32000},
-    {make: "Porsche", model: "Boxter", price: 72000}
-  ];
+  // const rowData = [
+  //   {make: "Toyota", model: "Celica", price: 35000},
+  //   {make: "Ford", model: "Mondeo", price: 32000},
+  //   {make: "Porsche", model: "Boxter", price: 72000}
+  // ];
 
   const columns = [
     ...materialEmployeecolumns,
     {
-      headerName: 'Linked',
-      field: 'linked',
+      title: 'Linked',
+      key: 'linked',
       filters: filterOptions || [],
       onFilter: (value, record) => record.linked === value,
+      render: (text, record) => {
+        return record.linked;
+      },
     },
     {
-      headerName: 'Owner',
-      field: 'owner',
+      title: 'Owner',
+      key: 'owner',
       filters: filterOptions || [],
-      onFilter: (value, record) => record.owner === value
+      onFilter: (value, record) => record.owner === value,
+      render: (text, record) => {
+        return record.owner;
+      },
     },
     {
-      headerName: 'Delivery Required On',
-      field: 'delivery_required_on',
+      title: 'Delivery Required On',
+      key: 'delivery_required_on',
       sorter: (a, b) =>
         moment(a.delivery_required_on).unix() - moment(b.delivery_required_on).unix(),
-      cellRenderer: params =>  moment(params.data.delivery_required_on).format('DD/MM/YYYY')
+      render: (text, record) => {
+        return moment(record.delivery_required_on).format('DD/MM/YYYY');
+      },
     },
     {
-      headerName: 'Status',
-      field: 'status',
+      title: 'Status',
+      key: 'status',
       className: 'align-center',
       filters: [
         {
@@ -227,8 +235,8 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
         },
       ],
       onFilter: (value, record) => statusCheck(record.is_allocated, record.is_rejected) === value,
-      cellRenderer: params => {
-        if (params.data.is_allocated && !params.data.is_rejected)
+      render: (text, record) => {
+        if (record.is_allocated && !record.is_rejected)
           return (
             <Button
               type='primary'
@@ -242,7 +250,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
               Allocated
             </Button>
           );
-        if (!params.data.is_allocated && !params.data.is_rejected) {
+        if (!record.is_allocated && !record.is_rejected) {
           return (
             <Button
               type='primary'
@@ -259,20 +267,20 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
             </Button>
           );
         }
-        if (!params.data.is_allocated && params.data.is_rejected) {
+        if (!record.is_allocated && record.is_rejected) {
           return (
             <Popover
               content={(
                 <div style={{ width: '20rem' }}>
                   <text>
                     <b>Reason : </b>
-                    {params.data.reason}
+                    {record.reason}
                   </text>
                   <br />
-                  {params.data.remarks ? (
+                  {record.remarks ? (
                     <text>
                       <b>Remarks : </b>
-                      {params.data.remarks}
+                      {record.remarks}
                     </text>
                   ) : null}
                 </div>
@@ -287,21 +295,23 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
       },
     },
     {
-      headerName: 'Raised By',
-      field: 'raised_by',
+      title: 'Raised By',
+      key: 'raised_by',
       dataIndex: 'raised_by',
     },
     {
-      headerName: 'Created at',
-      field: 'created_at',
+      title: 'Created at',
+      key: 'created_at',
       sorter: (a, b) => moment(a.created_at).unix() - moment(b.created_at).unix(),
-      cellRenderer: params => moment(params.data.created_at).format('DD/MM/YYYY, h:mm:ss a')
+      render: (text, record) => {
+        return moment(record.created_at).format('DD/MM/YYYY, h:mm:ss a');
+      },
     },
     ...(viewType === 'Pool Operator' ? [{
-      headerName: 'Options',
-      field: 'options',
+      title: 'Options',
+      key: 'options',
       width: '10vw',
-      cellRenderer: params => (
+      render: (text, record) => (
         <ActionsPopover
           triggerTitle='Options'
           buttonList={[
@@ -309,15 +319,15 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
               Component: () => (
                 <Button
                   type='primary'
-                  disabled={params.data.is_allocated || params.data.is_rejected}
+                  disabled={record.is_allocated || record.is_rejected}
                   onClick={async (e) => {
                     const response = await loadAPI('reate-mrstatus/', {
                       method: 'Post',
-                      data: { mr: params.data.id },
+                      data: { mr: record.id },
                     });
                     e.stopPropagation();
                   }}>
-                  <Link to='../create-allotment/' state={{ id: params.data.id }} key={params.data.id}>
+                  <Link to='../create-allotment/' state={{ id: record.id }} key={record.id}>
                     Create Allotment Docket
                   </Link>
                 </Button>
@@ -328,9 +338,9 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
                 <Button
                   className='mx-2'
                   type='primary'
-                  disabled={params.data.is_allocated || params.data.is_rejected}
+                  disabled={record.is_allocated || record.is_rejected}
                   onClick={(e) => {
-                    setRejectionId(params.data.id);
+                    setRejectionId(record.id);
                     setRejectionVisible(true);
                     e.stopPropagation();
                   }}>
@@ -343,8 +353,8 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
       ),
     }] : []),
     //     {
-    //       headerName:'Request Status',
-    //       field:'is_rejected',
+    //       title:'Request Status',
+    //       key:'is_rejected',
     //       render:(row)=>(
     //         <div>
     //
@@ -375,10 +385,10 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
     //     },
 
     {
-      headerName: 'Action',
-      field: 'operation',
-      // width: '9vw',
-      cellRenderer: params => (
+      title: 'Action',
+      key: 'operation',
+      width: '9vw',
+      render: (text, record) => (
         <div className='row justify-evenly'>
           <Button
             style={{
@@ -388,7 +398,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
               padding: '1px',
             }}
             onClick={(e) => {
-              setEditingId(params.data.id);
+              setEditingId(record.id);
               setPopoverEditVisible(true);
               e.stopPropagation();
             }}>
@@ -397,7 +407,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
           <DeleteWithPassword
             password={DEFAULT_PASSWORD}
             deleteHOC={deleteHOC({
-              record: params.data,
+              record,
               reload,
               api: deleteAddMr,
               success: 'Deleted MR successfully',
@@ -433,7 +443,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
   const tabs = [
     {
       name: 'All Material Requests',
-      field: 'allMaterialRequests',
+      key: 'allMaterialRequests',
       data: mergeArray(filteredData || []),
       columns,
       loading,
@@ -488,17 +498,15 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
         modalWidth="80"
         hideRightButton={viewType === 'Consignor' ? false : true}
       />
-      <div className="ag-theme-material">
+      {/* <div className="ag-theme-material">
         <AgGridReact
             rowData={filteredData}
             columnDefs={columnDefs}
             domLayout={'autoHeight'}
-            enableCellTextSelection
-            animateRows
-            suppressCellFocus
+            // animateRows={true} 
             >
         </AgGridReact>
-      </div>      
+      </div>       */}
       
     </NoPermissionAlert>
   );

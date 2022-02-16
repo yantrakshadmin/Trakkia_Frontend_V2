@@ -289,62 +289,62 @@ const TableWithTabHOC = ({
                   {tab.hasCustomModel ? (
                     <tab.CustomModel {...tab.customModelProps} />
                   ) : (
-                    // <Table
-                    //   id='mastertable'
-                    //   // bordered
-                    //   rowKey={rowKey}
-                    //   expandRowByClick
-                    //   expandIconColumnIndex={-1}
-                    //   pagination={{
-                    //     total:totalRows,
-                    //     pageSize: pageSize || 10,
-                    //     position: ['bottomRight'],
-                    //     onChange(current) {
-                    //       if(onPageChange){
-                    //         onPageChange(current);
-                    //       }
-                    //       changePage(current)
-                    //     },
-                    //   }}
-                    //   size={size}
-                    //   scroll={scroll}
-                    //   rowClassName='no-vertical'
-                    //   expandIcon={({ expanded, onExpand, record }) => null}
-                    //   rowSelection={
-                    //     customRowSelectionType
-                    //       ? { ...rowSelection, type: customRowSelectionType[tab.key] }
-                    //       : rowSelection
-                    //   }
-                    //   expandable={
-                    //     ExpandBody
-                    //       ? {
-                    //         expandedRowRender: (record) => (
-                    //           <p style={{ margin: 0 }}>
-                    //             <ExpandBody {...expandParams} {...record} />
-                    //           </p>
-                    //         ),
-                    //         rowExpandable: (record) =>
-                    //           expandHandleKey ? !!record[expandHandleKey].length : true,
-                    //         expandRowByClick: true,
-                    //       }
-                    //       : null
-                    //   }
-                    //   dataSource={tab.data}
-                    //   loading={tab.loading}
-                    //   columns={tab.columns}
-                    // />
-                    <div className="ag-theme-material">
-                      <AgGridReact
-                          rowData={tab.data}
-                          columnDefs={tab.columns}
-                          domLayout={'autoHeight'}
-                          enableCellTextSelection
-                          animateRows
-                          suppressCellFocus
-                          // onGridReady={(event) => event.api.sizeColumnsToFit()}
-                          >
-                      </AgGridReact>
-                    </div>  
+                    <Table
+                      id='mastertable'
+                      // bordered
+                      rowKey={rowKey}
+                      expandRowByClick
+                      expandIconColumnIndex={-1}
+                      pagination={{
+                        total:totalRows,
+                        pageSize: pageSize || 10,
+                        position: ['bottomRight'],
+                        onChange(current) {
+                          if(onPageChange){
+                            onPageChange(current);
+                          }
+                          changePage(current)
+                        },
+                      }}
+                      size={size}
+                      scroll={scroll}
+                      rowClassName='no-vertical'
+                      expandIcon={({ expanded, onExpand, record }) => null}
+                      rowSelection={
+                        customRowSelectionType
+                          ? { ...rowSelection, type: customRowSelectionType[tab.key] }
+                          : rowSelection
+                      }
+                      expandable={
+                        ExpandBody
+                          ? {
+                            expandedRowRender: (record) => (
+                              <p style={{ margin: 0 }}>
+                                <ExpandBody {...expandParams} {...record} />
+                              </p>
+                            ),
+                            rowExpandable: (record) =>
+                              expandHandleKey ? !!record[expandHandleKey].length : true,
+                            expandRowByClick: true,
+                          }
+                          : null
+                      }
+                      dataSource={tab.data}
+                      loading={tab.loading}
+                      columns={tab.columns}
+                    />
+                    // <div className="ag-theme-material">
+                    //   <AgGridReact
+                    //       rowData={tab.data}
+                    //       columnDefs={tab.columns}
+                    //       domLayout={'autoHeight'}
+                    //       enableCellTextSelection
+                    //       animateRows
+                    //       suppressCellFocus
+                    //       // onGridReady={(event) => event.api.sizeColumnsToFit()}
+                    //       >
+                    //   </AgGridReact>
+                    // </div>  
                   )}
                 </TabPane>
               ))}
