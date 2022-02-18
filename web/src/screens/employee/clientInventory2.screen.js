@@ -19,8 +19,10 @@ const {Search} = Input;
 
 const TestInventoryScreen = () => {
   const {data: products} = useAPI('/products/', {});
-  const {data: sClients} = useAPI('/clients/', {});
+  const {data: sClients} = useAPI('/senderclients/', {}, false, true);
   const [details, setDetails] = useState([]);
+  const [clientData, setClientData] = useState([]);
+  const [clientLoading, setClientLoading] = useState(true);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState({short_code: '', client: ''});
   const [searchVal, setSearchVal] = useState(null);
@@ -57,13 +59,38 @@ const TestInventoryScreen = () => {
   const DownloadCSVButton = useCallback(() => {
     const t = generateCSVData();
     return (
-      <Button>
-        <CSVLink filename={'client-inventory.csv'} data={t.data} headers={t.headers}>
-          Download CSV
-        </CSVLink>
-      </Button>
+      <Row style={{display: 'inline-flex', width: '100%'}}>
+        <Col span={12}>
+          <Button>
+            <CSVLink filename={'client-inventory.csv'} data={t.data} headers={t.headers}>
+              Download CSV
+            </CSVLink>
+          </Button>
+        </Col>
+        <Col span={24} style={{marginTop: '10px'}}>
+          {formItem({
+            key: 'senderclients',
+            kwargs: {
+              placeholder: 'Select',
+              onChange: async (val) => {
+                const {data} = await loadAPI(`/client-inv-items/?id=${val}`)
+                setClientData(data)
+                setClientLoading(false)
+              },
+            },
+            others: {
+              selectOptions: sClients || [],
+              key: 'id',
+              customTitle: 'name',
+              dataKeys: ['address'],
+            },
+            type: FORM_ELEMENT_TYPES.SELECT,
+            customLabel: 'Sender Clients',
+          })}
+        </Col>
+      </Row>
     );
-  }, [invData, generateCSVData]);
+  }, [sClients, generateCSVData]);
 
   console.log(invData, 'Ggg');
   const {form, submit, loading} = useHandleForm({
@@ -82,14 +109,14 @@ const TestInventoryScreen = () => {
   });
 
   const column = [
-    {
-      title: 'Client',
-      key: 'client',
-      dataIndex: 'client',
-      render: (text, record) => record.client.client_name,
-      filters: GetUniqueValueNested(invData || [], 'client', 'client_name'),
-      onFilter: (value, record) => record.client.client_name === value,
-    },
+    // {
+    //   title: 'Client',
+    //   key: 'client',
+    //   dataIndex: 'client',
+    //   render: (text, record) => record.client.client_name,
+    //   filters: GetUniqueValueNested(invData || [], 'client', 'client_name'),
+    //   onFilter: (value, record) => record.client.client_name === value,
+    // },
     {
       title: 'Product',
       key: 'product',
@@ -236,12 +263,12 @@ const TestInventoryScreen = () => {
           <MasterHOC
             refresh={reload}
             size="small"
-            data={invData}
+            data={clientData}
             columns={column}
             title="Inventory"
             ExtraButtonNextToTitle={DownloadCSVButton}
             hideRightButton
-            loading={loading || invLoading}
+            loading={clientLoading}
           />
         </Col>
         <Col lg={12}>

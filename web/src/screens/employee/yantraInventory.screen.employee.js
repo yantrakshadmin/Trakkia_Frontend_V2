@@ -60,14 +60,14 @@ export const TestInventoryScreen = () => {
   const DownloadCSVButton = useCallback(() => {
     const t = generateCSVData();
     return (
-      <Row style={{display: 'inline-flex'}}>
-        <Col span={12}>
+      <Row style={{display: 'inline-flex', width: '100%'}}>
+        {/* <Col span={12}>
           <Button>
             <CSVLink filename={'warehouse-inventory.csv'} data={t.data} headers={t.headers}>
               Download CSV
             </CSVLink>
           </Button>
-        </Col>
+        </Col> */}
         <Col span={24} style={{marginTop: '10px'}}>
           {formItem({
             key: 'warehouse',

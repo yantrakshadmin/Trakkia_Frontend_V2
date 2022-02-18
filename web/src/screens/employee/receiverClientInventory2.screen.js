@@ -19,8 +19,10 @@ const {Search} = Input;
 
 export const TestInventoryScreen = () => {
   const {data: products} = useAPI('/products/', {});
-  const {data: rClients} = useAPI('/receiverclients/', {});
+  const {data: rClients} = useAPI('/receiverclients/', {}, false, true);
   const [details, setDetails] = useState([]);
+  const [clientData, setClientData] = useState([]);
+  const [clientLoading, setClientLoading] = useState(true);
   const [detailsLoading, setDetailsLoading] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState({short_code: '', client: ''});
   const [searchVal, setSearchVal] = useState(null);
@@ -57,15 +59,40 @@ export const TestInventoryScreen = () => {
   const DownloadCSVButton = useCallback(() => {
     const t = generateCSVData();
     return (
-      <Button>
-        <CSVLink filename={'rc-inventory.csv'} data={t.data} headers={t.headers}>
-          Download CSV
-        </CSVLink>
-      </Button>
+      <Row style={{display: 'inline-flex', width: '100%'}}>
+        <Col span={12}>
+          <Button>
+            <CSVLink filename={'rc-inventory.csv'} data={t.data} headers={t.headers}>
+              Download CSV
+            </CSVLink>
+          </Button>
+        </Col>
+        <Col span={24} style={{marginTop: '10px'}}>
+          {formItem({
+            key: 'receiverclients',
+            kwargs: {
+              placeholder: 'Select',
+              onChange: async (val) => {
+                const {data} = await loadAPI(`/client-inv-items/?id=${val}`)
+                setClientData(data)
+                setClientLoading(false)
+              },
+            },
+            others: {
+              selectOptions: rClients || [],
+              key: 'id',
+              customTitle: 'name',
+              dataKeys: ['address'],
+            },
+            type: FORM_ELEMENT_TYPES.SELECT,
+            customLabel: 'Receiver Clients',
+          })}
+        </Col>
+      </Row>
     );
-  }, [invData, generateCSVData]);
+  }, [rClients, generateCSVData]);
 
-  console.log(invData, 'Ggg');
+  console.log(rClients, invData, 'Ggg');
   const {form, submit, loading} = useHandleForm({
     create: createRC2TestInv,
     success: 'Inventory created/edited successfully.',
@@ -236,12 +263,12 @@ export const TestInventoryScreen = () => {
           <MasterHOC
             refresh={reload}
             size="small"
-            data={invData}
+            data={clientData}
             columns={column}
             title="Inventory"
             ExtraButtonNextToTitle={DownloadCSVButton}
             hideRightButton
-            loading={loading || invLoading}
+            loading={clientLoading}
           />
         </Col>
         <Col lg={12}>

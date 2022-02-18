@@ -43,6 +43,7 @@ import { LineGraph } from '../../components/graphComponent/lineGraph';
 import DeleteWithPassword from '../../components/DeleteWithPassword';
 import { yantraColors } from '../../helpers/yantraColors';
 import KPICard from '../../components/Dashboard/KPICard'
+import moment from 'moment';
 
 
 const { Search } = Input;
@@ -62,10 +63,6 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
     reqData,
     usePaginated: false
   });
-  const { data: allotmentKPI } = useAPI('/allotcount-kpi/')
- 
-
-
 
   useEffect(() => {
     if (allotments) {
@@ -275,57 +272,83 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
     setDeliveryId(null);
   };
 
-  const total = 'Total Orders';
-  const deliverd = 'Delivered Orders';
-  const pending = 'Pending Orders';
-  const materialRequest = 'Material Request';
-  let deliveredCount = 0;
-  // eslint-disable-next-line array-callback-return
-  reqData.map((alt) => {
-    if (alt.is_delivered) deliveredCount += 1;
+  const [KPIData, setKPIData] = useState({
+    materialRequest: {
+      title: 'Material Request',
+      graphData: [0,0,0,0,0,0,0,0,0,0,0,0],
+      count: 0,
+      change: 3,
+      icon: 'fas fa-notes-medical',
+      color: '#1E88E5'
+    },
+    totalOrders: {
+      title: 'Total Orders',
+      graphData: [0,0,0,0,0,0,0,0,0,0,0,0],
+      count: 0,
+      change: 3,
+      icon: 'fas fa-user',
+      color: '#C62828'
+    },
+    deliveredOrders: {
+      title: 'Delivered Orders',
+      graphData: [0,0,0,0,0,0,0,0,0,0,0,0],
+      count: 0,
+      change: 3,
+      icon: 'fas fa-home',
+      color: '#00C853'
+    },
+    pendingOrders: {
+      title: 'Pending Orders',
+      graphData: [0,0,0,0,0,0,0,0,0,0,0,0],
+      count: 0,
+      change: 3,
+      icon: 'fas fa-user-plus',
+      color: '#212121'
+    }
   });
-  const pendingCount = reqData.length - deliveredCount;
+
+  useEffect(() => {
+
+    let delivered = 0, pending = 0
+
+    console.log(reqData)
+
+    let totalGraph = [0,0,0,0,0,0,0,0,0,0,0,0]
+    let deliveredGraph = [0,0,0,0,0,0,0,0,0,0,0,0]
+    let pendingGraph = [0,0,0,0,0,0,0,0,0,0,0,0]
+
+    reqData.forEach((d) => {
+      if(moment(d.dispatch_date).year() === moment().year()) { 
+        totalGraph[moment(d.dispatch_date).month()]++
+        if(d.is_delivered){
+          delivered++
+          deliveredGraph[moment(d.dispatch_date).month()]++
+        } else {
+          pending++
+          pendingGraph[moment(d.dispatch_date).month()]++
+        }
+      }
+    })
+
+    setKPIData({...KPIData, totalOrders: {...KPIData.totalOrders, count: delivered+pending, graphData: totalGraph}, deliveredOrders: {...KPIData.deliveredOrders, count: delivered, graphData: deliveredGraph}, pendingOrders: {...KPIData.pendingOrders, count: pending, graphData: pendingGraph}})
+
+  }, [reqData])
+
   return (
     <NoPermissionAlert hasPermission={status !== 403}>
-      {/* <Row className='mr-auto ml-auto' gutter={24}>
-        <Col span={6}>
-          <LineGraph
-            {...{ tagName: materialRequest, count: 0, width: 230 }}  />
-        </Col>
-        <Col span={6}>
-          <LineGraph {...{ tagName: total, count: reqData.length, width: 230 }} />
-        </Col>
-        <Col span={6}>
-          <LineGraph {...{ tagName: deliverd, count: deliveredCount, width: 230 }} />
-        </Col>
-        <Col span={6}>
-          <LineGraph {...{ tagName: pending, count: pendingCount, width: 230 }} />
-        </Col>
-      </Row> */}
-
 
       <Row gutter={10} style={{ margin: '5px', marginTop: '20px' }}>
-        {/* <Col span={6}>
-          {allotmentKPI ? <KPICard title={`Allotments`} count={allotmentKPI['this month']} change={allotmentKPI['last month'] == 0 ? (allotmentKPI['this month'] - allotmentKPI['last month']) * 100 : (allotmentKPI['this month'] - allotmentKPI['last month']) / allotmentKPI['last month'] * 100} icon={'fas fa-truck-loading'} color={'#212121'} /> : <KPICard title={`Allotments`} count={'...'} change={0} icon={'fas fa-truck-loading'} color={'#212121'} />}
-        </Col> */}
          <Col span={6}>
-          <KPICard title={materialRequest } count={0} change={3} icon={'fas fa-users'} color={'#1E88E5'} width={230} />
+          <KPICard {...KPIData.materialRequest} />
         </Col>
         <Col span={6}>
-          <KPICard title={total} count={reqData.length} change={3} icon={'fas fa-users'} color={'#1E88E5'} width={230} />
+          <KPICard {...KPIData.totalOrders} />
         </Col>
         <Col span={6}>
-          <KPICard title={deliverd} count={deliveredCount} change={1} icon={'fas fa-home'} color={'#00C853'} width={230} />
+          <KPICard {...KPIData.deliveredOrders} />
         </Col>
         <Col span={6}>
-          <KPICard
-            title={pending} count={pendingCount} change={2} icon={'fas fa-user-plus'} color={'#C62828'} width={230}
-
-            // {...{
-            //   title: pending, count: pendingCount, width: 230, change: 1, icon: 'fas fa-home',
-            //   color: '#00C853'
-            // }} 
-          />
+          <KPICard {...KPIData.pendingOrders} />
         </Col>
       </Row>
       <br />
