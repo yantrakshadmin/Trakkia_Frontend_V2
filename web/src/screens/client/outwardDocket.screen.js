@@ -316,6 +316,8 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
         modalWidth={98}
         formParams={{transaction_no: TN}}
         cancelEditing={cancelEditing}
+        currentPage={1}
+        totalRows={100}
       />
     </NoPermissionAlert>
   );

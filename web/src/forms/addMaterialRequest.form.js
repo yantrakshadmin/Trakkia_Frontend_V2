@@ -57,7 +57,6 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
     edit: editAddMr,
     retrieve: async () => {
       const result = await retrieveAddMr(id);
-      console.log("gg", result.data.raised_for);
       setSelectedClient({id: result.data.raised_for});
       return {...result, data: {...result.data, client_id: result.data.raised_for}};
     },
@@ -87,7 +86,7 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
       if (data) {
         if (data[0]) {
           if (data[0].name[0] === 'client_id') {
-            const sc = _.find(clients?.results, (item) => item.id === data[0].value);
+            const sc = _.find(clients, (item) => item.id === data[0].value);
             setSelectedClient({name: sc.name, id: sc.id});
           }
         }

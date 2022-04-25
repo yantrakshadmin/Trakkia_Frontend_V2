@@ -68,7 +68,7 @@ const UploadFormBody = ({ uploadLinkFunc, onDone, onCancel }) => {
   );
 };
 
-const TableWithTabHOC = ({
+const   TableWithTabHOC = ({
   title,
   ExtraButtonNextToTitle,
   newPage,
