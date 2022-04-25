@@ -41,9 +41,10 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
     isEmployee ? 'emp-outwards/' : '/outwards/',
     {},
   );
-  const {filteredData} = useTableSearch({
+  const { filteredData, } = useTableSearch({
     searchVal,
     reqData,
+
   });
 
   useEffect(() => {
@@ -314,9 +315,8 @@ const OutwardDocketScreen = ({currentPage, isEmployee}) => {
         title={deliveryId ? 'Delivered Docket ' : 'Outward Docket '}
         modalBody={deliveryId ? OutwardDeliveredDocketForm : OutwardDocketForm}
         modalWidth={98}
-        formParams={{transaction_no: TN}}
+        formParams={{transaction_no: TN}} 
         cancelEditing={cancelEditing}
-        currentPage={1}
         totalRows={100}
       />
     </NoPermissionAlert>

@@ -54,7 +54,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
   const [rejectionVisible, setRejectionVisible] = useState(false);
   const [popoverVisible, setPopoverVisible] = useState(false);
   const [popoverEditVisible, setPopoverEditVisible] = useState(false);
-  const { filteredData, loading, reload, hasPermission } = useTableSearch({
+  const { filteredData, loading, reload, hasPermission, paginationData } = useTableSearch({
     searchVal,
     retrieve: retrieveEmployeeMrsEfficient,
     useCompanyIdAndViewType: true
@@ -515,6 +515,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
         modalBody={AddMaterialRequestForm}
         modalWidth="80"
         hideRightButton={viewType === 'Consignor' ? false : true}
+        totalRows={paginationData.count}
       />
       {/* <div className="ag-theme-material">
         <AgGridReact

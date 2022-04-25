@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Input, Button, Popconfirm, Row ,Col } from 'antd';
+import { Input, Button, Popconfirm, Row, Col } from 'antd';
 import { connect, useSelector } from 'react-redux';
 import { useTableSearch } from 'hooks/useTableSearch';
 import { Link } from '@reach/router';
@@ -46,7 +46,7 @@ const OutwardDocketScreen = ({ currentPage, isEmployee }) => {
   const { data: allotmentKPI } = useAPI('/allotcount-kpi/')
 
 
-  const { filteredData, loading, reload, status } = useTableSearch({
+  const { filteredData, loading, reload, status, paginationData } = useTableSearch({
     searchVal,
     retrieve: retrieveOutwardDocket,
     useCompanyIdAndViewType: true
@@ -340,6 +340,7 @@ const OutwardDocketScreen = ({ currentPage, isEmployee }) => {
         title={deliveryId ? 'Delivered Docket ' : 'Outward Docket '}
         modalBody={deliveryId ? OutwardDeliveredDocketForm : OutwardDocketForm}
         modalWidth={98}
+        totalRows={paginationData.count}
         formParams={{ transaction_no: TN }}
         cancelEditing={cancelEditing}
         ExpandBody={ExpandTable}
