@@ -23,12 +23,14 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
   const { companyId } = userMeta
 
   const [flowId, setFlowId] = useState(null);
-  const [selectedClient, setSelectedClient] = useState({name: 'Select Client', id: null});
+  const [selectedClient, setSelectedClient] = useState({name: 'Select Client', id:null});
   const {data: flows, loading: loadingF} = useAPI(`/company-flows/?id=${selectedClient.id}&sc=${companyId}`);
   const [selectedKits, setSelectedKits] = useState([]);
   //const {data: kits} = useControlledSelect(flowId);
-  const {data: clients} = useAPI('/company-list/');
-  if(clients) clients.results = clients.results.filter((client) => client.id !== companyId)
+  // const {data: clients} = useAPI('/company-list/');
+  // if(clients) clients.results = clients.results.filter((client) => client.id !== companyId)
+  const { data: clients } = useAPI(`/mr-clients/?sc=${companyId}`);
+  // if (clients) clients = clients.filter((client) => client.id !== companyId) 
   
   useEffect(() => {
     if (flows && !loadingF && id) {
@@ -55,6 +57,7 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
     edit: editAddMr,
     retrieve: async () => {
       const result = await retrieveAddMr(id);
+      console.log("gg", result.data.raised_for);
       setSelectedClient({id: result.data.raised_for});
       return {...result, data: {...result.data, client_id: result.data.raised_for}};
     },
@@ -139,10 +142,10 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
           },
           others: {
             // selectOptions: filterActive(_, clients) || [],
-            selectOptions: (clients?.results || []).filter(item => item.type.map(t => t.company_type).includes('Pool Operator')) ,
+            selectOptions: (clients || []),
             key: 'id',
             customTitle: 'name',
-            dataKeys: ['phone' , 'email'],
+            // dataKeys: ['phone' , 'email'],
           },
           type: FORM_ELEMENT_TYPES.SELECT,
           customLabel: 'Client',
@@ -150,7 +153,7 @@ export const AddMaterialRequestForm = ({id, onCancel, onDone}) => {
         <Divider orientation="center">{selectedClient.name}</Divider>
         <Row style={{justifyContent: 'left'}}>
           {materialRequestFormFields.slice(0, 1).map((item, idx) => (
-            <Col span={24}>
+            <Col span={24}> 
               <div key={idx.toString()} className="p-2">
                 {formItem(item)}
               </div>
