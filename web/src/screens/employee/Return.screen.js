@@ -56,14 +56,18 @@ const ReturnDocketsScreen = ({ currentPage, user }) => {
 
 
   const { data: returns, loading, reload: reloadFull, status } = useAPI('/return-table/', {}, true,);
+  console.log(returns , "retrnnnnnnnnnnnn");
 
-  const { filteredData, reload } = useTableSearch({
+  const { filteredData, reload, paginationData } = useTableSearch({
     searchVal,
     reqData,
-    usePaginated: false
+    usePaginated: false,
   });
 
-  console.log(filteredData)
+  console.log(paginationData, "pagination datt=aaaaaaaaaaaa")
+  // console.log(usePaginated, "pagggggggggg")
+
+
 
   useEffect(() => {
     if (returns) {
@@ -339,6 +343,7 @@ const ReturnDocketsScreen = ({ currentPage, user }) => {
         footer={null}>
         <BarcodeReturnDocket transaction={TN} returnNo={returnNo} setVisible={setVisible} />
       </Modal>
+      
       <TableWithTabHOC
         rowKey={(record) => record.id}
         refresh={reloadFull}
@@ -353,8 +358,11 @@ const ReturnDocketsScreen = ({ currentPage, user }) => {
         editingId={editingId || deliveryId}
         cancelEditing={cancelEditing}
         hideRightButton={user.viewType === 'Pool Operator' ? false : true}
+        totalRows={returns?.count}
+        
       />
     </NoPermissionAlert>
+    
   );
 };
 

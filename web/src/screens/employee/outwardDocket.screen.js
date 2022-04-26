@@ -49,7 +49,9 @@ const OutwardDocketScreen = ({ currentPage, isEmployee }) => {
   const { filteredData, loading, reload, status, paginationData } = useTableSearch({
     searchVal,
     retrieve: retrieveOutwardDocket,
-    useCompanyIdAndViewType: true
+    useCompanyIdAndViewType: true,
+    // usePaginated: true,
+    
   });
 
   const columns = [
