@@ -179,7 +179,7 @@ export const DashboardScreen = () => {
       ]
   };
 
-  return (
+  return ( 
     <>
       <Row gutter={10} style={{margin: '5px', marginTop: '20px'}}>
         <Col span={6}>
