@@ -28,8 +28,8 @@ export const DashboardScreen = () => {
 
       const { data } = await loadAPI('/allotments-table/')
   
-      let allotmentsArr = [0,0,0,0,0,0,0,0,0,0,0,0]
-      console.log( moment().year(), data)
+      let allotmentsArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+      
 
       (data || []).forEach((d) => {
         if(moment(d.dispatch_date).year() === moment().year()) allotmentsArr[moment(d.dispatch_date).month()]++
@@ -179,7 +179,7 @@ export const DashboardScreen = () => {
       ]
   };
 
-  return (
+  return ( 
     <>
       <Row gutter={10} style={{margin: '5px', marginTop: '20px'}}>
         <Col span={6}>

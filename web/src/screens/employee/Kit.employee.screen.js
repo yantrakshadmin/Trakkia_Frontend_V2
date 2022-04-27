@@ -33,7 +33,7 @@ const KitEmployeeScreen = ({currentPage}) => {
     if (filteredData) {
       const csvd = [];
       filteredData.forEach((d) => {
-        const temp = {...d, kit_client: d.kit_client.client_name};
+        const temp = {...d, kit_client: d.kit_client};
         delete temp.products;
         delete temp.owner;
         csvd.push(temp);
@@ -46,6 +46,7 @@ const KitEmployeeScreen = ({currentPage}) => {
         //     PricePerUnit: prod.product.priceperunit,
         //   });
         // });
+        console.log(filteredData,"filterrrrfdddd");
       });
       setCsvData(csvd);
     }
@@ -68,13 +69,13 @@ const KitEmployeeScreen = ({currentPage}) => {
       dataIndex: 'components_per_kit',
       sorter: (a, b) => a.components_per_kit - b.components_per_kit,
     },
-    {
-      title: 'Kit Client',
-      key: 'kit_client',
-      filters: GetUniqueValue(filteredData || [], 'kit_client'),
-      onFilter: (value, record) => record.kit_client === value,
-      render: (text, record) => record.kit_client,
-    },
+    // {
+    //   title: 'Kit Client',
+    //   key: 'kit_client',
+    //   filters: GetUniqueValue(filteredData || [], 'kit_client'),
+    //   onFilter: (value, record) => record.kit_client === value,
+    //   render: (text, record) => record.kit_client,
+    // },
     {
       title: 'Action',
       key: 'operation',
