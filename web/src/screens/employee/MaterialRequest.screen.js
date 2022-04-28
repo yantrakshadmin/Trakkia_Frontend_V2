@@ -465,7 +465,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
       loading,
     },
   ];
-  console.log(filteredData , "Filterrdatttaaaaaaa") 
+  // console.log(filteredData , "Filterrdatttaaaaaaa") 
 
 
   const cancelEditing = () => {
