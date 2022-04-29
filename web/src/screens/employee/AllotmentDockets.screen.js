@@ -66,7 +66,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
 
   useEffect(() => {
     if (allotments) {
-      const reqD = allotments.map((alt) => ({
+      const reqD = (allotments.results || []).map((alt) => ({
         id: alt.id,
         transaction_no: alt.transaction_no,
         parent_name: alt.sales_order.owner,
@@ -82,6 +82,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
       setReqData(reqD);
     }
   }, [allotments]);
+  console.log(allotments, "allotmentss");
 
   const columns = [
     {
@@ -313,11 +314,11 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
 
     console.log(reqData)
 
-    let totalGraph = [0,0,0,0,0,0,0,0,0,0,0,0]
-    let deliveredGraph = [0,0,0,0,0,0,0,0,0,0,0,0]
-    let pendingGraph = [0,0,0,0,0,0,0,0,0,0,0,0]
+    let totalGraph = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let deliveredGraph = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+    let pendingGraph = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-    reqData.forEach((d) => {
+    (reqData.results || []).forEach((d) => {
       if(moment(d.dispatch_date).year() === moment().year()) { 
         totalGraph[moment(d.dispatch_date).month()]++
         if(d.is_delivered){
@@ -397,6 +398,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
         formParams={{ transaction_no: TN }}
         cancelEditing={cancelEditing}
         hideRightButton
+        totalRows={allotments?.count}
       />
     </NoPermissionAlert>
   );
