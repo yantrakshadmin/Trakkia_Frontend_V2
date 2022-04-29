@@ -108,7 +108,7 @@ export const MaterialRequestForm = ({id, onCancel, onDone, isEmployee}) => {
 
   return (
     <Spin spinning={loading}>
-      <Divider orientation="left">Material Request Details</Divider>
+      <Divider orientation="left">Material Request Detailssss</Divider>
       <Form
         onFinish={preProcess}
         form={form}

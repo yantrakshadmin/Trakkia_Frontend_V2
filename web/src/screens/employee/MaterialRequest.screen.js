@@ -392,7 +392,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
       width: '9vw',
       render: (text, record) => (
         <div className='row justify-evenly'>
-          <Button
+          {viewType === 'Pool Operator' ? '' : <Button
             style={{
               backgroundColor: 'transparent',
               border: 'none',
@@ -405,7 +405,10 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
               e.stopPropagation();
             }}>
             <Edit />
-          </Button>
+          </Button> }
+
+
+          
           <DeleteWithPassword
             password={DEFAULT_PASSWORD}
             deleteHOC={deleteHOC({
@@ -465,7 +468,7 @@ const ReceiverClientEmployeeScreen = ({ currentPage }) => {
       loading,
     },
   ];
-  console.log(filteredData , "Filterrdatttaaaaaaa") 
+  // console.log(filteredData , "Filterrdatttaaaaaaa") 
 
 
   const cancelEditing = () => {
