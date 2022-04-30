@@ -58,11 +58,13 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
   const { data: allotments, loading, reload: reloadFull, status } = useAPI('/allotments-table/');
   // const { data: count } = useAPI('/mr-count/', {});
   const [altId, setAltId] = useState(null);
-  const { filteredData, reload } = useTableSearch({
+  const { filteredData, reload, paginationData} = useTableSearch({
     searchVal,
     reqData,
     usePaginated: false
   });
+  console.log(paginationData, "pagidataaa");
+
 
   useEffect(() => {
     if (allotments) {
@@ -318,7 +320,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
     let deliveredGraph = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     let pendingGraph = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 
-    (reqData.results || []).forEach((d) => {
+    (reqData || []).forEach((d) => {
       if(moment(d.dispatch_date).year() === moment().year()) { 
         totalGraph[moment(d.dispatch_date).month()]++
         if(d.is_delivered){
@@ -334,6 +336,7 @@ const AllotmentDocketsScreen = ({ currentPage }) => {
     setKPIData({...KPIData, totalOrders: {...KPIData.totalOrders, count: delivered+pending, graphData: totalGraph}, deliveredOrders: {...KPIData.deliveredOrders, count: delivered, graphData: deliveredGraph}, pendingOrders: {...KPIData.pendingOrders, count: pending, graphData: pendingGraph}})
 
   }, [reqData])
+  console.log(reqData, "rq dattatattt");
 
   return (
     <NoPermissionAlert hasPermission={status !== 403}>

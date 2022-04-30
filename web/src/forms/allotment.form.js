@@ -69,10 +69,11 @@ const AllotmentForm = ({ location }) => {
           if(form && location.state.editId){
             let foundFlow = form.getFieldValue('flows').find(flow => flow.flow === item.flow.id)
             console.log(item, form.getFieldValue('flows').find(flow => flow.flow === item.flow.id))
-            item.kit.products = item.kit.products.map(product => {
-              product.quantity = foundFlow.items.find((item) => item.product === product.product.id).quantity
+            item.kit.products = (item.kit.products || []).map(product => {
+              product.quantity = (foundFlow.items || []).find((item) => item.product === product.product.id).quantity
               return product
             })
+            console.log(item.kit.products,"itemmss kitt");
           }
           tempFlows.push(item);
           tempKits.push(item.kit);

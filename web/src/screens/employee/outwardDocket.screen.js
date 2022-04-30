@@ -53,6 +53,7 @@ const OutwardDocketScreen = ({ currentPage, isEmployee }) => {
     // usePaginated: true,
     
   });
+  console.log(paginationData, "paggggggggggg");
 
   const columns = [
     {

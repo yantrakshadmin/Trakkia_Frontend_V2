@@ -31,7 +31,7 @@ export const DashboardScreen = () => {
       let allotmentsArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       // console.log( moment().year(), data)
 
-      (data || []).forEach((d) => {
+      (data.results || []).forEach((d) => {
         if (moment(d.dispatch_date).year() === moment().year()) allotmentsArr[moment(d.dispatch_date).month()]++
       })
 
@@ -183,7 +183,7 @@ export const DashboardScreen = () => {
     <>
       <Row gutter={10} style={{ margin: '5px', marginTop: '20px' }}>
         <Col span={6}>
-          {allotmentKPI ? <KPICard graphData={allotmentsLineData} title={`Allotments`} count={allotmentKPI['this month']} change={allotmentKPI['last month'] == 0 ? (allotmentKPI['this month'] - allotmentKPI['last month']) * 100 : (allotmentKPI['this month'] - allotmentKPI['last month']) / allotmentKPI['last month'] * 100} icon={'fas fa-truck-loading'} color={'#00C853'} /> : <KPICard graphData={allotmentsLineData} title={`Allotments`} count={'...'} change={0} icon={'fas fa-truck-loading'} color={'#00C853'} />}
+          {allotmentKPI ? <KPICard graphData={allotmentsLineData} title={`Allotments`} count={allotmentKPI['this month']} change={(allotmentKPI['last month'] == 0 ? (allotmentKPI['this month'] - allotmentKPI['last month']) * 100 : (allotmentKPI['this month'] - allotmentKPI['last month']) / allotmentKPI['last month'] * 100).toFixed(2)} icon={'fas fa-truck-loading'} color={'#00C853'} /> : <KPICard graphData={allotmentsLineData} title={`Allotments`} count={'...'} change={0} icon={'fas fa-truck-loading'} color={'#00C853'} />}
         </Col>
         <Col span={6}>
           <KPICard title={`Return`} count={98} change={2} icon={'fas fa-undo-alt'} color={'#1E88E5'} />
