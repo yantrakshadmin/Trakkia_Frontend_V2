@@ -46,7 +46,7 @@ const AllotmentForm = ({ location }) => {
     const fetchData = async (id) => {
 
       const {data} = await retrieveAllotment(id)
-      console.log(data, 'data')
+  
       data.dispatch_date = moment(data.dispatch_date)
       data.expected_delivery = moment(data.expected_delivery)
       form.setFieldsValue(data)
@@ -68,12 +68,18 @@ const AllotmentForm = ({ location }) => {
         const reqFlows = ((flowFetched && flowFetched[0]?.flows) || []).map((item, idx) => {
           if(form && location.state.editId){
             let foundFlow = form.getFieldValue('flows').find(flow => flow.flow === item.flow.id)
-            console.log(item, form.getFieldValue('flows').find(flow => flow.flow === item.flow.id))
-            item.kit.products = (item.kit.products || []).map(product => {
-              product.quantity = (foundFlow.items || []).find((item) => item.product === product.product.id).quantity
+            console.log(
+              item,
+              // form.getFieldValue('flows').find(flow => flow.flow === item.flow.id),
+              "all flows data")
+            item.kit.products = item.kit.products.map(product => {
+              product.quantity = foundFlow?.items.find((item) =>
+                item.product === product.product.id)?.quantity
+              console.log(product, "PRODDD");
+
               return product
+              
             })
-            console.log(item.kit.products,"itemmss kitt");
           }
           tempFlows.push(item);
           tempKits.push(item.kit);
