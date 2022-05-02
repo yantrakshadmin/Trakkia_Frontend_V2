@@ -10,6 +10,7 @@ import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
 import {ClientForm} from '../../forms/client.form';
 import {GetUniqueValue} from 'common/helpers/getUniqueValues';
 import NoPermissionAlert from 'components/NoPermissionAlert';
+import CompanyColumns from 'common/columns/Company.columns';
 
 const {Search} = Input;
 
@@ -18,7 +19,7 @@ const WarehouseEmployeeScreen = ({currentPage}) => {
   const [editingId, setEditingId] = useState(null);
   const [csvData, setCsvData] = useState(null);
 
-  const {filteredData, loading, reload, hasPermission} = useTableSearch({
+  const {filteredData, loading, reload, hasPermission, paginationData} = useTableSearch({
     searchVal,
     retrieve: retrieveClients,
   });
@@ -41,7 +42,8 @@ const WarehouseEmployeeScreen = ({currentPage}) => {
       width: '5vw',
       render: (text, record, index) => (currentPage - 1) * 10 + index + 1,
     },
-    ...clientColumns,
+    // ...clientColumns,
+    ...CompanyColumns,
     {
       title: 'Client State',
       key: 'client_state',
@@ -170,6 +172,7 @@ const WarehouseEmployeeScreen = ({currentPage}) => {
         scroll={{x: 2000}}
         csvdata={csvData}
         csvname={`SenderClients${searchVal}.csv`}
+        // totalRows={13}
       />
     </NoPermissionAlert>
   );

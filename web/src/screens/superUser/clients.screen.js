@@ -34,7 +34,7 @@ const ClientsScreen = ({ currentPage, user }) => {
 
   console.log(sender_clients)
 
-  const { filteredData, loading, reload, hasPermission } = useTableSearch({
+  const { filteredData, loading, reload, hasPermission , paginationData} = useTableSearch({
     searchVal,
     retrieve: retrieveCompanyList,
     usePaginated:true,
@@ -307,7 +307,8 @@ const ClientsScreen = ({ currentPage, user }) => {
         modalBody={AddCompanyForm}
         modalWidth={60}
         scroll={{ x: 1200 }}
-        formParams={{companyId: user.companyId}}
+        formParams={{ companyId: user.companyId }}
+        totalRows={paginationData.count}
       />
     </NoPermissionAlert>
   );
