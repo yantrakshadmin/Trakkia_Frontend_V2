@@ -31,7 +31,7 @@ export const DashboardScreen = () => {
       let allotmentsArr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
       // console.log( moment().year(), data)
 
-      (data.results || []).forEach((d) => {
+      (data?.results || []).forEach((d) => {
         if (moment(d.dispatch_date).year() === moment().year()) allotmentsArr[moment(d.dispatch_date).month()]++
       })
 

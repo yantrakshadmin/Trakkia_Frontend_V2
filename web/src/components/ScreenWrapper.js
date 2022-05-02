@@ -83,13 +83,13 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
           <div className="row align-center">
             
             <List
-              style={{minWidth: '100px'}}
+              style={{minWidth: '100px',}}
               itemLayout="horizontal"
               dataSource={data}
               renderItem={item => (
                 <List.Item>
                   <List.Item.Meta
-                    title={user.name}
+                    title={user.username}
                     description={user.viewType}
                   />
                 </List.Item>
