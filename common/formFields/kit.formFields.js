@@ -33,17 +33,17 @@ export const kitFormFields = [
     others: null,
     customLabel: 'Components Per Kit',
   },
-  {
-    key: 'kit_client',
-    rules: [{required: true, message: 'Please enter kit client name!'}],
-    kwargs: {
-      placeholder: 'Enter',
-      type: 'number',
-    },
-    type: FORM_ELEMENT_TYPES.SELECT,
-    others: null,
-    customLabel: 'Kit Client',
-  },
+  // {
+  //   key: 'kit_client',
+  //   rules: [{required: true, message: 'Please enter kit client name!'}],
+  //   kwargs: {
+  //     placeholder: 'Enter',
+  //     type: 'number',
+  //   },
+  //   type: FORM_ELEMENT_TYPES.SELECT,
+  //   others: null,
+  //   customLabel: 'Kit Client',
+  // },
   {
     key: 'part_name',
     kwargs: {
