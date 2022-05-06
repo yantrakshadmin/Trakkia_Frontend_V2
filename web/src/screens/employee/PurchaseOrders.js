@@ -176,7 +176,7 @@ const KitEmployeeScreen = ({currentPage}) => {
           </a>
           <Button
             type="primary"
-            shape="circle"
+            shape="rectangle"
             style={{
               fontSize: '12px',
               // backgroundColor: 'transparent',
@@ -186,7 +186,7 @@ const KitEmployeeScreen = ({currentPage}) => {
             }}
             onClick={(e) => {
               setEditingId(record.id);
-              setCreateGrn(true);
+              // setCreateGrn(true);
               e.stopPropagation();
             }}>
             GRN
