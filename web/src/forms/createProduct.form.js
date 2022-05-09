@@ -1,18 +1,25 @@
-import React, {useState} from 'react';
-import {Form, Col, Row, Button, Divider, Spin, message} from 'antd';
-import {productFormFields} from 'common/formFields/product.formFields';
-import {categoryOptions} from 'common/formFields/categoryOptions';
+import React, { useState } from 'react';
+import { Form, Col, Row, Button, Divider, Spin, message } from 'antd';
+import { productFormFields } from 'common/formFields/product.formFields';
+import { categoryOptions } from 'common/formFields/categoryOptions';
 
-import {useHandleForm} from 'hooks/form';
-import {createProduct, retrieveProduct, editProduct} from 'common/api/auth';
+import { useHandleForm } from 'hooks/form';
+import { createProduct, retrieveProduct, editProduct, createGRNform, editGRN } from 'common/api/auth';
 import formItem from '../hocs/formItem.hoc';
 
-export const ProductForm = ({id, onCancel, onDone}) => {
+export const ProductForm = ({ id, onCancel, onDone, isGRNForm, grnId }) => {
   const [reqFile, setFile] = useState(null);
 
-  const {form, submit, loading} = useHandleForm({
-    create: createProduct,
-    edit: editProduct,
+  const { form, submit, loading } = useHandleForm({
+    ...(isGRNForm ? {
+      create: createGRNform,
+      edit: () => { },
+      retrieve: () => { },
+
+    } : {
+      create: createProduct,
+      edit: editProduct,
+    }),
     retrieve: retrieveProduct,
     success: 'Product created/edited successfully.',
     failure: 'Error in creating/editing product.',
@@ -24,88 +31,95 @@ export const ProductForm = ({id, onCancel, onDone}) => {
   });
 
   const preProcess = (data) => {
-    if (reqFile) {
-      data.document = reqFile.originFileObj;
-    } else delete data.document;
+    console.log(reqFile, data, '-----')
     const req = new FormData();
     for (const key in data) {
-      req.append(key.toString(), data[key]);
+      if (key === 'document') {
+        if (data[key]) {
+          const newFileList = data[key].fileList.map((f) => {
+            if (f.status !== 'done') {
+              message.error(`${f.name} has not been uploaded yet!`);
+            } else {
+              return f.originFileObj;
+            }
+          });
+          data[key] = newFileList;
+          let c = 0;
+          data[key].forEach((el) => {
+            req.append(`document`, el);
+            c = c + 1;
+          });
+          req.set('no_of_fileA_files', c);
+        }
+      } else {
+        req.append(key.toString(), data[key]);
+      }
+    }
+    if (isGRNForm) {
+      req.append('grn', grnId);
     }
     submit(req);
   };
 
-  const others = {selectOptions: categoryOptions};
+  const others = { selectOptions: categoryOptions };
   return (
     <Spin spinning={loading}>
-      <Divider orientation="left">Product Details</Divider>
+      <Divider orientation="left">{isGRNForm ? "Upload RFID Serials" : "Product Details"}</Divider>
       <Form
-        initialValues={{active: true}}
+        initialValues={{ active: true }}
         onFinish={preProcess}
         form={form}
         layout="vertical"
         hideRequiredMark
         autoComplete="off">
-        <Row style={{justifyContent: 'left'}}>
-          {productFormFields.slice(0, 3).map((item, idx) => (
-            <Col span={8}>
+        {!isGRNForm && <>
+          <Row style={{ justifyContent: 'left' }}>
+            {productFormFields.slice(0, 3).map((item, idx) => (
+              <Col span={8}>
+                <div key={idx} className="p-2">
+                  {formItem(item)}
+                </div>
+              </Col>
+            ))}
+          </Row>
+          <Row style={{ justifyContent: 'left' }}>
+            {productFormFields.slice(3, 6).map((item, idx) => (
+              <Col span={8}>
+                <div key={idx} className="p-2">
+                  {formItem({ ...item, others })}
+                </div>
+              </Col>
+            ))}
+          </Row>
+          <Row style={{ justifyContent: 'space-between' }}>
+            {productFormFields.slice(6, 10).map((item, idx) => (
+              <Col span={6}>
+                <div key={idx} className="p-2">
+                  {formItem(item)}
+                </div>
+              </Col>
+            ))}
+          </Row>
+          <Row style={{ justifyContent: 'space-between' }}>
+            {productFormFields.slice(10, 14).map((item, idx) => (
+              <Col span={6}>
+                <div key={idx} className="p-2">
+                  {formItem(item)}
+                </div>
+              </Col>
+            ))}
+            <Col span={6} />
+          </Row>
+        </>}
+        {isGRNForm && <Row style={{ justifyContent: 'space-between' }}>
+          {productFormFields.slice(14, 15).map((item, idx) => (
+            <Col span={12}>
               <div key={idx} className="p-2">
                 {formItem(item)}
               </div>
             </Col>
           ))}
-        </Row>
-        <Row style={{justifyContent: 'left'}}>
-          {productFormFields.slice(3, 6).map((item, idx) => (
-            <Col span={8}>
-              <div key={idx} className="p-2">
-                {formItem({...item, others})}
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Row style={{justifyContent: 'space-between'}}>
-          {productFormFields.slice(6, 10).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem(item)}
-              </div>
-            </Col>
-          ))}
-        </Row>
-        <Row style={{justifyContent: 'space-between'}}>
-          {productFormFields.slice(10, 14).map((item, idx) => (
-            <Col span={6}>
-              <div key={idx} className="p-2">
-                {formItem(item)}
-              </div>
-            </Col>
-          ))}
-          <Col span={6} />
-        </Row>
-        <Row justify="center">
-          <Col span={24} style={{justifyContent: 'center', display: 'flex'}}>
-            <div key={13} className="p-2">
-              {formItem({
-                ...productFormFields[14],
-                kwargs: {
-                  onChange(info) {
-                    const {status} = info.file;
-                    if (status !== 'uploading') {
-                      console.log(info.file, info.fileList);
-                    }
-                    if (status === 'done') {
-                      setFile(info.file);
-                      message.success(`${info.file.name} file uploaded successfully.`);
-                    } else if (status === 'error') {
-                      message.error(`${info.file.name} file upload failed.`);
-                    }
-                  },
-                },
-              })}
-            </div>
-          </Col>
-        </Row>
-
+        </Row>}
         <Row>
           <Button type="primary" htmlType="submit">
             Save

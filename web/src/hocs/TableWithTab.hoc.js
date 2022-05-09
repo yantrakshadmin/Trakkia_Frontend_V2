@@ -68,7 +68,7 @@ const UploadFormBody = ({ uploadLinkFunc, onDone, onCancel }) => {
   );
 };
 
-const   TableWithTabHOC = ({
+const TableWithTabHOC = ({
   title,
   ExtraButtonNextToTitle,
   newPage,
@@ -96,22 +96,23 @@ const   TableWithTabHOC = ({
   reset,
   separate,
   editingId,
-  pageSize=10,
+  pageSize = 10,
   RightBody,
   cancelEditing,
-  hideRightButton ,
+  hideRightButton,
   customRowSelectionType,
   expandHandleKey,
   ExpandBody,
   expandParams,
   totalRows,
   onPageChange,
+  modalVisibleProp,
 }) => {
   const [modalVisible, setModalVisible] = useState(!!editingId);
   const [activeTab, setActiveTab] = useState(tabs[0].key);
   const dispatch = useDispatch();
-  const changePage =  useCallback((page) => dispatch(changePageAction(page)),[dispatch]);
-  const changePageSize =  useCallback((p) => dispatch(changePageSizeAction(p)),[dispatch]);
+  const changePage = useCallback((page) => dispatch(changePageAction(page)), [dispatch]);
+  const changePageSize = useCallback((p) => dispatch(changePageSizeAction(p)), [dispatch]);
 
   useEffect(() => {
     changePageSize(pageSize)
@@ -161,7 +162,7 @@ const   TableWithTabHOC = ({
     <div>
       <Modal
         maskClosable={false}
-        visible={(modalVisible || !!editingId) && !separate}
+        visible={(modalVisible || !!editingId || modalVisibleProp) && !separate}
         destroyOnClose
         style={{ minWidth: `${modalWidth}vw` }}
         title={modelTitle || `Add ${title}`}
@@ -186,7 +187,7 @@ const   TableWithTabHOC = ({
       <Row justify='space-between' align='middle'>
         <Col>
           <Title level={3}>
-            {title} 
+            {title}
             {' '}
             {ExtraButtonNextToTitle ? <ExtraButtonNextToTitle /> : null}
           </Title>
@@ -222,7 +223,7 @@ const   TableWithTabHOC = ({
                   </Button>
                 </>
               ) : null}
-              <br /> 
+              <br />
               {' '}
               <br />
             </>
@@ -296,11 +297,11 @@ const   TableWithTabHOC = ({
                       expandRowByClick
                       expandIconColumnIndex={-1}
                       pagination={{
-                        total:totalRows,
+                        total: totalRows,
                         pageSize: pageSize || 10,
                         position: ['bottomRight'],
                         onChange(current) {
-                          if(onPageChange){
+                          if (onPageChange) {
                             onPageChange(current);
                           }
                           changePage(current)

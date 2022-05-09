@@ -1,29 +1,31 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import {DEFAULT_BASE_URL} from 'common/constants/enviroment';
+import { DEFAULT_BASE_URL } from 'common/constants/enviroment';
 import GRNColumns from 'common/columns/GRN.column';
-import {Popconfirm, Button, Input} from 'antd';
-import {connect} from 'react-redux';
-import {useTableSearch} from 'hooks/useTableSearch';
-import {useAPI} from 'common/hooks/api';
+import { Popconfirm, Button, Input } from 'antd';
+import { connect } from 'react-redux';
+import { useTableSearch } from 'hooks/useTableSearch';
+import { useAPI } from 'common/hooks/api';
 import Edit from 'icons/Edit';
 import Delete from 'icons/Delete';
 import Document from 'icons/Document';
+import Upload from 'icons/Upload';
 import Download from 'icons/Download';
 import Print from 'icons/Print';
 
-import {deleteGRN, retrieveGRNBars} from 'common/api/auth';
-import {deleteHOC} from '../../hocs/deleteHoc';
-import {ProductTable} from '../../components/GRNProductsTable';
+import { deleteGRN, retrieveGRNBars } from 'common/api/auth';
+import { deleteHOC } from '../../hocs/deleteHoc';
+import { ProductTable } from '../../components/GRNProductsTable';
 import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
-import {GRNForm} from '../../forms/GRN.form';
-import {GetUniqueValue} from 'common/helpers/getUniqueValues';
+import { GRNForm } from '../../forms/GRN.form';
+import { GetUniqueValue } from 'common/helpers/getUniqueValues';
 import TableWithTabHoc from '../../hocs/TableWithTab.hoc';
 
 import DeleteWithPassword from '../../components/DeleteWithPassword';
-import {DEFAULT_PASSWORD} from 'common/constants/passwords';
+import { DEFAULT_PASSWORD } from 'common/constants/passwords';
 import NoPermissionAlert from 'components/NoPermissionAlert';
-const {Search} = Input;
+import { ProductForm } from 'forms/createProduct.form';
+const { Search } = Input;
 
 const KitEmployeeScreen = () => {
   const [searchVal, setSearchVal] = useState(null);
@@ -32,17 +34,19 @@ const KitEmployeeScreen = () => {
   const [csvData, setCsvData] = useState(null);
   const [barLoading, setBarLoading] = useState(false);
   const [barID, setBarID] = useState(null);
+  const [uploadModal, setUploadModal] = useState(Boolean);
+  const [currentGRNId, setCurrentGRNId] = useState(null)
 
   const { user, page } = useSelector(s => s);
-  const {userMeta} = user;
-  const { viewType,companyId } = userMeta
+  const { userMeta } = user;
+  const { viewType, companyId } = userMeta
   const { currentPage } = page;
-  const {data: grns, loading, reload, status} = useAPI(`/grns/`, {} ,false  , true);
+  const { data: grns, loading, reload, status } = useAPI(`/grns/`, {}, false, true);
 
-  const {filteredData} = useTableSearch({
+  const { filteredData } = useTableSearch({
     searchVal,
     reqData,
-    usePaginated:false
+    usePaginated: false
   });
 
   useEffect(() => {
@@ -58,6 +62,7 @@ const KitEmployeeScreen = () => {
           inward_date: grn.inward_date,
           products: grn.items,
           document: grn.document,
+          serials_uploaded: grn.serials_uploaded
         }));
         setReqData(newData);
       };
@@ -69,7 +74,7 @@ const KitEmployeeScreen = () => {
     if (filteredData) {
       const csvd = [];
       filteredData.forEach((d) => {
-        const temp = {...d};
+        const temp = { ...d };
         delete temp.products;
         csvd.push(temp);
         d.products.forEach((prod) => {
@@ -86,7 +91,7 @@ const KitEmployeeScreen = () => {
   }, [filteredData]);
 
   const download = (filename, data) => {
-    const blob = new Blob([data], {type: 'text/csv'});
+    const blob = new Blob([data], { type: 'text/csv' });
     if (window.navigator.msSaveOrOpenBlob) {
       window.navigator.msSaveBlob(blob, filename);
     } else {
@@ -101,6 +106,8 @@ const KitEmployeeScreen = () => {
 
   const cancelEditing = () => {
     setEditingId(null);
+    setCurrentGRNId(null);
+    setUploadModal(false);
   };
 
   const columns = [
@@ -118,6 +125,35 @@ const KitEmployeeScreen = () => {
       onFilter: (value, record) => record.warehouse === value,
     },
     ...GRNColumns,
+    {
+      title: 'Upload',
+      key: 'upload',
+      render: (record) => {
+        console.log(record, record.serials_uploaded, '----')
+        return (
+          <Button
+            disabled={record.serials_uploaded}
+            style={{
+              backgroundColor: 'transparent',
+              color: "primary",
+              border: 'none',
+              boxShadow: 'none',
+              padding: '1px',
+            }}
+            onClick={(e) => {
+              setUploadModal(true)
+              setCurrentGRNId(record.id);
+              e.stopPropagation();
+
+            }}
+          >
+            <Upload />
+          </Button>)
+      }
+      // dataIndex: 'warehouse',
+      // filters: GetUniqueValue(filteredData || [], 'warehouse'),
+      // onFilter: (value, record) => record.warehouse === value,
+    },
     {
       title: 'Action',
       key: 'operation',
@@ -149,7 +185,7 @@ const KitEmployeeScreen = () => {
               e.stopPropagation();
               setBarLoading(true);
               setBarID(record.id);
-              const {data} = await retrieveGRNBars(record.id);
+              const { data } = await retrieveGRNBars(record.id);
               if (data) {
                 download(`${record.id}.txt`, data.join('\n \n'));
                 setBarLoading(false);
@@ -234,8 +270,8 @@ const KitEmployeeScreen = () => {
 
   return (
     <NoPermissionAlert hasPermission={status === 403 ? false : true}>
-      <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-        <div style={{width: '15vw', display: 'flex', alignItems: 'flex-end'}}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ width: '15vw', display: 'flex', alignItems: 'flex-end' }}>
           <Search onChange={(e) => setSearchVal(e.target.value)} placeholder="Search" enterButton />
         </div>
       </div>
@@ -245,19 +281,22 @@ const KitEmployeeScreen = () => {
         refresh={reload}
         tabs={tabs}
         size="middle"
-        title="GRNs"
+        title={uploadModal ? `GRN (${currentGRNId})` : "GRNs"}
         editingId={editingId}
         cancelEditing={cancelEditing}
-        modalBody={GRNForm}
+        modalBody={uploadModal ? ProductForm : GRNForm}
         modalWidth={60}
         expandHandleKey="products"
-        expandParams={{loading}}
+        expandParams={{ loading }}
         ExpandBody={ProductTable}
         hideRightButton
         // csvdata={csvData}
+        onCancelButton={cancelEditing}
+        modalVisibleProp={!!currentGRNId}
         downloadLink={`${DEFAULT_BASE_URL}/grn-download/`}
+        formParams={uploadModal ? { isGRNForm: true, grnId: currentGRNId } : {}}
 
-        // csvname={`GRNs${  searchVal  } .csv`}
+      // csvname={`GRNs${  searchVal  } .csv`}
       />
     </NoPermissionAlert>
   );
@@ -266,3 +305,5 @@ const KitEmployeeScreen = () => {
 
 
 export default KitEmployeeScreen;
+
+const gg = { "name": "hey" }

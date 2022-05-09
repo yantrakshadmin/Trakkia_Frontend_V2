@@ -129,5 +129,12 @@ export const productFormFields = [
     },
     label: 'Document',
   },
-
+  {
+    key: 'grn',
+    type: FORM_ELEMENT_TYPES.INPUT_NUMBER,
+    kwargs: {
+      placeholder: 'Enter',
+    },
+    customLabel: 'GRN Id',
+  },
 ];

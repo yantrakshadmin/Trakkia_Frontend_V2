@@ -1,40 +1,40 @@
-import {loadAPI} from '../helpers/api';
+import { loadAPI } from '../helpers/api';
 
-export const getJWTTokens = ({username, password}) =>
+export const getJWTTokens = ({ username, password }) =>
   loadAPI(`/api/token/`, {
     method: 'POST',
-    data: {username, password},
+    data: { username, password },
     secure: false,
   });
 
 
 
-export const isUserVerified = ({username}) =>
+export const isUserVerified = ({ username }) =>
   loadAPI(`/verification/`, {
-    params: {username},
+    params: { username },
     secure: false,
   });
 
-export const verifyUser = ({username, otp}) =>
+export const verifyUser = ({ username, otp }) =>
   loadAPI('/verifyOTP/', {
     method: 'POST',
-    data: {username, otp},
+    data: { username, otp },
     secure: false,
   });
 
 export const getUserMeta = () => loadAPI(`/user/meta/`);
 
-export const createEmployee = ({username, email, password, first_name, last_name}) =>
+export const createEmployee = ({ username, email, password, first_name, last_name }) =>
   loadAPI('/create-employee/', {
     method: 'POST',
-    data: {username, email, password, first_name, last_name},
+    data: { username, email, password, first_name, last_name },
     secure: false,
   });
 
-export const createClient = ({username, email, password, first_name, last_name}) =>
+export const createClient = ({ username, email, password, first_name, last_name }) =>
   loadAPI('/create-client/', {
     method: 'POST',
-    data: {username, email, password, first_name, last_name},
+    data: { username, email, password, first_name, last_name },
     secure: false,
   });
 
@@ -61,7 +61,17 @@ export const createProduct = (req) =>
     },
   });
 
-export const retrieveProducts = ({companyId,viewType, page, pageSize}) =>
+export const createGRNform = (req) =>
+  loadAPI('upload-grnserial/', {
+    method: 'POST',
+    data: req,
+    secure: true,
+    headers: {
+      'Content-Type': `multipart/form-data  boundary=${Math.random().toString().substr(2)}`,
+    },
+  });
+
+export const retrieveProducts = ({ companyId, viewType, page, pageSize }) =>
   loadAPI(`/products/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
@@ -77,6 +87,16 @@ export const editProduct = (id, req) => {
     },
   });
 };
+// export const editGRN = (id, req) => {
+//   return loadAPI(`/edit-product/${id}/`, {
+//     method: 'PATCH',
+//     secure: true,
+//     data: req,
+//     headers: {
+//       'Content-Type': `multipart/form-data  boundary=${Math.random().toString().substr(2)}`,
+//     },
+//   });
+// };
 
 export const retrieveProduct = (id) =>
   loadAPI(`/edit-product/${id}`, {
@@ -127,7 +147,7 @@ export const editKit = (
     },
   });
 
-export const retrieveKits = ({companyId,viewType, page, pageSize}) =>
+export const retrieveKits = ({ companyId, viewType, page, pageSize }) =>
   loadAPI(`/kits/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
@@ -176,7 +196,7 @@ export const retrieveOutward = (id) =>
     method: 'GET',
     secure: true,
   });
-export const retrieveOutwardDocket = ({companyId,viewType, page, pageSize}) =>
+export const retrieveOutwardDocket = ({ companyId, viewType, page, pageSize }) =>
   loadAPI(`outwards/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
@@ -297,7 +317,7 @@ export const retrieveVendor = (id) =>
     secure: true,
   });
 
-export const retrieveVendors = ({companyId,viewType, page, pageSize}) =>
+export const retrieveVendors = ({ companyId, viewType, page, pageSize }) =>
   loadAPI(`/vendors/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
@@ -335,7 +355,7 @@ export const retrieveWarehouse = (id) =>
     secure: true,
   });
 
-export const retrieveWarehouses = ({companyId,viewType, page, pageSize}) =>
+export const retrieveWarehouses = ({ companyId, viewType, page, pageSize }) =>
   loadAPI(`/warehouse/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
@@ -377,18 +397,18 @@ export const retrieveEmployeeProfile = (id) =>
     secure: true,
   });
 
-export const createReceiverClient = ({name, city, address, emitter, pan, gst, active}) =>
+export const createReceiverClient = ({ name, city, address, emitter, pan, gst, active }) =>
   loadAPI('/create-receiverclient/', {
     method: 'POST',
-    data: {name, city, address, emitter, pan, gst, active},
+    data: { name, city, address, emitter, pan, gst, active },
     secure: true,
   });
 
-export const editReceiverClient = (id, {name, city, address, emitter, pan, gst, active}) =>
+export const editReceiverClient = (id, { name, city, address, emitter, pan, gst, active }) =>
   // loadAPI(`/edit-receiverclient/${id}/`, {
   loadAPI(`/edit-receiverclient/${id}/`, {
     method: 'PATCH',
-    data: {name, city, address, emitter, pan, gst, active},
+    data: { name, city, address, emitter, pan, gst, active },
     secure: true,
   });
 
@@ -443,7 +463,7 @@ export const createFlow = ({
 
 export const editFlow = (
   id,
-  {flow_name, flow_info, flow_type, flow_days, sender_client, receiver_client, kits, active},
+  { flow_name, flow_info, flow_type, flow_days, sender_client, receiver_client, kits, active },
 ) =>
   loadAPI(`/edit-flow/${id}/`, {
     method: 'PATCH',
@@ -466,7 +486,7 @@ export const retreiveFlow = (id) =>
     secure: true,
   });
 
-export const retreiveFlows = ({companyId,viewType, page, pageSize}) =>
+export const retreiveFlows = ({ companyId, viewType, page, pageSize }) =>
   loadAPI(`/flows/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
@@ -490,24 +510,24 @@ export const deleteFlow = (id) =>
     secure: true,
   });
 
-export const createMr = ({delivery_required_on, flows, client_id, raised_for}) =>
+export const createMr = ({ delivery_required_on, flows, client_id, raised_for }) =>
   loadAPI('/create-mrequets/', {
     method: 'POST',
-    data: {delivery_required_on, flows, client_id, raised_for},
+    data: { delivery_required_on, flows, client_id, raised_for },
     secure: true,
   });
 
-export const editMr = (id, {delivery_required_on, flows}) =>
+export const editMr = (id, { delivery_required_on, flows }) =>
   loadAPI(`/edit-mrequets/${id}/`, {
     method: 'PATCH',
-    data: {delivery_required_on, flows},
+    data: { delivery_required_on, flows },
     secure: true,
   });
 
-export const editAddMr = (id, {delivery_required_on, flows, client_id,raised_for }) =>
+export const editAddMr = (id, { delivery_required_on, flows, client_id, raised_for }) =>
   loadAPI(`/mr-edit/${id}/`, {
     method: 'PATCH',
-    data: {delivery_required_on, flows, client_id,raised_for },
+    data: { delivery_required_on, flows, client_id, raised_for },
     secure: true,
   });
 
@@ -541,24 +561,24 @@ export const deleteAddMr = (id) =>
     secure: true,
   });
 
-export const createDm = ({delivery_month, demand_flows, client_id}) =>
+export const createDm = ({ delivery_month, demand_flows, client_id }) =>
   loadAPI('/create-demand/', {
     method: 'POST',
-    data: {delivery_month, demand_flows, client_id},
+    data: { delivery_month, demand_flows, client_id },
     secure: true,
   });
 
-export const editDm = (id, {delivery_month, demand_flows}) =>
+export const editDm = (id, { delivery_month, demand_flows }) =>
   loadAPI(`/edit-demand/${id}/`, {
     method: 'PATCH',
-    data: {delivery_month, demand_flows},
+    data: { delivery_month, demand_flows },
     secure: true,
   });
 
-export const editAddDm = (id, {delivery_required_on, flows, client_id}) =>
+export const editAddDm = (id, { delivery_required_on, flows, client_id }) =>
   loadAPI(`/admin-mredit/${id}/`, {
     method: 'PATCH',
-    data: {delivery_required_on, flows, client_id},
+    data: { delivery_required_on, flows, client_id },
     secure: true,
   });
 
@@ -604,7 +624,7 @@ export const retrieveEmployeeMrs = () =>
     secure: true,
   });
 
-export const retrieveEmployeeMrsEfficient = ({companyId,viewType, page, pageSize}) =>
+export const retrieveEmployeeMrsEfficient = ({ companyId, viewType, page, pageSize }) =>
   loadAPI(`/mrequest-table/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
@@ -701,7 +721,7 @@ export const retrieveAllotments = (id) =>
   loadAPI('/allotments/', {
     method: 'GET',
     secure: true,
-    params: {id},
+    params: { id },
   });
 
 export const retrieveAllotmentsDockets = (id) =>
@@ -742,7 +762,7 @@ export const editGRN = (id, data) =>
     // },
   });
 
-export const retrieveGRN = (id) => 
+export const retrieveGRN = (id) =>
   loadAPI(`/edit-grn/${id}/`, {
     method: 'GET',
     secure: true,
@@ -955,7 +975,7 @@ export const retrieveReturns = (id) =>
   loadAPI('/return-received/', {
     method: 'GET',
     secure: true,
-    params: {id},
+    params: { id },
   });
 //
 // export const retrieveReturns = () =>
@@ -1035,7 +1055,7 @@ export const retrieveGRNBarCodes = (id) =>
     secure: true,
   });
 
-export const retrieveAllotmentReport = ({cname, to, from}) =>
+export const retrieveAllotmentReport = ({ cname, to, from }) =>
   loadAPI(`/allotment-report/`, {
     method: 'GET',
     secure: true,
@@ -1046,7 +1066,7 @@ export const retrieveAllotmentReport = ({cname, to, from}) =>
     },
   });
 
-export const retrieveStockingReport = ({to, from, cname}) =>
+export const retrieveStockingReport = ({ to, from, cname }) =>
   loadAPI(`/floating-report/`, {
     method: 'GET',
     secure: true,
@@ -1057,7 +1077,7 @@ export const retrieveStockingReport = ({to, from, cname}) =>
     },
   });
 
-export const retrieveReturnReport = ({cname, to, from}) =>
+export const retrieveReturnReport = ({ cname, to, from }) =>
   loadAPI(`/return-report/`, {
     method: 'GET',
     secure: true,
@@ -1072,14 +1092,14 @@ export const retrieveAllotmentsDelivered = (id) =>
   loadAPI('/allotments-delivered/', {
     method: 'GET',
     secure: true,
-    params: {id},
+    params: { id },
   });
 
 export const retrieveDocketOutwardInward = (id) =>
   loadAPI('/outward-inward/', {
     method: 'GET',
     secure: true,
-    params: {id},
+    params: { id },
   });
 
 export const retrieveReturnDocket = (id) =>
@@ -1590,27 +1610,27 @@ export const retrieveUser = (id) => loadAPI(`/emp-profile/${id}/`, {
   method: 'GET',
 });
 
-export const editUser = (id,data) => loadAPI(`/emp-profile/${id}/`, {
+export const editUser = (id, data) => loadAPI(`/emp-profile/${id}/`, {
   method: 'POST',
   data,
 });
 
 
-    
-export const retrieveEmployeeList = ({companyId, page, pageSize}) =>
+
+export const retrieveEmployeeList = ({ companyId, page, pageSize }) =>
   loadAPI(`/employees/${companyId}/?page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
   });
 
 export const deleteEmployee = (id) =>
-    loadAPI(`/emp-profile/${id}/`, {
-      method: 'DELETE',
-      secure: true,
+  loadAPI(`/emp-profile/${id}/`, {
+    method: 'DELETE',
+    secure: true,
   });
 
 
-  export const createPurchseOrder = (data) =>
+export const createPurchseOrder = (data) =>
   loadAPI('/create-po/', {
     method: 'POST',
     secure: true,
@@ -1649,6 +1669,5 @@ export const printPurchaseOrders = (id) =>
   loadAPI(`/print-purchaseorders/`, {
     method: 'GET',
     secure: true,
-    params: {id},
+    params: { id },
   });
-  
