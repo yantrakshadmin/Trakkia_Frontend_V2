@@ -325,7 +325,7 @@ const TableWithTabHOC = ({
                               </p>
                             ),
                             rowExpandable: (record) =>
-                              expandHandleKey ? !!record[expandHandleKey].length : true,
+                              expandHandleKey ? !!record[expandHandleKey]?.length : true,
                             expandRowByClick: true,
                           }
                           : null

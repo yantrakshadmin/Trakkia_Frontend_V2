@@ -322,6 +322,11 @@ export const employeeRoutes = [
         path: '/main-inventory/inventory-rclients/',
         Component: lazy(() => import('screens/employee/rcInventoryMain.screen')),
       },
+      {
+        name: 'Scanned Data',
+        path: '/main-inventory/scanned-data/',
+        Component: lazy(() => import('screens/employee/ScannedData.screen')),
+      },
       // {
       //   name: 'Receiver Client',
       //   path: '/main-inventory/inventory-rclients/',
