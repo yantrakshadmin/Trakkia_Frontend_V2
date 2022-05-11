@@ -1,46 +1,46 @@
-import React, {useState} from 'react';
-import {Form, Col, Row, Button, Divider, Spin, message} from 'antd';
-import {GRNFormFields, GRNItemFormFields, PoGRNFields} from 'common/formFields/GRN.formFields';
-import {useAPI} from 'common/hooks/api';
-import {useHandleForm} from 'hooks/form';
-import {createGRN, editGRN, getUserMeta, retrievePurchaseOrder, retrieveGRN} from 'common/api/auth';
-import {PlusOutlined, MinusCircleOutlined} from '@ant-design/icons';
-
-import moment from 'moment';
-import formItem from '../hocs/formItem.hoc';
-import {useSelector} from 'react-redux';
-
+import React, { useState } from 'react';
 import _ from 'lodash';
-import {filterActive} from 'common/helpers/mrHelper';
+import { Form, Col, Row, Button, Divider, Spin, message } from 'antd';
+import { GRNFormFields, GRNItemFormFields, PoGRNFields } from 'common/formFields/GRN.formFields';
+import { useAPI } from 'common/hooks/api';
+import { useHandleForm } from 'hooks/form';
+import { createGRN, editGRN, retrievePurchaseOrder, retrieveGRN } from 'common/api/auth';
+import { PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
+import { useSelector } from 'react-redux';
 
-export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
+import { filterActive } from 'common/helpers/mrHelper';
+import formItem from '../hocs/formItem.hoc';
+
+export const GRNForm = ({ id, onCancel, onDone, noEdit, createGrnWithPO, purchaseOrder }) => {
   console.log(createGrnWithPO)
   const [reqFile, setFile] = useState(null);
 
-  const {user} = useSelector((s) => s);
-  const {userMeta} = user;
-  const {companyId} = userMeta;
+  const { user } = useSelector((s) => s);
+  const { userMeta } = user;
+  const { companyId } = userMeta;
 
-  const {data: vendors} = useAPI(`/company-vendor/?id=${companyId}`);
-  const {data: warehouses} = useAPI(`/company-warehouse/?id=${companyId}`);
-  const {data: products} = useAPI(`/products/`, {}, false, true);
+  const { data: vendors } = useAPI(`/company-vendor/?id=${companyId}`);
+  const { data: warehouses } = useAPI(`/company-warehouse/?id=${companyId}`);
+  const { data: products } = useAPI(`/products/`, {}, false, true);
 
-  const handleGrnWithPO = (data) => {
-    data['warehouse'] = data['delivered_to'];
-    delete data['delivered_to'];
+  const handleGrnWithPO = () => {
+    const data = purchaseOrder;
     let sum = 0;
-    data.items.forEach((i) => {
+    sum += (sum * parseInt(data.billing_gst,10)) / 100;
+    data.items = (data.items || []).map((i) => {
       sum += i.item_price * i.item_quantity;
-    });
-    sum += (sum * parseInt(data.billing_gst)) / 100;
+      return {
+      ...i,
+      item: i.item?.id,
+      }
+    })
     data.invoice_amount = sum;
-
     return data;
   };
-  const {form, submit, loading} = useHandleForm({
+
+  const { form, submit, loading } = useHandleForm({
     create: createGRN,
     edit: editGRN,
-    // retrieve: retrieveGRN,
     retrieve: createGrnWithPO ? retrievePurchaseOrder : retrieveGRN,
     success: 'GRN created/edited successfully.',
     failure: 'Error in creating/editing GRN.',
@@ -48,12 +48,13 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
     close: onCancel,
     id: createGrnWithPO ? null : id,
     dates: ['inward_date'],
-    customHandling: createGrnWithPO ? handleGrnWithPO : undefined,
   });
 
+  React.useEffect(()=>{
+    form.setFieldsValue(handleGrnWithPO());
+  },[])
 
 
-  
   //
   // const preProcess = (data) => {
   //   if (reqFile) {
@@ -75,7 +76,7 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
 
   return (
     <Spin spinning={loading}>
-      <Divider orientation="left">GRN Details</Divider>
+      <Divider orientation='left'>GRN Details</Divider>
       <Form onFinish={submit} form={form} layout="vertical" hideRequiredMark autoComplete="off">
         <Row>
           {PoGRNFields.slice(0, 2).map((item, idx) => (
@@ -88,7 +89,7 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
         </Row>
         <Divider orientation="left"></Divider>
 
-        <Row style={{justifyContent: 'left'}}>
+        <Row style={{ justifyContent: 'left' }}>
           {GRNFormFields.slice(0, 1).map((item, idx) => (
             <Col span={6}>
               <div key={idx} className="p-2">
@@ -126,8 +127,8 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
                     key: 'id',
                     selectOptions: vendors
                       ? filterActive(_, vendors || []).filter(
-                          (vendor) => vendor.type === 'Material',
-                        )
+                        (vendor) => vendor.type === 'Material',
+                      )
                       : [],
                     customTitle: 'name',
                     dataKeys: ['street', 'city'],
@@ -151,8 +152,8 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
                     key: 'id',
                     selectOptions: vendors
                       ? filterActive(_, vendors || []).filter(
-                          (vendor) => vendor.type === 'Transporter',
-                        )
+                        (vendor) => vendor.type === 'Transporter',
+                      )
                       : [],
                     customTitle: 'name',
                     dataKeys: ['street', 'city'],
@@ -169,36 +170,36 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
             </Col>
           ))}
         </Row>
-        <Row style={{justifyContent: 'left'}}>
+        <Row style={{ justifyContent: 'left' }}>
           {GRNFormFields.slice(4, 8).map((item, idx) => (
             <Col span={6}>
               <div key={idx} className="p-2">
-                {formItem({...item})}
+                {formItem({ ...item })}
               </div>
             </Col>
           ))}
         </Row>
-        <Row style={{justifyContent: 'left'}}>
+        <Row style={{ justifyContent: 'left' }}>
           {GRNFormFields.slice(8, 12).map((item, idx) => (
             <Col span={6}>
               <div key={idx} className="p-2">
-                {formItem({...item})}
+                {formItem({ ...item })}
               </div>
             </Col>
           ))}
         </Row>
-        <Row style={{justifyContent: 'left'}}>
+        <Row style={{ justifyContent: 'left' }}>
           {GRNFormFields.slice(12, 13).map((item, idx) => (
             <Col span={6}>
               <div key={idx} className="p-2">
-                {formItem({...item})}
+                {formItem({ ...item })}
               </div>
             </Col>
           ))}
           {GRNFormFields.slice(13, 14).map((item, idx) => (
             <Col span={6}>
               <div key={idx} className="p-2">
-                {formItem({...item})}
+                {formItem({ ...item })}
               </div>
             </Col>
           ))}
@@ -209,7 +210,7 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
                   ...item,
                   kwargs: {
                     onChange(info) {
-                      const {status} = info.file;
+                      const { status } = info.file;
                       if (status !== 'uploading') {
                         console.log(info.file, info.fileList);
                       }
@@ -228,7 +229,7 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
         </Row>
         <Divider orientation="left">Product Details</Divider>
         <Form.List name="items">
-          {(fields, {add, remove}) => {
+          {(fields, { add, remove }) => {
             return (
               <div>
                 {fields.map((field, index) => (
@@ -280,7 +281,7 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
                     ))}
                     <Button
                       type="danger"
-                      style={index != 0 ? {top: '-2vh'} : null}
+                      style={index != 0 ? { top: '-2vh' } : null}
                       onClick={() => {
                         remove(field.name);
                       }}>
@@ -307,7 +308,7 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
             Save
           </Button>
           <div className="p-2" />
-          <Button type="primary" onClick={onCancel}>
+          <Button type='primary' onClick={onCancel}>
             Cancel
           </Button>
         </Row>

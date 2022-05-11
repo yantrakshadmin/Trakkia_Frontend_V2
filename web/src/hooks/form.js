@@ -14,9 +14,9 @@ export const useHandleForm = ({
   done,
   close,
   dates,
+  customHandling = (d)=>(d),
   useViewTypeAndCompanyId
 }) => {
-
   const { userMeta } = useSelector(s => s.user);
   const { viewType,companyId } = userMeta
   const isEdit = !!id;
@@ -66,7 +66,7 @@ export const useHandleForm = ({
         if (dates) dates.map((date) => (data[date] = moment(data[date])));
         if (data) {
           console.log(data, 'retrive');
-          form.setFieldsValue(data);
+          form.setFieldsValue(customHandling(data));
         }
         setApiData(data);
       }
