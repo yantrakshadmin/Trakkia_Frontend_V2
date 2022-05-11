@@ -186,7 +186,7 @@ const KitEmployeeScreen = ({currentPage}) => {
             }}
             onClick={(e) => {
               setEditingId(record.id);
-              // setCreateGrn(true);
+              setCreateGrn(true);
               e.stopPropagation();
             }}>
             GRN
