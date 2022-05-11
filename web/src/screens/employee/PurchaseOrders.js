@@ -41,6 +41,7 @@ const PurchaseOrderScreen = () => {
           id: po.id,
           delivered_to: po.delivered_to.name,
           material_vendor: po.material_vendor.name,
+          material_vendor_item : po.material_vendor,
           expected_delivery: po.expected_delivery,
           payment_terms: po.payment_terms,
           po_number: po.po_number,

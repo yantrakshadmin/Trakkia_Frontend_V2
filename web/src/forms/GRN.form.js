@@ -34,6 +34,7 @@ export const GRNForm = ({ id, onCancel, onDone, noEdit, createGrnWithPO, purchas
       item: i.item?.id,
       }
     })
+    data.material_vendor = data.material_vendor_item?.id;
     data.invoice_amount = sum;
     return data;
   };

@@ -1,80 +1,17 @@
-import React, {useState, useEffect} from 'react';
-import {Row, Col, Typography, Spin} from 'antd';
-import {Table} from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Row, Col, Typography, Spin } from 'antd';
+import { Table } from 'react-bootstrap';
 
 
 import moment from 'moment';
 
-import {
-  retrieveAllotments,
-  retrieveAllotmentsCalender,
-  retrieveOutwardDocketEmp,
-} from 'common/api/auth';
+import { retrieveOutwardDocketEmp } from 'common/api/auth';
 
 import '../Docket/docket.styles.scss';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useParams } from '@reach/router';
 
 const {Title} = Typography;
-// dispatch_date: "2020-10-22T17:13:16.490000Z"
-// id: 1
-// invoice_number: "u76878a"
-// kit: {id: 20, kit_name: "KIT1182C", kit_info: "Remote Assy_FSC", components_per_kit: 252, kit_type: "FSC", …}
-// owner: {user: 5, client_name: "Lumax Auto Technologies Ltd", client_shipping_address: "Plot no. 164, 165, Sector 5, Imt Manesar", client_shipping_city: "Gurugram", client_shipping_pincode: 122052, …}
-// quantity_kit: 6
-// quantity_parts: 6
-// remarks: "0"
-// sending_location: {id: 14, name: "Lumax Cornaglia Auto Tech Private Limited", city: "Pantnagar", address: "Khasara No 403/1, Khicha Road, Pistour, Rudrapur, 263150, Uttrakhand", pan: "0", …}
-// transaction_date: "2020-10-16T17:13:13.340000Z"
-// transaction_no: 2000
-// transporter_name: "Lumax Auto"
-// vehicle_details: "Auto"
-
-// annexure: "https://yantrapacks-dev.s3.amazonaws.com/media/annexure/Lumax_Auto_Signed_ESA.pdf"
-// client_billing_address: "Plot no. 164, 165, Sector 5, Imt Manesar"
-// client_category: "Automotive"
-// client_city: "Gurugram"
-// client_code: "0"
-// client_contact_no: "9968810711"
-// client_contact_person: "Inderjeet Yadav"
-// client_email: "inderjeet.yadav@lumaxmail.com"
-// client_gst: "06AAACD4090Q4Z9"
-// client_is_gst_registered: "Yes"
-// client_name: "Lumax Auto Technologies Ltd"
-// client_pan: "0"
-// client_payment_terms: "0"
-// client_pincode: 122052
-// client_product_user_type: "Transfer"
-// client_region: "North"
-// client_shipping_address: "Plot no. 164, 165, Sector 5, Imt Manesar"
-// client_shipping_city: "Gurugram"
-// client_shipping_pincode: 122052
-// client_shipping_state: "Haryana"
-// client_state: "Haryana"
-
-// emitter
-// annexure: "https://yantrapacks-dev.s3.amazonaws.com/media/annexure/Lumax_Auto_Signed_ESA.pdf"
-// client_billing_address: "Plot no. 164, 165, Sector 5, Imt Manesar"
-// client_category: "Automotive"
-// client_city: "Gurugram"
-// client_code: "0"
-// client_contact_no: "9968810711"
-// client_contact_person: "Inderjeet Yadav"
-// client_email: "inderjeet.yadav@lumaxmail.com"
-// client_gst: "06AAACD4090Q4Z9"
-// client_is_gst_registered: "Yes"
-// client_name: "Lumax Auto Technologies Ltd"
-// client_pan: "0"
-// client_payment_terms: "0"
-// client_pincode: 122052
-// client_product_user_type: "Transfer"
-// client_region: "North"
-// client_shipping_address: "Plot no. 164, 165, Sector 5, Imt Manesar"
-// client_shipping_city: "Gurugram"
-// client_shipping_pincode: 122052
-// client_shipping_state: "Haryana"
-// client_state: "Haryana"
-// user: 5
 
 const OutwardDocket = ({location, match}) => {
   const [allotment, setAllotment] = useState(null);
