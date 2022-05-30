@@ -5,7 +5,11 @@ import scannedDataColumn from 'common/columns/ScannedData.column';
 import TableWithTabHoc from 'hocs/TableWithTab.hoc';
 import { DEFAULT_BASE_URL } from "common/constants/enviroment";
 import ExpandTable from "../../components/ScannedExpandTable";
-import { Form, Button,Row } from 'antd';
+import { Form, Button, Row, Col } from 'antd';
+import formItem from "../../hocs/formItem.hoc";
+import { FORM_ELEMENT_TYPES } from '../../constants/formFields.constant';
+import moment from 'moment';
+
 
 
 // <<<<<<< HEAD
@@ -22,7 +26,6 @@ const ScannedData = ({ currentPage }) => {
     const { data: scannedData } = useAPI(`/rfid-dump/`, {}, false, false);
     const { data: serialName } = useAPI(`/grnserial-conversion/?company=${52}/`, {}, false, false);
 
-    // const { data: warehouse } = useAPI(`/warehouse/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`)
     console.log(scannedData, "dataaaa++++++++++++++++++++")
     console.log(serialName, "serialName");
     
@@ -33,7 +36,6 @@ const ScannedData = ({ currentPage }) => {
     // }, [scannedData])
 
     const onSubmit = async (data) => {
-
         if (scannedData) {
             // const reqD = scannedData.map((alt) => ({
             //     // reference_number: alt.reference_number,
@@ -44,6 +46,8 @@ const ScannedData = ({ currentPage }) => {
             //     // is_delivered: alt.is_delivered
             // }));
             setReqAllotments(scannedData);
+            data.to = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
+            data.from = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
             // setWarehouseName(warehouse)
             console.log(scannedData, "scannedddddddddd");
             // console.log(reqD, "alottttttttttt");
@@ -139,25 +143,7 @@ const ScannedData = ({ currentPage }) => {
     return (
         <>
             <Form onFinish={onSubmit} form={form} layout="vertical" hideRequiredMark autoComplete="off">
-                {/* <Row>
-                    <Col span={10}>
-                        {formItem({
-                            key: 'cname',
-                            kwargs: {
-                                placeholder: 'Select',
-                            },
-                            others: {
-                                selectOptions: clients || [],
-                                key: 'id',
-                                customTitle: 'name',
-                                dataKeys: ['address'],
-                            },
-                            type: FORM_ELEMENT_TYPES.SELECT,
-                            customLabel: 'Client',
-                        })}
-                    </Col>
-                </Row> */}
-                {/* <Row>
+                <Row>
                     <Col span={3}>
                         {formItem({
                             key: 'from',
@@ -185,13 +171,19 @@ const ScannedData = ({ currentPage }) => {
                             customLabel: 'To',
                         })}
                     </Col>
-                </Row> */}
+                </Row>
                 <Row>
                     <Button type="primary" htmlType="submit">
                         Submit
                     </Button>
                 </Row>
             </Form>
+
+
+
+
+
+
             <br />
             <TableWithTabHoc
                 expandHandleKey={'serials'}

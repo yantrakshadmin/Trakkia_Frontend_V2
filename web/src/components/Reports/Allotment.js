@@ -1,20 +1,20 @@
-import React, {useState, useEffect, useCallback} from 'react';
-import {connect} from 'react-redux';
+import React, { useState, useEffect, useCallback } from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
-import {DEFAULT_BASE_URL} from 'common/constants/enviroment';
-import {useAPI} from 'common/hooks/api';
-import {Row, Col, Form, Button} from 'antd';
-import {retrieveAllotmentReport, retrieveClients} from 'common/api/auth';
+import { DEFAULT_BASE_URL } from 'common/constants/enviroment';
+import { useAPI } from 'common/hooks/api';
+import { Row, Col, Form, Button } from 'antd';
+import { retrieveAllotmentReport, retrieveClients } from 'common/api/auth';
 import allotmentColumns from 'common/columns/AllotmentReport.column';
-import {AllotFlowTable} from 'components/AllotFlowExp';
+import { AllotFlowTable } from 'components/AllotFlowExp';
 import TableWithTabHoc from 'hocs/TableWithTab.hoc';
-import {FORM_ELEMENT_TYPES} from '../../constants/formFields.constant';
+import { FORM_ELEMENT_TYPES } from '../../constants/formFields.constant';
 
 import formItem from '../../hocs/formItem.hoc';
 import { loadAPI } from 'common/helpers/api';
 import { CSVLink } from 'react-csv';
 
-const AllotmentReport = ({currentPage}) => {
+const AllotmentReport = ({ currentPage }) => {
   const [all, setAll] = useState(false);
   const [loading, setLoading] = useState(false);
   const [csvData, setCsvData] = useState(null);
@@ -23,7 +23,7 @@ const AllotmentReport = ({currentPage}) => {
   const [clientName, setClientName] = useState(null);
   const [form] = Form.useForm();
 
-  const {data: clients} = useAPI('/senderclients/', {}, false, true);
+  const { data: clients } = useAPI('/senderclients/', {}, false, true);
 
   const onSubmit = async (data) => {
 
@@ -36,10 +36,10 @@ const AllotmentReport = ({currentPage}) => {
     data.to = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
     data.from = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
 
-    const {data: csvD} = await loadAPI(`/allotment-reportsdownload/?cname=${data.cname}&to=${data.to}&from=${data.from}`)
+    const { data: csvD } = await loadAPI(`/allotment-reportsdownload/?cname=${data.cname}&to=${data.to}&from=${data.from}`)
     setCsvData(csvD)
 
-    const {data: report} = await retrieveAllotmentReport(data);
+    const { data: report } = await retrieveAllotmentReport(data);
     if (report) {
       setLoading(false);
       setReportData(report);
@@ -122,7 +122,7 @@ const AllotmentReport = ({currentPage}) => {
           <Col span={3}>
             {formItem({
               key: 'from',
-              rules: [{required: true, message: 'Please select From date!'}],
+              rules: [{ required: true, message: 'Please select From date!' }],
               kwargs: {
                 placeholder: 'Select',
                 type: 'number',
@@ -136,7 +136,7 @@ const AllotmentReport = ({currentPage}) => {
           <Col span={3}>
             {formItem({
               key: 'to',
-              rules: [{required: true, message: 'Please select To date!'}],
+              rules: [{ required: true, message: 'Please select To date!' }],
               kwargs: {
                 placeholder: 'Select',
                 type: 'number',
@@ -161,21 +161,21 @@ const AllotmentReport = ({currentPage}) => {
         title="Allotment Dockets"
         hideRightButton
         ExtraButtonNextToTitle={csvData && DownloadCSVButton}
-        // downloadLinkButtonTitle="Download"
-        // downloadLink={`${DEFAULT_BASE_URL}allotment-reportsdownload/?cname=${client}&to=${to}&from=${from}`}
-        // downloadLink2={`${DEFAULT_BASE_URL}/billing-annexure/?id=${client}&to=${to}&from=${from}`}
-        // expandHandleKey="flows"
-        // ExpandBody={AllotFlowTable}
-        // expandParams={{loading}}
-        // csvdata={csvData}
-        // csvname={'Allotments' + clientName + '.csv'}
+      // downloadLinkButtonTitle="Download"
+      // downloadLink={`${DEFAULT_BASE_URL}allotment-reportsdownload/?cname=${client}&to=${to}&from=${from}`}
+      // downloadLink2={`${DEFAULT_BASE_URL}/billing-annexure/?id=${client}&to=${to}&from=${from}`}
+      // expandHandleKey="flows"
+      // ExpandBody={AllotFlowTable}
+      // expandParams={{loading}}
+      // csvdata={csvData}
+      // csvname={'Allotments' + clientName + '.csv'}
       />
     </>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {currentPage: state.page.currentPage};
+  return { currentPage: state.page.currentPage };
 };
 
 export default connect(mapStateToProps)(AllotmentReport);
