@@ -1,48 +1,33 @@
 
   
-import React, {useState, useEffect} from 'react';
-import {DEFAULT_BASE_URL} from 'common/constants/enviroment';
-import GRNColumns from 'common/columns/GRN.column';
-import {Popconfirm, Button, Input, Space} from 'antd';
-import {connect} from 'react-redux';
-import {useTableSearch} from 'hooks/useTableSearch';
-import {useAPI} from 'common/hooks/api';
-import Edit from 'icons/Edit';
-import Delete from 'icons/Delete';
-import Document from 'icons/Document';
-import Download from 'icons/Download';
-import Print from 'icons/Print';
 import moment from 'moment';
-import {deleteGRN, retrieveGRNBars} from 'common/api/auth';
-import {deleteHOC} from '../../hocs/deleteHoc';
-import ExpandTable from 'components/PurchaseOrderExpandTable';
-import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
-import {PurchaseOrderForm} from '../../forms/PurchaseOrderForms';
-import {GRNForm} from 'forms/GRN.form';
-import {GetUniqueValue} from 'common/helpers/getUniqueValues';
-import TableWithTabHoc from '../../hocs/TableWithTab.hoc';
-import {Select} from 'antd';
-import DeleteWithPassword from '../../components/DeleteWithPassword';
-import {DEFAULT_PASSWORD} from 'common/constants/passwords';
+import { Button, Input } from 'antd';
+import { connect } from 'react-redux';
+import React, { useState, useEffect } from 'react';
+
+import Edit from 'icons/Edit';
+import Print from 'icons/Print';
+import { GRNForm } from 'forms/GRN.form';
+import { useAPI } from 'common/hooks/api';
+import { useTableSearch } from 'hooks/useTableSearch';
+import { GetUniqueValue } from 'common/helpers/getUniqueValues';
 import NoPermissionAlert from 'components/NoPermissionAlert';
-import {Popover} from 'antd';
-import {FileAddOutlined} from '@ant-design/icons';
+import ExpandTable from 'components/PurchaseOrderExpandTable';
+import { PurchaseOrderForm } from '../../forms/PurchaseOrderForms';
+import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
 
-const {Search} = Input;
-const {Option} = Select;
+const { Search } = Input;
 
-const KitEmployeeScreen = ({currentPage}) => {
+const PurchaseOrderScreen = () => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [reqData, setReqData] = useState(null);
-  const [csvData, setCsvData] = useState(null);
-  const [barLoading, setBarLoading] = useState(false);
-  const [barID, setBarID] = useState(null);
   const [createGrn, setCreateGrn] = useState(null);
+  const [currentPurchaseOrder,setCurrentPurchaseOrder] = useState(null)
 
-  const {data: pos, loading, reload, status} = useAPI('/purchaseorders/', {}, false , true);
+  const { data: pos, loading, reload, status } = useAPI('/purchaseorders/', {}, false , true);
 
-  const {filteredData} = useTableSearch({
+  const { filteredData } = useTableSearch({
     searchVal,
     reqData,
     usePaginated : false,
@@ -56,12 +41,15 @@ const KitEmployeeScreen = ({currentPage}) => {
           id: po.id,
           delivered_to: po.delivered_to.name,
           material_vendor: po.material_vendor.name,
+          material_vendor_item : po.material_vendor,
           expected_delivery: po.expected_delivery,
           payment_terms: po.payment_terms,
           po_number: po.po_number,
           billing_gst: po.billing_gst,
           amount: po.amount,
           gst: po.gst,
+          warehouse:po.delivered_to.id,
+          items: po.items
         }));
         setReqData(newData);
       };
@@ -69,22 +57,10 @@ const KitEmployeeScreen = ({currentPage}) => {
     }
   }, [pos]);
 
-  const download = (filename, data) => {
-    const blob = new Blob([data], {type: 'text/csv'});
-    if (window.navigator.msSaveOrOpenBlob) {
-      window.navigator.msSaveBlob(blob, filename);
-    } else {
-      const elem = window.document.createElement('a');
-      elem.href = window.URL.createObjectURL(blob);
-      elem.download = filename;
-      document.body.appendChild(elem);
-      elem.click();
-      document.body.removeChild(elem);
-    }
-  };
   const cancelEditing = () => {
     setEditingId(null);
     setCreateGrn(false);
+    setCurrentPurchaseOrder(null)
   };
 
   const columns = [
@@ -144,7 +120,7 @@ const KitEmployeeScreen = ({currentPage}) => {
       key: 'operation',
       width: '7vw',
       render: (text, record) => (
-        <div className="row justify-evenly">
+        <div className='row justify-evenly'>
           <Button
             style={{
               backgroundColor: 'transparent',
@@ -159,10 +135,9 @@ const KitEmployeeScreen = ({currentPage}) => {
             <Edit />
           </Button>
           <a
-            // href={`${DEFAULT_BASE_URL}/print-barcodes/${record.id}/`}
             href={`../purchase-order/${record.id}`}
-            target="_blank"
-            rel="noopener noreferrer">
+            target='_blank'
+            rel='noopener noreferrer'>
             <Button
               style={{
                 backgroundColor: 'transparent',
@@ -175,18 +150,15 @@ const KitEmployeeScreen = ({currentPage}) => {
             </Button>
           </a>
           <Button
-            type="primary"
-            shape="rectangle"
+            type='primary'
+            shape='rectangle'
             style={{
-              fontSize: '12px',
-              // backgroundColor: 'transparent',
-              // border: 'none',
-              // boxShadow: 'none',
-              // padding: '1px',
+              fontSize: '12px'
             }}
             onClick={(e) => {
               setEditingId(record.id);
-              // setCreateGrn(true);
+              setCreateGrn(true);
+              setCurrentPurchaseOrder(record);
               e.stopPropagation();
             }}>
             GRN
@@ -207,10 +179,10 @@ const KitEmployeeScreen = ({currentPage}) => {
   ];
 
   return (
-    <NoPermissionAlert hasPermission={status === 403 ? false : true}>
-      <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-        <div style={{width: '15vw', display: 'flex', alignItems: 'flex-end'}}>
-          <Search onChange={(e) => setSearchVal(e.target.value)} placeholder="Search" enterButton />
+    <NoPermissionAlert hasPermission={status !== 403}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ width: '15vw', display: 'flex', alignItems: 'flex-end' }}>
+          <Search onChange={(e) => setSearchVal(e.target.value)} placeholder='Search' enterButton />
         </div>
       </div>
       <br />
@@ -218,30 +190,22 @@ const KitEmployeeScreen = ({currentPage}) => {
         rowKey={(record) => record.id}
         refresh={reload}
         tabs={tabs}
-        size="middle"
-        title="Purchase Orders  "
+        size='middle'
+        title='Purchase Orders'
+        modelTitle={createGrn ?"Add GRN":"Add Purchase Orders"}
         editingId={editingId}
         cancelEditing={cancelEditing}
         modalBody={createGrn ? GRNForm : PurchaseOrderForm}
         modalWidth={60}
-        // createGrnWithPO={}
-
-        formParams={{noEdit:true, createGrnWithPO: createGrn}}
-
-        // expandHandleKey="products"
-        // expandParams={{loading}}
+        formParams={{ noEdit:true, createGrnWithPO: createGrn, purchaseOrder:currentPurchaseOrder }}
         ExpandBody={ExpandTable}
-        // csvdata={csvData}
-        // downloadLink={`${DEFAULT_BASE_URL}/grn-download/`}
-
-        // csvname={`GRNs${  searchVal  } .csv`}
       />
     </NoPermissionAlert>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {currentPage: state.page.currentPage};
+  return { currentPage: state.page.currentPage };
 };
 
-export default connect(mapStateToProps)(KitEmployeeScreen);
+export default connect(mapStateToProps)(PurchaseOrderScreen);

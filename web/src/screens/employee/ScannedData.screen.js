@@ -1,20 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { connect } from 'react-redux';
-import moment from 'moment';
-import { DEFAULT_BASE_URL } from 'common/constants/enviroment';
+import React, {useState,useCallback} from 'react';
+import { connect, useSelector } from 'react-redux';
 import { useAPI } from 'common/hooks/api';
-import { Row, Col, Form, Button } from 'antd';
-import { retrieveAllotmentReport, retrieveClients } from 'common/api/auth';
 import scannedDataColumn from 'common/columns/ScannedData.column';
-import { AllotFlowTable } from 'components/AllotFlowExp';
 import TableWithTabHoc from 'hocs/TableWithTab.hoc';
-import { FORM_ELEMENT_TYPES } from '../../constants/formFields.constant';
+import { DEFAULT_BASE_URL } from "common/constants/enviroment";
 import ExpandTable from "../../components/ScannedExpandTable";
+import { Form, Button,Row } from 'antd';
 
-import formItem from '../../hocs/formItem.hoc';
-import { loadAPI } from 'common/helpers/api';
-import { CSVLink } from 'react-csv';
 
+// <<<<<<< HEAD
 const ScannedData = ({ currentPage }) => {
     const [all, setAll] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -30,7 +24,7 @@ const ScannedData = ({ currentPage }) => {
 
     // const { data: warehouse } = useAPI(`/warehouse/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`)
     console.log(scannedData, "dataaaa++++++++++++++++++++")
-    console.log(serialName,"serialName");
+    console.log(serialName, "serialName");
     
     // useEffect(() => {
     //     setReqAllotments(scannedData);
@@ -117,7 +111,7 @@ const ScannedData = ({ currentPage }) => {
         ...scannedDataColumn,
     ];
 
-    console.log(reqAllotments,"reqAllotments")
+    console.log(reqAllotments, "reqAllotments")
 
     const tabs = [
         {
@@ -132,12 +126,12 @@ const ScannedData = ({ currentPage }) => {
     const DownloadCSVButton = useCallback(() => {
         return (
             <Button>
-                <CSVLink
+                {/* <CSVLink
                     data={csvData}
                     filename={'Allotments' + clientName + '.csv'}
-                    className='btn btn-primary'>
+                    className='btn btn-primary'> */}
                     Download
-                </CSVLink>
+                {/* </CSVLink> */}
             </Button>
         );
     }, [csvData]);
@@ -220,10 +214,58 @@ const ScannedData = ({ currentPage }) => {
             />
         </>
     );
-};
+
+}
 
 const mapStateToProps = (state) => {
     return { currentPage: state.page.currentPage };
 };
 
 export default connect(mapStateToProps)(ScannedData);
+// =======
+// const ScannedData = () => {
+//   const { user } = useSelector((s) => s);
+//   const { userMeta } = user;
+//   const { companyId } = userMeta;
+//   const { data: scannedData, loading } = useAPI(`/rfid-dump/`, {}, false, false);
+
+//   const columns = [
+//     {
+//       title: 'Sr. No.',
+//       key: 'srno',
+//       render: (text, record, index) => {
+//         console.log(text, record);
+//         return index + 1
+//       }
+//     },
+//     ...scannedDataColumn,
+//   ];
+
+//   const tabs = [
+//     {
+//       name: 'Scanned Data',
+//       key: 'Scanned data',
+//       data: scannedData || [],
+//       columns,
+//       loading,
+//     },
+//   ];
+
+//   return (
+//     <>
+//       <TableWithTabHoc
+//         expandHandleKey='serials'
+//         rowKey={(record) => record.id}
+//         tabs={tabs}
+//         size='middle'
+//         title='Scanned Data'
+//         hideRightButton
+//         ExpandBody={ExpandTable}
+//         downloadLinkButtonTitle='Download'
+//         downloadLink={`${DEFAULT_BASE_URL}rfid-dumpdownload/?company_id=${companyId}`}
+//       />
+//     </>
+//   );
+// >>>>>>> 216a5686f063c7ae1d1a8307716aaed35e6b6a0b
+// };
+
