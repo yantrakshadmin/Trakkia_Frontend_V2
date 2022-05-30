@@ -20,14 +20,23 @@ const ScannedData = ({ currentPage }) => {
     const [loading, setLoading] = useState(false);
     const [csvData, setCsvData] = useState(null);
     const [reportData, setReportData] = useState(null);
-    const [reqAllotments, setReqAllotments] = useState(null);
+    const [reqAllotments, setReqAllotments] = useState([]);
     const [clientName, setClientName] = useState(null);
     const [form] = Form.useForm();
     const [warehouseName, setWarehouseName] = useState('')
 
     const { data: scannedData } = useAPI(`/rfid-dump/`, {}, false, false);
+    const { data: serialName } = useAPI(`/grnserial-conversion/?company=${52}/`, {}, false, false);
+
     // const { data: warehouse } = useAPI(`/warehouse/?company=${companyId}&view=${viewType}&page=${page}&pageSize=${pageSize}`)
-    console.log(scannedData,"dataaaa++++++++++++++++++++")
+    console.log(scannedData, "dataaaa++++++++++++++++++++")
+    console.log(serialName,"serialName");
+    
+    // useEffect(() => {
+    //     setReqAllotments(scannedData);
+
+
+    // }, [scannedData])
 
     const onSubmit = async (data) => {
 
@@ -45,6 +54,8 @@ const ScannedData = ({ currentPage }) => {
             console.log(scannedData, "scannedddddddddd");
             // console.log(reqD, "alottttttttttt");
         }
+      
+        
        
 
         // setLoading(true);
@@ -106,7 +117,7 @@ const ScannedData = ({ currentPage }) => {
         ...scannedDataColumn,
     ];
 
-    console.log(reqAllotments)
+    console.log(reqAllotments,"reqAllotments")
 
     const tabs = [
         {

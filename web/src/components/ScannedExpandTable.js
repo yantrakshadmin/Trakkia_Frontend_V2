@@ -1,6 +1,6 @@
 /* eslint-disable object-curly-spacing */
-import React, { useState, useEffect } from 'react';
-import { Table, Row, Col, Spin } from 'antd';
+import React from 'react';
+import { Table, Row, Col, } from 'antd';
 import { useAPI } from 'common/hooks/api';
 import _ from 'lodash';
 const cols = [
