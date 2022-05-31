@@ -1,5 +1,5 @@
-import React, { useState, useEffect} from 'react';
-import { connect } from 'react-redux';
+import React, { useState, useEffect,} from 'react';
+import { connect, useSelector } from 'react-redux';
 import { useAPI } from 'common/hooks/api';
 import scannedDataColumn from 'common/columns/ScannedData.column';
 import TableWithTabHoc from 'hocs/TableWithTab.hoc';
@@ -21,7 +21,12 @@ const ScannedData = ({ currentPage }) => {
     const [form] = Form.useForm();
 
     const { data: scannedData } = useAPI(`/rfid-dump/`, {}, false, false);
-    console.log(scannedData, "dataaaa++++++++++++++++++++")
+    console.log(scannedData, "dataaaa++++++++++++++++++++");
+
+
+    const { user } = useSelector(s => s);
+    const { userMeta } = user;
+    const {  companyId } = userMeta;
 
     useEffect(() => {
         setReqAllotments(scannedData)
@@ -32,7 +37,7 @@ const ScannedData = ({ currentPage }) => {
     const onSubmit = async (data) => {
         data.to = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
         data.from = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
-     await loadAPI(`/rfid-dumpdownload/?to=${data.to}&from=${data.from}`);
+        await loadAPI(`/rfid-dumpdownload/?company_id=${companyId}&to=${data.to}&from=${data.from}`);
 
         // if (scannedData) {
 
