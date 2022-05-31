@@ -1,4 +1,4 @@
-import React, { useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import { connect } from 'react-redux';
 import { useAPI } from 'common/hooks/api';
 import scannedDataColumn from 'common/columns/ScannedData.column';
@@ -23,15 +23,21 @@ const ScannedData = ({ currentPage }) => {
     const { data: scannedData } = useAPI(`/rfid-dump/`, {}, false, false);
     console.log(scannedData, "dataaaa++++++++++++++++++++")
 
+    useEffect(() => {
+        setReqAllotments(scannedData)
+
+    }, [scannedData])
+    
+
     const onSubmit = async (data) => {
         data.to = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
         data.from = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
      await loadAPI(`/rfid-dumpdownload/?to=${data.to}&from=${data.from}`);
 
-        if (scannedData) {
-            setReqAllotments(scannedData);
-            console.log(scannedData, "scannedddddddddd");
-        }
+        // if (scannedData) {
+
+        //     console.log(scannedData, "scannedddddddddd");
+        // }
     };
 
     const columns = [
