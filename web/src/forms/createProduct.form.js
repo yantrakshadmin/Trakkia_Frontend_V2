@@ -91,9 +91,10 @@ export const ProductForm = ({ id, onCancel, onDone, isGRNForm, grnId }) => {
               </Col>
             ))}
           </Row>
-          <Row style={{ justifyContent: 'space-between' }}>
-            {productFormFields.slice(6, 10).map((item, idx) => (
-              <Col span={6}>
+          
+          <Row style={{ justifyContent: 'left' }}>
+            {productFormFields.slice(6, 8).map((item, idx) => (
+              <Col span={10}>
                 <div key={idx} className="p-2">
                   {formItem(item)}
                 </div>
@@ -101,7 +102,18 @@ export const ProductForm = ({ id, onCancel, onDone, isGRNForm, grnId }) => {
             ))}
           </Row>
           <Row style={{ justifyContent: 'space-between' }}>
-            {productFormFields.slice(10, 14).map((item, idx) => (
+            {productFormFields.slice(8, 12).map((item, idx) => (
+              <Col span={6}>
+                <div key={idx} className="p-2">
+                  {formItem(item)}
+                </div>
+              </Col>
+            ))}
+            <Col span={6} />
+          </Row>
+
+          <Row style={{ justifyContent: 'space-between' }}>
+            {productFormFields.slice(12, 16).map((item, idx) => (
               <Col span={6}>
                 <div key={idx} className="p-2">
                   {formItem(item)}
@@ -112,7 +124,7 @@ export const ProductForm = ({ id, onCancel, onDone, isGRNForm, grnId }) => {
           </Row>
         </>}
         {isGRNForm && <Row style={{ justifyContent: 'space-between' }}>
-          {productFormFields.slice(14, 15).map((item, idx) => (
+          {productFormFields.slice(15, 17).map((item, idx) => (
             <Col span={12}>
               <div key={idx} className="p-2">
                 {formItem(item)}

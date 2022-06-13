@@ -234,8 +234,8 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
                 {fields.map((field, index) => (
                   <Row align="middle">
                     {GRNItemFormFields.slice(0, 1).map((item) => (
-                      <Col span={5}>
-                        <div className="p-2">
+                      <Col span={3}>
+                        <div className="p-1">
                           {formItem({
                             ...item,
                             noLabel: index != 0,
@@ -261,8 +261,9 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
                         </div>
                       </Col>
                     ))}
-                    {GRNItemFormFields.slice(1, 4).map((item) => (
-                      <Col span={5}>
+
+                    {GRNItemFormFields.slice(1, 2).map((item) => (
+                      <Col span={4}>
                         <div className="p-2">
                           {formItem({
                             ...item,
@@ -276,9 +277,52 @@ export const GRNForm = ({id, onCancel, onDone, noEdit, createGrnWithPO}) => {
                             },
                           })}
                         </div>
+
                       </Col>
                     ))}
+
+      
+                    {GRNItemFormFields.slice(2, 4).map((item) => (
+                      <Col span={4}>
+                        <div className="p-2">
+                          {formItem({
+                            ...item,
+                            noLabel: index != 0,
+                            others: {
+                              formOptions: {
+                                ...field,
+                                name: [field.name, item.key],
+                                fieldKey: [field.fieldKey, item.key],
+                              },
+                            },
+                          })}
+                        </div>
+                        
+                      </Col>
+                    ))}
+
+                    {GRNItemFormFields.slice(4,5).map((item) => (
+                      <Col span={6}>
+                        <div className="p-2">
+                          {formItem({
+                            ...item,
+                            noLabel: index != 0,
+                            others: {
+                              formOptions: {
+                                ...field,
+                                name: [field.name, item.key],
+                                fieldKey: [field.fieldKey, item.key],
+                              },
+                            },
+                          })}
+                        </div>
+
+                      </Col>
+                    ))}
+
+
                     <Button
+                    
                       type="danger"
                       style={index != 0 ? {top: '-2vh'} : null}
                       onClick={() => {

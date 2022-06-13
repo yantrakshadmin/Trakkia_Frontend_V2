@@ -1,16 +1,16 @@
 import {FORM_ELEMENT_TYPES} from '../../web/src/constants/formFields.constant';
 
 export const PoGRNFields = [
-  {
-    key: 'po_number',
-    rules: [{required: true, message: 'Please enter purchase order number!'}],
-    kwargs: {
-      placeholder: 'Enter',
-    },
-    type: FORM_ELEMENT_TYPES.INPUT,
-    others: null,
-    customLabel: 'Purchase Order Number',
-  },
+  // {
+  //   key: 'po_number',
+  //   rules: [{required: true, message: 'Please enter purchase order number!'}],
+  //   kwargs: {
+  //     placeholder: 'Enter',
+  //   },
+  //   type: FORM_ELEMENT_TYPES.INPUT,
+  //   others: null,
+  //   customLabel: 'Purchase Order Number',
+  // },
   {
     key: 'id',
     rules: [{required: true, message: 'Please enter purchase order ID!'}],
@@ -223,6 +223,17 @@ export const GRNItemFormFields = [
     type: FORM_ELEMENT_TYPES.INPUT,
     others: null,
     customLabel: 'Label Name',
+  },
+  {
+    key: 'warranty_period ',
+    rules: [{ message: 'Please enter Product Warranty Period!' }],
+    kwargs: {
+      placeholder: 'Enter',
+      maxLength: 20,
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    others: null,
+    customLabel: 'Product Warranty Period',
   },
 ];
 

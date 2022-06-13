@@ -57,6 +57,24 @@ export const productFormFields = [
     },
     customLabel: 'HSN Code',
   },
+  {
+    key: 'expected_life',
+    type: FORM_ELEMENT_TYPES.INPUT,
+    kwargs: {
+      placeholder: 'Enter',
+      type: 'number',
+    },
+    customLabel: 'Product Expected Life',
+  },
+  {
+    key: 'maintenenance_period',
+    type: FORM_ELEMENT_TYPES.INPUT,
+    kwargs: {
+      placeholder: 'Enter',
+      type: 'number',
+    },
+    customLabel: 'Preventive Maintenance  Period',
+  },
 
   {
     key: 'height',

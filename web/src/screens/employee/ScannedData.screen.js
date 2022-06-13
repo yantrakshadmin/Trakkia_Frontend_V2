@@ -35,6 +35,7 @@ const ScannedData = ({ currentPage }) => {
     
 
     const onSubmit = async (data) => {
+        setLoading(true)
         data.to = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
         data.from = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
         await loadAPI(`/rfid-dumpdownload/?company_id=${companyId}&to=${data.to}&from=${data.from}`);
@@ -43,6 +44,7 @@ const ScannedData = ({ currentPage }) => {
 
         //     console.log(scannedData, "scannedddddddddd");
         // }
+        setLoading(false)
     };
 
     const columns = [
