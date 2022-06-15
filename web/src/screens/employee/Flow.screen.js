@@ -1,26 +1,26 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import flowsColumns from 'common/columns/Flows.column';
-import {Popconfirm, Button, Input} from 'antd';
-import {deleteFlow, retreiveFlows} from 'common/api/auth';
-import {connect} from 'react-redux';
-import {useTableSearch} from 'hooks/useTableSearch';
-import {FlowForm} from '../../forms/flow.form';
+import { Popconfirm, Button, Input } from 'antd';
+import { deleteFlow, retreiveFlows } from 'common/api/auth';
+import { connect } from 'react-redux';
+import { useTableSearch } from 'hooks/useTableSearch';
+import { FlowForm } from '../../forms/flow.form';
 import TableWithTabHOC from '../../hocs/TableWithTab.hoc';
 import FlowExpandTable from '../../components/FlowExpandTable';
-import {deleteHOC} from '../../hocs/deleteHoc';
+import { deleteHOC } from '../../hocs/deleteHoc';
 import Delete from '../../icons/Delete';
 import Edit from '../../icons/Edit';
-import {GetUniqueValueNested} from 'common/helpers/getUniqueValues';
+import { GetUniqueValueNested } from 'common/helpers/getUniqueValues';
 import NoPermissionAlert from 'components/NoPermissionAlert';
 
-const {Search} = Input;
+const { Search } = Input;
 
-const FlowEmployeeScreen = ({currentPage}) => {
+const FlowEmployeeScreen = ({ currentPage }) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [csvData, setCsvData] = useState(null);
 
-  const {filteredData, loading, reload, hasPermission} = useTableSearch({
+  const { filteredData, loading, reload, hasPermission } = useTableSearch({
     searchVal,
     retrieve: retreiveFlows,
     usePaginated: false,
@@ -66,11 +66,12 @@ const FlowEmployeeScreen = ({currentPage}) => {
     },
     ...flowsColumns,
     {
-      title: 'Flow Days',
+      title: 'Cycle Days',
       key: 'flow_days',
       dataIndex: 'flow_days',
       sorter: (a, b) => a.flow_days - b.flow_days,
     },
+   
     {
       title: 'Sender Client',
       key: 'sender_client',
@@ -84,6 +85,12 @@ const FlowEmployeeScreen = ({currentPage}) => {
       filters: GetUniqueValueNested(filteredData || [], 'receiver_client', 'name'),
       onFilter: (value, record) => record.receiver_client.name === value,
       render: (text, record) => record.receiver_client.name,
+    },
+    {
+      title: 'Remark',
+      key: 'remark',
+      dataIndex: 'remark',
+      // sorter: (a, b) => a.flow_days - b.flow_days,
     },
     {
       title: 'Action',
@@ -144,8 +151,8 @@ const FlowEmployeeScreen = ({currentPage}) => {
 
   return (
     <NoPermissionAlert hasPermission={hasPermission}>
-      <div style={{display: 'flex', justifyContent: 'flex-end'}}>
-        <div style={{width: '15vw', display: 'flex', alignItems: 'flex-end'}}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <div style={{ width: '15vw', display: 'flex', alignItems: 'flex-end' }}>
           <Search onChange={(e) => setSearchVal(e.target.value)} placeholder="Search" enterButton />
         </div>
       </div>
@@ -161,17 +168,19 @@ const FlowEmployeeScreen = ({currentPage}) => {
         modalBody={FlowForm}
         modalWidth={50}
         expandHandleKey="kits"
-        expandParams={{loading}}
+        expandParams={{ loading }}
         ExpandBody={FlowExpandTable}
         csvdata={csvData}
         csvname={`Flows${searchVal}.csv`}
+        modelTitle={"Add Flow"}
+
       />
     </NoPermissionAlert>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {currentPage: state.page.currentPage};
+  return { currentPage: state.page.currentPage };
 };
 
 export default connect(mapStateToProps)(FlowEmployeeScreen);

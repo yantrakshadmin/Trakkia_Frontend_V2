@@ -40,8 +40,9 @@ export const flowFormFields = [
     },
     type: FORM_ELEMENT_TYPES.INPUT,
     others: null,
-    customLabel: 'Flow Days',
+    customLabel: 'Cycle Days',
   },
+ 
   {
     key: 'sender_client',
     rules: [{required: true, message: 'Please select sender client!'}],
@@ -63,8 +64,18 @@ export const flowFormFields = [
     customLabel: 'Receiver Client',
   },
   {
+    key: 'remark',
+    kwargs: {
+      placeholder: 'Enter',
+    },
+    type: FORM_ELEMENT_TYPES.INPUT,
+    others: null,
+    customLabel: 'Remark',
+  },
+  {
     key: 'active',
     type: FORM_ELEMENT_TYPES.SWITCH,
     label: 'Active',
   },
+  
 ];

@@ -203,7 +203,7 @@ export const FlowForm = ({id, onCancel, onDone}) => {
               })}
             </div>
           </Col>
-          {flowFormFields.slice(6, 7).map((item, idx) => (
+          {flowFormFields.slice(6, 8).map((item, idx) => (
             <Col span={8}>
               <div key={idx} className="p-2">
                 {formItem({...item, form})}
