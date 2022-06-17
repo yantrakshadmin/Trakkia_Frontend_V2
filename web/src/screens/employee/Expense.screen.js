@@ -19,6 +19,8 @@ import FilesViewModal from '../../components/FilesViewModal';
 import DeleteWithPassword from '../../components/DeleteWithPassword';
 import {DEFAULT_PASSWORD} from 'common/constants/passwords';
 import NoPermissionAlert from 'components/NoPermissionAlert';
+// import Upload from 'icons/Upload';
+
 
 import _ from 'lodash';
 
@@ -26,7 +28,11 @@ const {Search} = Input;
 
 const ExpenseEmployeeScreen = ({currentPage, isEmployee}) => {
   const [searchVal, setSearchVal] = useState(null);
-  const [editingId, setEditingId] = useState(null);
+  const [editingId, setEditingId] = useState(null)
+
+
+  
+
 
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
@@ -40,16 +46,43 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee}) => {
 
   const columns = [
     ...expenseColumns,
+
+    // {
+    //   title: 'Upload',
+    //   key: 'upload',
+    //   render: (record) => {
+    //     // console.log(record, record.serials_uploaded, '----')
+    //     return (
+    //       <Button
+    //         // disabled={record.serials_uploaded}
+    //         style={{
+    //           backgroundColor: 'transparent',
+    //           color: "primary",
+    //           border: 'none',
+    //           boxShadow: 'none',
+    //           padding: '1px',
+    //         }}
+    //         onClick={(e) => {
+    //         }}
+    //       >
+    //         <Upload />
+    //       </Button>)
+    //   }
+    //   // dataIndex: 'warehouse',
+    //   // filters: GetUniqueValue(filteredData || [], 'warehouse'),
+    //   // onFilter: (value, record) => record.warehouse === value,
+    // },
     {
       title: 'Action',
       key: 'operation',
       width: '7vw',
       render: (text, record) => (
-        <div className="row justify-evenly">
+        <div className="row justify-evenly">         
           <FilesViewModal
             documentAvail={record.bill ? (record.bill.length > 0 ? true : false) : false}
             getDocuments={() => record.bill}
           />
+         
           {/* <Button
             style={{
               backgroundColor: 'transparent',
