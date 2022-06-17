@@ -52,7 +52,7 @@ export const ProductForm = ({ id, onCancel, onDone, isGRNForm, grnId }) => {
           req.set('no_of_fileA_files', c);
         }
       } else {
-        req.append(key.toString(), data[key]);
+        req.append(key.toString(), data[key] || 0);
       }
     }
     if (isGRNForm) {

@@ -51,6 +51,8 @@ export const retrieveClients = () =>
     secure: true,
   });
 
+
+
 export const createProduct = (req) =>
   loadAPI('/create-product/', {
     method: 'POST',
@@ -76,6 +78,12 @@ export const retrieveProducts = ({ companyId, viewType, page, pageSize }) =>
     method: 'GET',
     secure: true,
   });
+
+export const retrieveScannedData = ({ page, pageSize }) =>
+  loadAPI(`/rfid-dump/?page=${page}&pageSize=${pageSize}`, {
+    method: 'GET',
+    secure: true,
+  }); 
 
 export const editProduct = (id, req) => {
   return loadAPI(`/edit-product/${id}/`, {
