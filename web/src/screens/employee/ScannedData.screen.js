@@ -13,6 +13,7 @@ import Download from 'icons/Download';
 import { CSVLink } from 'react-csv';
 import { useTableSearch } from 'hooks/useTableSearch';
 import { retrieveScannedData } from 'common/api/auth';
+import { DEFAULT_BASE_URL } from 'common/constants/enviroment';
 
 
 
@@ -20,16 +21,10 @@ import { retrieveScannedData } from 'common/api/auth';
 const ScannedData = ({ currentPage }) => {
     const [all, setAll] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [csvData, setCsvData] = useState(null);
-    const [reportData, setReportData] = useState(null);
-    // const [reqAllotments, setReqAllotments] = useState([]);
-    const [clientName, setClientName] = useState(null);
+
+
+
     const [form] = Form.useForm();
-
-    // const { data: scannedData } = useAPI(`/rfid-dump/`, {}, false, false);
-    // console.log(csvData, "csvData dataaaa++++++++++++++++++++");
-
-
     const { user } = useSelector(s => s);
     const { userMeta } = user;
     const { companyId } = userMeta;
@@ -39,15 +34,15 @@ const ScannedData = ({ currentPage }) => {
         usePaginated: true,
     });
 
-  
-    const onSubmit = async (data) => {
-        setLoading(true)
-        data.to = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
-        data.from = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
-        const { data: csvD } = await loadAPI(`/rfid-dumpdownload/?company_id=${companyId}&to=${data.to}&from=${data.from}`)
-        setCsvData(csvD)
-        setLoading(false)
-    };
+    const onDownloadBtn = () => {
+        const data = form.getFieldsValue()
+        const today = new Date().toISOString();
+        const tempTo = moment(data.to || today).endOf('date').format('YYYY-MM-DD HH:MM');
+        const tempFrom = moment(data.from || today).startOf('date').format('YYYY-MM-DD HH:MM');
+        
+        console.log(data, "dataaaaaaaaaaaa");
+        return (`${DEFAULT_BASE_URL}rfid-dumpdownload/?company_id=${companyId}&to=${tempTo}&from=${tempFrom}`)
+    }
 
     const columns = [
         {
@@ -81,24 +76,23 @@ const ScannedData = ({ currentPage }) => {
         },
     ];
 
-    const DownloadCSVButton = useCallback(() => {
+    const DownloadCSVButton = () => {
         return (
-            <Button>
-                <CSVLink
-                    data={csvData}
-                    filename={'Scanned Data' +'.xlsx'}
-                    className='btn btn-primary'>
+            <Button
+                onClick={() => {
+                    window.open(onDownloadBtn())
+                }  
+            }>
                     Download
-                </CSVLink>
             </Button>
         );
-    }, [csvData]);
+    }
 
     return (
         <>
-            <Form onFinish={onSubmit} form={form} layout="vertical" hideRequiredMark autoComplete="off">
+            <Form  form={form} layout="inline" hideRequiredMark autoComplete="off">
                 <Row>
-                    <Col span={3}>
+                    <Col span={10}>
                         {formItem({
                             key: 'from',
                             rules: [{ required: true, message: 'Please select From date!' }],
@@ -111,8 +105,7 @@ const ScannedData = ({ currentPage }) => {
                             customLabel: 'From',
                         })}
                     </Col>
-                    <Col span={4} />
-                    <Col span={3}>
+                    <Col span={10}>
                         {formItem({
                             key: 'to',
                             rules: [{ required: true, message: 'Please select To date!' }],
@@ -126,11 +119,7 @@ const ScannedData = ({ currentPage }) => {
                         })}
                     </Col>
                 </Row>
-                <Row>
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-                </Row>
+
             </Form>
 
             <br />
@@ -142,7 +131,7 @@ const ScannedData = ({ currentPage }) => {
                 size="middle"
                 title="Scanned Data"
                 hideRightButton
-                ExtraButtonNextToTitle={csvData && DownloadCSVButton}
+                ExtraButtonNextToTitle={  DownloadCSVButton}
                 // ExtraButtonNextToTitle={csvData && DownloadCSVButton}
                 ExpandBody={ExpandTable}
                 totalRows={paginationData?.count}
