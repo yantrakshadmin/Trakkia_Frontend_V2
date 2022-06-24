@@ -81,8 +81,10 @@ const ScannedData = ({ currentPage }) => {
             <Button
                 onClick={() => {
                     window.open(onDownloadBtn())
+                    // onDownloadBtn()
                 }  
-            }>
+                }
+            >
                     Download
             </Button>
         );
@@ -92,7 +94,7 @@ const ScannedData = ({ currentPage }) => {
         <>
             <Form  form={form} layout="inline" hideRequiredMark autoComplete="off">
                 <Row>
-                    <Col span={10}>
+                    <Col span={11}>
                         {formItem({
                             key: 'from',
                             rules: [{ required: true, message: 'Please select From date!' }],
@@ -131,7 +133,7 @@ const ScannedData = ({ currentPage }) => {
                 size="middle"
                 title="Scanned Data"
                 hideRightButton
-                ExtraButtonNextToTitle={  DownloadCSVButton}
+                ExtraButtonNextToTitle={   DownloadCSVButton}
                 // ExtraButtonNextToTitle={csvData && DownloadCSVButton}
                 ExpandBody={ExpandTable}
                 totalRows={paginationData?.count}

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, ReactN } from 'react';
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import moment from 'moment';
 import { DEFAULT_BASE_URL } from 'common/constants/enviroment';
 import { useAPI } from 'common/hooks/api';
@@ -27,59 +27,60 @@ const ReportsWarhoue = [
 
 
 const AuditSummary = ({ currentPage }) => {
-    const [client, setClient] = useState('');
     const [toDate, setToDate] = useState(null);
     const [fromDate, setFromDate] = useState(null);
     const [warehouse, setwarehouse] = useState([]);
     const [selectedWarehouse, setSelectedWarehouse] = useState([]);
-    const [selectedReportWarehouse, setSelectedReportWarehouse] = useState([])
+    const [selectedReport, setSelectedReport] = useState([])
     const [selectedValues, setSelectedValues] = useState([]);
     const [form] = Form.useForm();
+    const { user } = useSelector(s => s);
+    const { userMeta } = user;
+    const { companyId, viewType } = userMeta;
 
 
     React.useEffect(() => {
         handelWarehouse();
     }, [selectedWarehouse]);
 
-
-    const onChange = async () => {
-        const tempFrom = moment(form.getFieldValue('dateFrom'))
-            .startOf('date')
-            .format('YYYY-MM-DD+HH:MM');
-        const tempTo = moment(form.getFieldValue('dateTo')).endOf('date').format('YYYY-MM-DD+HH:MM');
-        setToDate(tempTo);
-        setFromDate(tempFrom);
-        setClient(form.getFieldValue('cname'));
-    };
-
-
     const handelWarehouse = async () => {
-        const { data: auditUp } = await loadAPI(`/warehouse-up/?company=${52}&view=${'Pool Operator'}`, {});
+        const { data: auditUp } = await loadAPI(`/warehouse-up/?company=${companyId}&view=${viewType}`, {});
         setwarehouse(auditUp);
     };
     const handleWarehouseChange = (value) => {
 
         if (value.includes('allwar')) {
-            console.log("working");
-            form.setFieldsValue({ warehouse: (warehouse || []).map((e) => e.id) })
-            let res  = form.getFieldsValue(warehouse)
-            // console.log(res);
 
-        } else {
-            console.log(value);
+            form.setFieldsValue({ warehouse: (warehouse || []).map((e) => e.id) })
+            setSelectedWarehouse(form.getFieldValue('warehouse'))
         }
+        setSelectedWarehouse(form.getFieldValue('warehouse'))
     };
     const handleReportChange = (value) => {
         if (value.includes('all')) {
-            console.log("working");
             form.setFieldsValue({ reports: (ReportsWarhoue || []).map((e) => e.val) })
-            console.log(value);
-
-
-        } else {
-            console.log(value);
+            setSelectedReport(form.getFieldValue('reports'))
         }
+        setSelectedReport(form.getFieldValue('reports'))
     };
+    const onChange = async () => {
+        const tempFrom = moment(form.getFieldValue('dateFrom')).startOf('date').format('YYYY-MM-DD');
+        const tempTo = moment(form.getFieldValue('dateTo')).endOf('date').format('YYYY-MM-DD');
+        setToDate(tempTo);
+        setFromDate(tempFrom);
+    };
+
+    const onDownloadBtn = () => {
+        const data = form.getFieldsValue()
+        // const today = new Date().toISOString();
+        const tempTo = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
+        const tempFrom = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
+        console.log(data, "dataaaaaaaaaaaa");
+        return (`${DEFAULT_BASE_URL}rfid-dumpdownload/?company_id=${companyId}&warehouse=${[data.warehouse]}&reports=${data.reports}&from=${fromDate}&to=${toDate}`)
+    }
+
+
+
 
 
     return (
@@ -95,7 +96,6 @@ const AuditSummary = ({ currentPage }) => {
                     <Col span={12}>
                         <Form.Item name="warehouse" label="Warehouse">
                             <Select
-
                                 mode='multiple'
                                 placeholder="Select Warehouse"
                                 allowClear
@@ -123,16 +123,6 @@ const AuditSummary = ({ currentPage }) => {
                                 maxTagCount={2}
                                 onChange={handleReportChange}
                             >
-                                {/* <Option key="all" value="all">---SELECT ALL---</Option>
-                                <Option key="1" value="AS">Audit Summary Report</Option>
-                                <Option key="1" value="AH">Asset Health Report</Option>
-                                <Option key="1" value="MT">Missing Tags</Option>
-                                <Option key="1" value="3DT">3 Day Triangulation Report</Option>
-                                <Option key="1" value="DD">Dump Data</Option>
-                                <Option key="1" value="IS">Individual Scan Report</Option>
-                                <Option key="1" value="LM">Location Mismatch Report</Option>
-                                <Option key="1" value="MA">Missing Audit Report</Option>
-                                <Option key="1" value="AS">Audit Summary Report</Option> */}
 
                                 <Option key="all" value="all">---SELECT ALL---</Option>
                                 {(ReportsWarhoue || []).map((v) => (
@@ -174,12 +164,18 @@ const AuditSummary = ({ currentPage }) => {
                 </Row>
                 <Row>
                     <Button
-                        // href={`${DEFAULT_BASE_URL}/outward-report/?to=${toDate}&from=${fromDate}&cname=${client}`}
-                        rel="noopener noreferrer"
-                        target="blank">
+                        onClick={() => {
+                            window.open(onDownloadBtn())
+                            // onDownloadBtn()
+                            console.log("on click working");
+                        }
+
+                        }
+                    >
                         Download
                     </Button>
                 </Row>
+
             </Form>
             <br />
         </>
