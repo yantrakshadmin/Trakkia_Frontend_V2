@@ -154,19 +154,19 @@ export const employeeRoutes = [
       },
     ],
   },
-  {
-    name: 'DEPS',
-    icon: ['fas', 'ticket-alt'],
-    path: '/deps/',
-    isSubMenu: true,
-    subMenu: [
-      {
-        name: 'Tickets',
-        path: '/deps/tickets/',
-        Component: lazy(() => import('screens/employee/Tickets.screen')),
-      },
-    ],
-  },
+  // {
+  //   name: 'DEPS',
+  //   icon: ['fas', 'ticket-alt'],
+  //   path: '/deps/',
+  //   isSubMenu: true,
+  //   subMenu: [
+  //     {
+  //       name: 'Tickets',
+  //       path: '/deps/tickets/',
+  //       Component: lazy(() => import('screens/employee/Tickets.screen')),
+  //     },
+  //   ],
+  // },
   {
     name: 'Masters',
     icon: ['fas', 'layer-group'],
@@ -433,6 +433,11 @@ export const employeeRoutes = [
         name: 'Report-beta',
         path: '/reports/report-beta/',
         Component: lazy(() => import('components/Reports/Report-beta.js')),
+      },
+      {
+        name: 'Audit Summary',
+        path: '/reports/audit-summary/',
+        Component: lazy(() => import('components/Reports/AuditSummary.js')),
       },
     ],
   },
