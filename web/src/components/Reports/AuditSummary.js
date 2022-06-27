@@ -64,8 +64,8 @@ const AuditSummary = ({ currentPage }) => {
         setSelectedReport(form.getFieldValue('reports'))
     };
     const onChange = async () => {
-        const tempFrom = moment(form.getFieldValue('dateFrom')).startOf('date').format('YYYY-MM-DD');
-        const tempTo = moment(form.getFieldValue('dateTo')).endOf('date').format('YYYY-MM-DD');
+        const tempFrom = moment(form.getFieldValue('dateFrom')).startOf('date').format('YYYY-MM-DD HH:MM');
+        const tempTo = moment(form.getFieldValue('dateTo')).endOf('date').format('YYYY-MM-DD HH:MM');
         setToDate(tempTo);
         setFromDate(tempFrom);
     };
@@ -73,8 +73,8 @@ const AuditSummary = ({ currentPage }) => {
     const onDownloadBtn = () => {
         const data = form.getFieldsValue()
         // const today = new Date().toISOString();
-        const tempTo = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
-        const tempFrom = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
+        // const tempTo = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
+        // const tempFrom = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
         console.log(data, "dataaaaaaaaaaaa");
         return (`${DEFAULT_BASE_URL}rfid-dumpdownload/?company_id=${companyId}&warehouse=${[data.warehouse]}&reports=${data.reports}&from=${fromDate}&to=${toDate}`)
     }
@@ -166,8 +166,6 @@ const AuditSummary = ({ currentPage }) => {
                     <Button
                         onClick={() => {
                             window.open(onDownloadBtn())
-                            // onDownloadBtn()
-                            console.log("on click working");
                         }
 
                         }
