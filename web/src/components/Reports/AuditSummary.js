@@ -22,7 +22,6 @@ const ReportsWarhoue = [
     { id: 6, name: 'Individual Scan Report', val: 'IS' },
     { id: 7, name: 'Location Mismatch Report', val: 'LM' },
     { id: 8, name: 'Missing Audit Report', val: 'MA' },
-    { id: 9, name: 'Audit Summary Report', val: 'AS' },
 ];
 
 
