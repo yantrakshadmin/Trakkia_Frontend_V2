@@ -23,6 +23,13 @@ export const DashboardScreen = () => {
   const { data: allotmentKPI } = useAPI('/allotcount-kpi/')
   const { data: ticketKPI } = useAPI('/ticketcount-kpi/')
 
+  const { data: taggedAsset } = useAPI('/tagged-asset/')
+  const { data: availableAsset } = useAPI('/avialable-asset/')
+  const { data: missingAsset } = useAPI('/missing-asset/')
+  const { data: totalAudit } = useAPI('/total-audits/')
+
+
+
   useEffect(() => {
     const getAllotmentLineData = async () => {
 
@@ -181,7 +188,7 @@ export const DashboardScreen = () => {
 
   return (
     <>
-      <Row gutter={10} style={{ margin: '5px', marginTop: '20px' }}>
+      {/* <Row gutter={10} style={{ margin: '5px', marginTop: '20px' }}>
         <Col span={6}>
           {allotmentKPI ? <KPICard graphData={allotmentsLineData} title={`Allotments`} count={allotmentKPI['this month']} change={(allotmentKPI['last month'] == 0 ? (allotmentKPI['this month'] - allotmentKPI['last month']) * 100 : (allotmentKPI['this month'] - allotmentKPI['last month']) / allotmentKPI['last month'] * 100).toFixed(2)} icon={'fas fa-truck-loading'} color={'#00C853'} /> : <KPICard graphData={allotmentsLineData} title={`Allotments`} count={'...'} change={0} icon={'fas fa-truck-loading'} color={'#00C853'} />}
         </Col>
@@ -194,7 +201,28 @@ export const DashboardScreen = () => {
         <Col span={6}>
           <KPICard title={`Average Cycle Time`} count={30} change={1} icon={'fas fa-history'} color={'#212121'} />
         </Col>
+      </Row> */}
+
+      
+
+
+
+      <Row gutter={10} style={{ margin: '5px', marginTop: '20px' }}>
+        <Col span={6}>
+          <KPICard title={`Tagged Asset`} count={taggedAsset} change={2} icon={'fas fa-undo-alt'} color={'#1E88E5'} />
+        </Col>
+        <Col span={6}>
+          <KPICard title={`Available Asset`} count={availableAsset} change={2} icon={'fas fa-undo-alt'} color={'#1E88E5'} />
+        </Col>
+        <Col span={6}>
+          <KPICard graphData={ticketsLineData} title={`Missing Asset`} count={missingAsset} change={3} icon={'fas fa-ticket-alt'} color={'#C62828'} />
+        </Col>
+        <Col span={6}>
+          <KPICard title={`Audits Conducted`} count={totalAudit} change={1} icon={'fas fa-history'} color={'#212121'} />
+        </Col>
       </Row>
+
+
       <Row>
         <Col span={12}>
           <Card style={{ borderRadius: '10px', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px', margin: '10px' }}>
