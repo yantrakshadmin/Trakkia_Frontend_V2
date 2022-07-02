@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Col, Card } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import { Row, Col, Card , Spin } from 'antd';
 import { useAPI } from 'common/hooks/api';
 import { Cal } from './events.screen';
 import Chart from "react-apexcharts";
@@ -22,6 +23,15 @@ export const DashboardScreen = () => {
 
   const { data: allotmentKPI } = useAPI('/allotcount-kpi/')
   const { data: ticketKPI } = useAPI('/ticketcount-kpi/')
+
+  const { data: scannedData, loading } = useAPI('/scanned-map/')
+  const { data: missedData  } = useAPI('/missed-map/')
+
+  
+  console.log(scannedData, "scannedData");
+
+
+
 
   useEffect(() => {
     const getAllotmentLineData = async () => {
@@ -179,6 +189,28 @@ export const DashboardScreen = () => {
     ]
   };
 
+
+  function removeLastWord(str) {
+    const words = str.split(' ');
+
+    if (words.length === 1) {
+      return str;
+    }
+
+    return words.slice(0, -1).join(' ');
+  }
+
+
+
+  const chartSereis = Object.keys(scannedData || {}).filter(f => f!== "Date" )
+  const finalSereis = (chartSereis || []).map(key => ({ name: removeLastWord( _.startCase(key)), data: (scannedData || {})[key] || {} }))
+
+  console.log(finalSereis, "finalSereis");
+  const missedChartSereis = Object.keys(missedData || {}).filter(f => f !== "Date")
+  const missedFinalSereis = (missedChartSereis || []).map(key => ({ name: removeLastWord( _.startCase(key)), data: (missedData || {})[key] || {} }))
+  
+
+
   return (
     <>
       <Row gutter={10} style={{ margin: '5px', marginTop: '20px' }}>
@@ -195,7 +227,7 @@ export const DashboardScreen = () => {
           <KPICard title={`Average Cycle Time`} count={30} change={1} icon={'fas fa-history'} color={'#212121'} />
         </Col>
       </Row>
-      <Row>
+      {/* <Row>
         <Col span={12}>
           <Card style={{ borderRadius: '10px', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px', margin: '10px' }}>
             <Chart
@@ -214,6 +246,52 @@ export const DashboardScreen = () => {
               type={chartData.type}
               height={chartData.height}
             />
+          </Card>
+        </Col>
+      </Row> */}
+
+      <br/>
+      <br />
+      
+      <Row>
+        <Col span={12}>
+          <Card style={{ borderRadius: '10px', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px', margin: '10px' }}>
+            {loading ? <div style={{ height: 260, display: 'flex' , justifyContent: 'center', alignItems: 'center' }}> <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /> </div> :
+            
+            <Chart
+              options={{
+                ...chartData.options, xaxis: {
+                  type: 'category',
+                  categories: scannedData?.Date || []
+                },
+                  title: { text: "Available Assets"}
+                
+              }}
+              series={finalSereis}
+              type={chartData.type}
+              height={chartData.height}
+            />
+            }
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Card style={{ borderRadius: '10px', boxShadow: 'rgba(149, 157, 165, 0.2) 0px 8px 24px', margin: '10px' }}>
+            {loading ? <div style={{ height: 260, display: 'flex', justifyContent: 'center', alignItems: 'center' }}> <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /> </div> :
+
+              <Chart
+                options={{
+                  ...chartData.options, xaxis: {
+                    type: 'category',
+                    categories: missedData?.Date || []
+                  },
+                  title: { text: "Missing Assets" }
+
+                }}
+                series={missedFinalSereis}
+                type={chartData.type}
+                height={chartData.height}
+              />
+            }
           </Card>
         </Col>
       </Row>

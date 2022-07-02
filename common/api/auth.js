@@ -1549,6 +1549,15 @@ export const createRelocation = (src) =>
     //   'Content-Type': `multipart/form-data  boundary=${Math.random().toString().substr(2)}`,
     // },
   });
+export const uploadRelocation = (src) =>
+  loadAPI('/upload-relocation/', {
+    method: 'POST',
+    data: src,
+    secure: true,
+    // headers: {
+    //   'Content-Type': `multipart/form-data  boundary=${Math.random().toString().substr(2)}`,
+    // },
+  });
 
 export const retrieveRelocations = () =>
   loadAPI('/relocations/', {

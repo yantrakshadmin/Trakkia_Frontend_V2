@@ -165,6 +165,7 @@ export const relocationFormFields = [
     customLabel: 'Products/Kits',
     colSpan: 6,
   },
+
 ];
 
 export const relocationFlowFormFields = [

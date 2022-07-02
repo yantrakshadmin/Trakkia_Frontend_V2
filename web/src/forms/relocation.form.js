@@ -219,6 +219,7 @@ export const RelocationForm = ({id, onCancel, onDone, isEmployee}) => {
         hideRequiredMark
         autoComplete="off"
         onFieldsChange={handleFieldsChange}>
+        
         <Row style={{justifyContent: 'left'}}>
           {relocationFormFields.slice(0, 1).map((item, idx) => (
             <Col span={item.colSpan}>
