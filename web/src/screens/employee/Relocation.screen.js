@@ -1,12 +1,13 @@
 import React, {useState} from 'react';
 import relocationColumn from 'common/columns/relocation.column';
-import {Popconfirm, Button, Input} from 'antd';
+import {Popconfirm, Button, Input,Modal} from 'antd';
 import {deleteRelocation, retrieveRelocations} from 'common/api/auth';
 import {connect} from 'react-redux';
 import {useTableSearch} from 'hooks/useTableSearch';
 import {useAPI} from 'common/hooks/api';
 import {mergeArray} from 'common/helpers/mrHelper';
-import {RelocationForm} from 'forms/relocation.form';
+import { RelocationForm } from 'forms/relocation.form';
+import {RelocationUploadForm} from 'forms/relocationUpload.form'
 import TableWithTabHOC from 'hocs/TableWithTab.hoc';
 import ExpandTable from 'components/RelocationExpandTable';
 import {deleteHOC} from 'hocs/deleteHoc';
@@ -31,6 +32,9 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee, user}) => {
   const [editingId, setEditingId] = useState(null);
   const [deliveryId, setDeliveryId] = useState(null);
   const [TN, setTN] = useState(null);
+
+  const [uploadModal, setUploadModal] = useState(Boolean);
+  const [currentGRNId, setCurrentGRNId] = useState(null)
 
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
@@ -152,7 +156,35 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee, user}) => {
           <Search onChange={(e) => setSearchVal(e.target.value)} placeholder="Search" enterButton />
         </div>
       </div>
+
+      <div style={{ display: 'flex', justifyContent: 'flex-end' , marginTop: '20px' }}>
+        <div style={{ width: '12.6vw', display: 'flex', alignItems: 'flex-end' }}>
+          <Button type='primary'
+            onClick={(e) => {
+              setUploadModal(true)
+              // setEditingId(record.id)
+              // setCurrentGRNId(record.id);
+              e.stopPropagation();
+
+            }}
+          > Upload Relocation </Button>
+        </div>
+      </div>
+
       <br />
+
+
+      <Modal
+        maskClosable={false}
+        visible={uploadModal}
+        destroyOnClose
+        style={{ minWidth: `80vw` }}
+        title={'Upload Relocation'}
+        onCancel={() => { setUploadModal(false) }}
+        footer={null}>
+        <RelocationUploadForm onCancel={() => { setUploadModal(false) }} onDone={() => { setUploadModal(false) }} />
+      </Modal>
+
       <TableWithTabHOC
         rowKey={(record) => record.id}
         refresh={reload}
@@ -162,12 +194,18 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee, user}) => {
         editingId={editingId || deliveryId}
         cancelEditing={cancelEditing}
         modalBody={deliveryId ? DeliveredForm : RelocationForm}
+        // modalBody={uploadModal ? RelocationUploadForm : RelocationForm  }
+
         modalWidth={80}
-        formParams={{isEmployee, transaction_no: TN}}
+        formParams={{ isEmployee, transaction_no: TN, }}
         // expandHandleKey="transactions"
-        expandParams={{loading}}
+        expandParams={{ loading }}
         ExpandBody={ExpandTable}
+        modalVisibleProp={!!currentGRNId}
         hideRightButton={user.viewType === 'Pool Operator' ? false : true}
+
+
+
       />
     </NoPermissionAlert>
   );
