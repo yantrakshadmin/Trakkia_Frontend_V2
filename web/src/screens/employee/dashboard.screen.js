@@ -208,7 +208,7 @@ export const DashboardScreen = () => {
 
 
 
-  const chartSereis = Object.keys(scannedData || {}).filter(f => f!== "Date" )
+  const chartSereis = Object.keys(scannedData || {}).filter(f => f !== "Date" && f !== "Warehouse" && f !== 'HPT' && f !== 'Blue Racks' && f !== 'Plastic Pallet' && f !== 'Trolley' && f !== 'Warehouse')
   const finalSereis = (chartSereis || []).map(key => ({ name: removeLastWord( _.startCase(key)), data: (scannedData || {})[key] || {} }))
 
   console.log(finalSereis, "finalSereis");
@@ -262,17 +262,32 @@ export const DashboardScreen = () => {
             {loading ? <div style={{ height: 260, display: 'flex' , justifyContent: 'center', alignItems: 'center' }}> <Spin indicator={<LoadingOutlined style={{ fontSize: 24 }} spin />} /> </div> :
             
             <Chart
-              options={{
-                ...chartData.options, xaxis: {
+                options={{
+                  ...chartData.options,
+                  // tooltip: {
+                  //   shared: true,
+                  //   intersect: false,
+                  //   y: {
+                  //     formatter: function (y) {
+                  //       if (typeof y !== "undefined") {
+                     
+                  //         return y.toFixed(0) + " points";
+                  //       }
+                  //       return y;
+
+                  //     }
+                  //   }
+                  // },
+                  xaxis: {
                   type: 'category',
                   categories: scannedData?.Date || []
-                },
+                  },
                   title: { text: "Available Assets"}
                 
               }}
               series={finalSereis}
               type={chartData.type}
-              height={chartData.height}
+              height={chartData.height}     
             />
             }
           </Card>
