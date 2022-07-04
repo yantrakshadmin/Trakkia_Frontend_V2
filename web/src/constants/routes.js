@@ -278,6 +278,12 @@ export const employeeRoutes = [
         Component: lazy(() => import('screens/employee/GRNStuff/RegenerateGRN.screen')),
         props: { isEmployee: true },
       },
+      {
+        name: 'End Of Life',
+        path: '/grn/end-of-life-grn',
+        Component: lazy(() => import('screens/employee/GRNStuff/EndOfLife.screen')),
+        props: { isEmployee: true },
+      },
     ],
   },
   // {
