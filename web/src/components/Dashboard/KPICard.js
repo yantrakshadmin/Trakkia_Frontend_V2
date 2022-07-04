@@ -94,12 +94,12 @@ const KPICard = ({ title, count, change, icon, color, graphData }) => {
 
             <hr className='line' />
             <Row>
-                {change >= 0
+                {/* {change >= 0
                     ?
                     <Text style={{ marginRight: '5px', fontWeight: '700' }} type="success">+{change}%</Text> :
                     <Text style={{ marginRight: '5px', fontWeight: '700' }} type="success">-{-change}%</Text>
                 }
-                <Text type="secondary">than last month</Text>
+                <Text type="secondary">than last month</Text> */}
             </Row>
         </Card>
     );
