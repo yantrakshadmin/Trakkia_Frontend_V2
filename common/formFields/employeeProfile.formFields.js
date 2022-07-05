@@ -169,7 +169,7 @@ export const employeeFormFields = [
   },
   {
     key: 'clients',
-    rules: [{ required: true, message: 'Please select client!' }],
+    // rules: [{ required: true, message: 'Please select client!' }],
     kwargs: {
       placeholder: 'Select',
       mode:'multiple',

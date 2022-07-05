@@ -208,13 +208,15 @@ export const DashboardScreen = () => {
 
 
 
-  const chartSereis = Object.keys(scannedData || {}).filter(f => f !== "Date" && f !== "Warehouse" && f !== 'HPT' && f !== 'Blue Racks' && f !== 'Plastic Pallet' && f !== 'Trolley' && f !== 'Warehouse')
+  const chartSereis = Object.keys(scannedData || {}).filter(f => f !== "Date"  && f !== 'HPT' && f !== 'Blue Racks' && f !== 'Plastic Pallet' && f !== 'Trolley' && f !== 'Warehouse')
   const finalSereis = (chartSereis || []).map(key => ({ name: removeLastWord( _.startCase(key)), data: (scannedData || {})[key] || {} }))
-
   console.log(finalSereis, "finalSereis");
-  const missedChartSereis = Object.keys(missedData || {}).filter(f => f !== "Date")
+
+
+  const missedChartSereis = Object.keys(missedData || {}).filter(f => f !== "Date" && f !== 'HPT' && f !== 'Blue Racks' && f !== 'Plastic Pallet' && f !== 'Trolley' && f !== 'Warehouse')
   const missedFinalSereis = (missedChartSereis || []).map(key => ({ name: removeLastWord( _.startCase(key)), data: (missedData || {})[key] || {} }))
-  
+  console.log(missedData, "missedData");
+  console.log(missedFinalSereis,"missedFinalSereis");
 
 
   return (

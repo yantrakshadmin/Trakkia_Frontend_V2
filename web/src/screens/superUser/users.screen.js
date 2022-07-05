@@ -1,22 +1,29 @@
 import React, { useState } from 'react';
 import userColumns from 'common/columns/Users.column';
-import { Popconfirm, Button, Input } from 'antd';
-import { connect  } from 'react-redux';
+import { Popconfirm, Button, Input, Modal } from 'antd';
+import { connect } from 'react-redux';
 import { useTableSearch } from 'hooks/useTableSearch';
-import {  deleteEmployee,retrieveEmployeeList } from 'common/api/auth';
+import { deleteEmployee, retrieveEmployeeList } from 'common/api/auth';
 import Delete from 'icons/Delete';
 import { deleteHOC } from 'hocs/deleteHoc';
 import Edit from 'icons/Edit';
+import Upload from 'icons/Upload';
+
 import TableWithTabHOC from 'hocs/TableWithTab.hoc';
-import {AddUserForm}  from 'forms/SuperUser/addUser.form';
-import {EditUserForm}  from 'forms/SuperUser/editUser.form';
+import { AddUserForm } from 'forms/SuperUser/addUser.form';
+import { EditUserForm } from 'forms/SuperUser/editUser.form';
 import NoPermissionAlert from 'components/NoPermissionAlert';
+import { UsersUploadForm } from "../../forms/UsersUpload.form"
+
 
 const { Search } = Input;
 
 const WarehouseEmployeeScreen = ({ currentPage, user }) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
+  const [uploadModal, setUploadModal] = useState(Boolean);
+  const [employeeId, setEmployeeId] = useState(null);
+
 
   const { filteredData, loading, reload, hasPermission } = useTableSearch({
     searchVal,
@@ -27,6 +34,32 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
 
   const columns = [
     ...userColumns,
+    {
+      title: 'Assign Tags',
+      key: 'assign-tags',
+      width: '8vw',
+      render: (text, record) => (
+        <div className='row align-center justify-evenly'>
+          <Button
+            style={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              boxShadow: 'none',
+              padding: '1px',
+            }}
+            onClick={(e) => {
+              setUploadModal(true)
+              setEmployeeId(record.user);
+              // console.log(record, record.user, "Onclickkkkk")
+              // e.stopPropagation();
+            }}>
+            <Upload />
+          </Button>
+
+        </div>
+      ),
+
+    },
     {
       title: 'Action',
       key: 'operation',
@@ -94,6 +127,17 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
         </div>
       </div>
       <br />
+
+      <Modal
+        maskClosable={false}
+        visible={uploadModal}
+        destroyOnClose
+        style={{ minWidth: `80vw` }}
+        title={'Upload Users'}
+        onCancel={() => { setUploadModal(false) }}
+        footer={null}>
+        <UsersUploadForm employeeId={employeeId} onCancel={() => { setUploadModal(false) }} onDone={() => { setUploadModal(false) }} />
+      </Modal>
       <TableWithTabHOC
         rowKey={(record) => record.id}
         refresh={reload}
@@ -105,17 +149,17 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
         modalBody={editingId ? EditUserForm : AddUserForm}
         modalWidth={60}
         scroll={{ x: 1200 }}
-        formParams={{companyId: user.companyId}}
+        formParams={{ companyId: user.companyId, }}
       />
     </NoPermissionAlert>
   );
 };
 
 const mapStateToProps = (state) => {
-  return { 
+  return {
     currentPage: state.page.currentPage,
-    user: state.user.userMeta 
-   };
+    user: state.user.userMeta
+  };
 };
 
 export default connect(mapStateToProps)(WarehouseEmployeeScreen);
