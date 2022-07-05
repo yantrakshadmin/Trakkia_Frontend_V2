@@ -57,7 +57,7 @@ export const UsersUploadForm = ({ id, onCancel, onDone, isEmployee, employeeId }
 
     return (
         <Spin spinning={loading}>
-            <Divider orientation="left"> Upload User</Divider>
+            <Divider orientation="left"> Upload Tags</Divider>
             <Form
                 onFinish={preProcess}
                 form={form}

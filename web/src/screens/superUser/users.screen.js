@@ -14,6 +14,7 @@ import { AddUserForm } from 'forms/SuperUser/addUser.form';
 import { EditUserForm } from 'forms/SuperUser/editUser.form';
 import NoPermissionAlert from 'components/NoPermissionAlert';
 import { UsersUploadForm } from "../../forms/UsersUpload.form"
+import File from 'icons/File';
 
 
 const { Search } = Input;
@@ -101,7 +102,18 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
               onClick={(e) => e.stopPropagation()}>
               <Delete />
             </Button>
+           
           </Popconfirm>
+          <Button
+            style={{
+              backgroundColor: 'transparent',
+              boxShadow: 'none',
+              border: 'none',
+              padding: '1px',
+            }}
+            onClick={(e) => e.stopPropagation()}>
+            <File />
+          </Button>
         </div>
       ),
     },
@@ -133,7 +145,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
         visible={uploadModal}
         destroyOnClose
         style={{ minWidth: `80vw` }}
-        title={'Upload Users'}
+        title={'Upload Tags'}
         onCancel={() => { setUploadModal(false) }}
         footer={null}>
         <UsersUploadForm employeeId={employeeId} onCancel={() => { setUploadModal(false) }} onDone={() => { setUploadModal(false) }} />
