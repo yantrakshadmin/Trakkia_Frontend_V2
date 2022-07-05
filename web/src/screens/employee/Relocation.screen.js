@@ -151,7 +151,7 @@ const ExpenseEmployeeScreen = ({currentPage, isEmployee, user}) => {
 
   return (
     <NoPermissionAlert hasPermission={hasPermission}>
-      <div style={{display: 'flex', justifyContent: 'flex-end'}}>
+      <div style={{ display: 'flex', justifyContent: 'flex-end'}}>
         <div style={{width: '15vw', display: 'flex', alignItems: 'flex-end'}}>
           <Search onChange={(e) => setSearchVal(e.target.value)} placeholder="Search" enterButton />
         </div>

@@ -1578,6 +1578,16 @@ export const uploadEndOfLife = (src) =>
     secure: true,
   });
 
+export const uploadUserTags = (id, src ) =>
+  loadAPI(`/upload-tags/`, {
+    method: 'POST',
+    data: src,
+    secure: true,
+    headers: {
+      emp: id,
+    }
+  });
+
 
 export const deleteRelocation = (id) =>
   loadAPI(`/edit-relocation/${id}/`, {
