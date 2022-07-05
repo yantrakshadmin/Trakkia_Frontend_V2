@@ -1565,6 +1565,20 @@ export const retrieveRelocations = () =>
     secure: true,
   });
 
+export const retrieveEndOfLife = () =>
+  loadAPI('/eol-list/', {
+    method: 'GET',
+    secure: true,
+  });
+
+export const uploadEndOfLife = (src) =>
+  loadAPI('/upload-eol/', {
+    method: 'POST',
+    data: src,
+    secure: true,
+  });
+
+
 export const deleteRelocation = (id) =>
   loadAPI(`/edit-relocation/${id}/`, {
     method: 'DELETE',
