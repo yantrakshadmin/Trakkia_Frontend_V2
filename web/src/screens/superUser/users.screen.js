@@ -18,6 +18,7 @@ import File from 'icons/File';
 import { useAPI } from 'common/hooks/api';
 import { loadAPI } from 'common/helpers/api';
 import Axios from 'axios';
+import { v } from 'react-select/dist/index-4bd03571.esm';
 
 
 const { Search } = Input;
@@ -38,6 +39,17 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
     retrieve: retrieveEmployeeList,
     useCompanyIdAndViewType: true
   });
+
+
+
+  const getFileUrl = (arr, userId,) => {
+ 
+    const filterArry =( arr|| []).filter(f => f.emp == userId )
+    return filterArry[0]?.file;
+   
+  }
+
+
 
 
   const columns = [
@@ -110,11 +122,23 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
            
           </Popconfirm>
           <a
+            href={getFileUrl(tagList, record.user)}
+            target='blank'
+          >
+            <File/>
+        </a>
+          {/* {(record.user === tagList[0]?.emp) ? <a
             href={tagList[0]?.file}
             target='blank'>
             <File />
 
+          </a> :
+            <a>
+              <File />
+
             </a>
+           } */}
+         
           {/* <Button
             style={{
               backgroundColor: 'transparent',
