@@ -17,6 +17,7 @@ import { UsersUploadForm } from "../../forms/UsersUpload.form"
 import File from 'icons/File';
 import { useAPI } from 'common/hooks/api';
 import { loadAPI } from 'common/helpers/api';
+import Axios from 'axios';
 
 
 const { Search } = Input;
@@ -27,18 +28,10 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
   const [uploadModal, setUploadModal] = useState(Boolean);
   const [employeeId, setEmployeeId] = useState(null);
 
-  const { data: tagList } = useAPI('/emp-tagslist/', {});
-  
+  const { data: tagList } =  useAPI('/emp-tagslist/')
+   
+        // console.log(tagList[0]?.file, "fileeeeeeeee") 
 
-
-  console.log( tagList ,"bbbbbbbbbbb");
-
-
-
-  // useEffect(() => {
-  //   console.log(tagList?.file, "fileeeeeeeee")
-
-  // }, [])
   
   const { filteredData, loading, reload, hasPermission } = useTableSearch({
     searchVal,
@@ -64,7 +57,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
             }}
             onClick={(e) => {
               setUploadModal(true)
-              setEmployeeId(tagList?.emp);
+              setEmployeeId(record.user);
             }}>
             <Upload />
           </Button>
@@ -117,7 +110,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
            
           </Popconfirm>
           <a
-            href={'https://trakkiatest-1.s3.amazonaws.com/media/emptags/pillartags.csv'}
+            href={tagList[0]?.file}
             target='blank'>
             <File />
 
@@ -162,7 +155,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
         </div>
       </div>
       <br />
-
+     
       <Modal
         maskClosable={false}
         visible={uploadModal}
@@ -172,7 +165,8 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
         onCancel={() => { setUploadModal(false) }}
         footer={null}>
         <UsersUploadForm employeeId={employeeId} onCancel={() => { setUploadModal(false) }} onDone={() => { setUploadModal(false) }} />
-      </Modal>
+      </Modal> 
+     
      
       <TableWithTabHOC
         rowKey={(record) => record.id}
