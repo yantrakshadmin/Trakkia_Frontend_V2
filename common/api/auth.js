@@ -1579,13 +1579,13 @@ export const uploadEndOfLife = (src) =>
   });
 
 export const uploadUserTags = (id, src ) =>
-  loadAPI(`/upload-tags/`, {
+  loadAPI(`/upload-tags/?emp=${id}`, {
     method: 'POST',
     data: src,
     secure: true,
-    headers: {
-      emp: id,
-    }
+    // headers: {
+    //   emp: id,
+    // }
   });
 
 
