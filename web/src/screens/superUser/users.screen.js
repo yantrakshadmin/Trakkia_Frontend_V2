@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import userColumns from 'common/columns/Users.column';
 import { Popconfirm, Button, Input, Modal } from 'antd';
 import { connect } from 'react-redux';
@@ -15,6 +15,8 @@ import { EditUserForm } from 'forms/SuperUser/editUser.form';
 import NoPermissionAlert from 'components/NoPermissionAlert';
 import { UsersUploadForm } from "../../forms/UsersUpload.form"
 import File from 'icons/File';
+import { useAPI } from 'common/hooks/api';
+import { loadAPI } from 'common/helpers/api';
 
 
 const { Search } = Input;
@@ -25,7 +27,19 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
   const [uploadModal, setUploadModal] = useState(Boolean);
   const [employeeId, setEmployeeId] = useState(null);
 
+  const { data: tagList } = useAPI('/emp-tagslist/', {});
+  
 
+
+  console.log( tagList ,"bbbbbbbbbbb");
+
+
+
+  // useEffect(() => {
+  //   console.log(tagList?.file, "fileeeeeeeee")
+
+  // }, [])
+  
   const { filteredData, loading, reload, hasPermission } = useTableSearch({
     searchVal,
     retrieve: retrieveEmployeeList,
@@ -50,9 +64,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
             }}
             onClick={(e) => {
               setUploadModal(true)
-              setEmployeeId(record.user);
-              // console.log(record, record.user, "Onclickkkkk")
-              // e.stopPropagation();
+              setEmployeeId(tagList?.emp);
             }}>
             <Upload />
           </Button>
@@ -104,16 +116,27 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
             </Button>
            
           </Popconfirm>
-          <Button
+          <a
+            href={'https://trakkiatest-1.s3.amazonaws.com/media/emptags/pillartags.csv'}
+            target='blank'>
+            <File />
+
+            </a>
+          {/* <Button
             style={{
               backgroundColor: 'transparent',
               boxShadow: 'none',
               border: 'none',
               padding: '1px',
             }}
-            onClick={(e) => e.stopPropagation()}>
+            // onClick={(e) =>
+            
+            //   e.stopPropagation()
+            // }
+            >
             <File />
-          </Button>
+            </Button> */}
+          
         </div>
       ),
     },
@@ -150,6 +173,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
         footer={null}>
         <UsersUploadForm employeeId={employeeId} onCancel={() => { setUploadModal(false) }} onDone={() => { setUploadModal(false) }} />
       </Modal>
+     
       <TableWithTabHOC
         rowKey={(record) => record.id}
         refresh={reload}
