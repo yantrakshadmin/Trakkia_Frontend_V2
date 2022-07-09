@@ -39,7 +39,7 @@ const ScannedData = ({ currentPage }) => {
         const today = new Date().toISOString();
         const tempTo = moment(data.to || today).endOf('date').format('YYYY-MM-DD HH:MM');
         const tempFrom = moment(data.from || today).startOf('date').format('YYYY-MM-DD HH:MM');
-        
+
         console.log(data, "dataaaaaaaaaaaa");
         return (`${DEFAULT_BASE_URL}rfid-dumpdownload/?company_id=${companyId}&to=${tempTo}&from=${tempFrom}`)
     }
@@ -51,50 +51,50 @@ const ScannedData = ({ currentPage }) => {
             render: (text, record, index) => (currentPage - 1) * 10 + index + 1,
         },
         ...scannedDataColumn,
-        // {
-        //     title: 'Download',
-        //     key: 'download',
-        //     render: (text, record) => {
-        //         return (
-        //             <div className='row justify-center'>
-        //                 <a href={'nn'} target='_blank' rel='noreferrer'>
-        //                     <Download />
-        //                 </a>
-        //             </div>
-        //         );
-        //     },
-        // },
+        {
+            title: 'Download',
+            key: 'download',
+            render: (text, record) => {
+                return (
+                    <div className='row justify-center'>
+                        <a href={'nn'} target='_blank' rel='noreferrer'>
+                            <Download />
+                        </a>
+                    </div>
+                );
+            },
+        },
     ];
 
     const tabs = [
         {
-            name: 'Audit Summary',
-            key: 'Scanned data',
-            data: filteredData || [],
-            columns,
+            // name: 'Audit Summary',
+            // key: 'Scanned data',
+            // data: filteredData || [],
+            // columns,
             loading,
         },
     ];
 
-    // const DownloadCSVButton = () => {
-    //     return (
-    //         <Button
-    //             onClick={() => {
-    //                 window.open(onDownloadBtn())
-    //                 // onDownloadBtn()
-    //             }  
-    //             }
-    //         >
-    //                 Download
-    //         </Button>
-    //     );
-    // }
+    const DownloadCSVButton = () => {
+        return (
+            <Button
+                onClick={() => {
+                    window.open(onDownloadBtn())
+                    // onDownloadBtn()
+                }
+                }
+            >
+                Download
+            </Button>
+        );
+    }
 
     return (
         <>
-            <Form  form={form} layout="inline" hideRequiredMark autoComplete="off">
-                <Row >
-                    <Col span={10}>
+            {/* <Form form={form} layout="inline" hideRequiredMark autoComplete="off">
+                <Row>
+                    <Col span={11}>
                         {formItem({
                             key: 'from',
                             rules: [{ required: true, message: 'Please select From date!' }],
@@ -120,20 +120,9 @@ const ScannedData = ({ currentPage }) => {
                             customLabel: 'To',
                         })}
                     </Col>
-                    <Col span={4}>
-                    <Button
-                        onClick={() => {
-                            window.open(onDownloadBtn())
-                            // onDownloadBtn()
-                        }
-                        }
-                    >
-                        Download
-                        </Button>
-                    </Col>
                 </Row>
 
-            </Form>
+            </Form> */}
 
             <br />
             <TableWithTabHoc
@@ -142,10 +131,9 @@ const ScannedData = ({ currentPage }) => {
                 tabs={tabs}
                 refresh={reload}
                 size="middle"
-                title="Audit Summary"
+                title=""
                 hideRightButton
-                // ExtraButtonNextToTitle={   DownloadCSVButton}
-                // ExtraButtonNextToTitle={csvData && DownloadCSVButton}
+                // ExtraButtonNextToTitle={DownloadCSVButton}
                 ExpandBody={ExpandTable}
                 totalRows={paginationData?.count}
             />

@@ -328,11 +328,7 @@ export const employeeRoutes = [
         path: '/main-inventory/inventory-rclients/',
         Component: lazy(() => import('screens/employee/rcInventoryMain.screen')),
       },
-      {
-        name: 'Scanned Data',
-        path: '/main-inventory/scanned-data/',
-        Component: lazy(() => import('screens/employee/ScannedData.screen')),
-      },
+      
       // {
       //   name: 'Receiver Client',
       //   path: '/main-inventory/inventory-rclients/',
@@ -441,8 +437,18 @@ export const employeeRoutes = [
         Component: lazy(() => import('components/Reports/Report-beta.js')),
       },
       {
+        name: 'Missing Audit',
+        path: '/reports/missing-audit/',
+        Component: lazy(() => import('components/Reports/MissingAudit.js')),
+      },
+      {
         name: 'Audit Summary',
-        path: '/reports/audit-summary/',
+        path: '/main-inventory/audit-summary/',
+        Component: lazy(() => import('screens/employee/ScannedData.screen')),
+      },
+      {
+        name: 'Consolidated Reports',
+        path: '/reports/consolidated-reports/',
         Component: lazy(() => import('components/Reports/AuditSummary.js')),
       },
     ],

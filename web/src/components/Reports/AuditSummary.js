@@ -15,13 +15,13 @@ const { Option } = Select;
 
 const ReportsWarhoue = [
     { id: 1, name: 'Audit Summary Report', val: 'AS' },
-    { id: 2, name: 'Asset Health Report', val: 'AH' },
-    { id: 3, name: 'Missing Tags', val: 'MT' },
-    { id: 4, name: '3 Day Triangulation Report', val: '3DT' },
-    { id: 5, name: 'Dump Data', val: 'DD' },
+    { id: 2, name: 'Last Seen for Missing Tags Report', val: 'AH' },
+    { id: 3, name: 'Missing Scans Report', val: 'MS' },
+    { id: 4, name: 'Missing Assets Report', val: 'MAS' },
+    { id: 8, name: 'Missing Audit Report', val: 'MAU' },
+    { id: 5, name: 'Dump Data Reports', val: 'DD' },
     { id: 6, name: 'Individual Scan Report', val: 'IS' },
     { id: 7, name: 'Location Mismatch Report', val: 'LM' },
-    { id: 8, name: 'Missing Audit Report', val: 'MA' },
 ];
 
 
@@ -84,7 +84,7 @@ const AuditSummary = ({ currentPage }) => {
 
     return (
         <>
-            <Title level={3}>Audit Summary</Title>
+            <Title level={3}>Consolidated Reports</Title>
             <Form
                 onFieldsChange={onChange}
                 form={form}
