@@ -25,6 +25,7 @@ export const publicRoutes = [
   },
   {
     path: '/employee/return-docket/:id',
+    key: 'return_docket',
     Component: lazy(() => import('components/ReturnDocket/ReturnDocket')),
   },
 ];
@@ -123,6 +124,7 @@ export const employeeRoutes = [
   },
   {
     name: 'Sales',
+    key: 'sales',
     icon: ['fas', 'user-friends'],
     path: '/reports/',
     isSubMenu: true,
@@ -169,6 +171,7 @@ export const employeeRoutes = [
   // },
   {
     name: 'Masters',
+    key: 'masters',
     icon: ['fas', 'layer-group'],
     path: '/masters/',
     Component: lazy(() => import('screens/employee/Product.employee.screen')),
@@ -218,24 +221,28 @@ export const employeeRoutes = [
   },
   {
     name: 'Volume Plan',
+    key: 'volume_plan',
     icon: ['far', 'calendar-alt'],
     path: '/demands/',
     Component: lazy(() => import('screens/employee/DemandModule.screen')),
   },
   {
     name: 'Material Requests',
+    key: 'material_request',
     icon: ['fas', 'notes-medical'],
     path: '/material-request/',
     Component: lazy(() => import('screens/employee/MaterialRequest.screen')),
   },
   {
     name: 'Allotment Dockets',
+    key: 'allotment_docket',
     icon: ['fas', 'truck-loading'],
     path: '/allotment-dockets/',
     Component: lazy(() => import('screens/employee/AllotmentDockets.screen.js')),
   },
   {
     name: 'Outward Docket',
+    key: 'outward_docket',
     icon: ['fas', 'sign-out-alt'],
     path: '/outward-docket/',
     Component: lazy(() => import('screens/employee/outwardDocket.screen')),
@@ -243,12 +250,14 @@ export const employeeRoutes = [
   },
   {
     name: 'Return Dockets',
+    key: 'return_docket',
     icon: ['fas', 'undo-alt'],
     path: '/return-dockets/',
     Component: lazy(() => import('screens/employee/Return.screen')),
   },
   {
     name: 'Relocation Docket',
+    key: 'relocation_docket',
     icon: ['fas', 'money-check-alt'],
     path: '/relocation/',
     Component: lazy(() => import('screens/employee/Relocation.screen')),
@@ -256,6 +265,7 @@ export const employeeRoutes = [
   },
   {
     name: 'GRN',
+    key : 'grn',
     icon: ['fas', 'cart-arrow-down'],
     path: '/grn/',
     isSubMenu: true,
@@ -268,6 +278,7 @@ export const employeeRoutes = [
       },
       {
         name: 'GRN',
+        key: 'grn',
         path: '/grn/grns',
         Component: lazy(() => import('screens/employee/GRN.screen')),
         props: { isEmployee: true },
@@ -294,6 +305,7 @@ export const employeeRoutes = [
   // },
   {
     name: 'Inventory',
+    key: 'inventory',
     icon: ['fas', 'boxes'],
     path: '/main-inventory/',
     isSubMenu: true,
@@ -375,6 +387,7 @@ export const employeeRoutes = [
   },
   {
     name: 'Expense',
+    key: 'expense',
     icon: ['fas', 'money-check-alt'],
     path: '/expense/',
     Component: lazy(() => import('screens/employee/Expense.screen')),
@@ -388,26 +401,31 @@ export const employeeRoutes = [
     subMenu: [
       {
         name: 'Volume Plan',
+        key: 'volume_plan_report',
         path: '/reports/demands/',
         Component: lazy(() => import('components/Reports/Demand.js')),
       },
       {
         name: 'Allotments',
+        key: 'allotments_report',
         path: '/reports/allotments/',
         Component: lazy(() => import('components/Reports/Allotment.js')),
       },
       {
         name: 'Returns',
+        key:'returns_report',
         path: '/reports/returns/',
         Component: lazy(() => import('components/Reports/Return.js')),
       },
       {
         name: 'Outwards',
+        key: 'outwards_report',
         path: '/reports/outwards/',
         Component: lazy(() => import('components/Reports/Outward.js')),
       },
       {
         name: 'Floating',
+        key: 'floating_report',
         path: '/reports/stocking/',
         Component: lazy(() => import('components/Reports/Stocking.js')),
       },
@@ -428,26 +446,32 @@ export const employeeRoutes = [
       // },
       {
         name: 'Loss/Excess',
+        key: 'loss_excess_report',
+        key: 'loss_excess',
         path: '/reports/loss-excess/',
         Component: lazy(() => import('components/Reports/LossExcess.js')),
       },
       {
         name: 'Report-beta',
+        key : 'report_beta',
         path: '/reports/report-beta/',
         Component: lazy(() => import('components/Reports/Report-beta.js')),
       },
       {
         name: 'Missing Audit',
+        key: 'missing_audit_report',
         path: '/reports/missing-audit/',
         Component: lazy(() => import('components/Reports/MissingAudit.js')),
       },
       {
         name: 'Audit Summary',
+        key: 'audit_summary',
         path: '/main-inventory/audit-summary/',
         Component: lazy(() => import('screens/employee/ScannedData.screen')),
       },
       {
         name: 'Consolidated Reports',
+        key: 'consolidated_report',
         path: '/reports/consolidated-reports/',
         Component: lazy(() => import('components/Reports/AuditSummary.js')),
       },
@@ -458,6 +482,7 @@ export const employeeRoutes = [
 export const clientRoutes = [
   {
     name: 'Masters',
+    key: 'masters',
     icon: ['fas', 'layer-group'],
     path: '/masters/',
     Component: lazy(() => import('screens/client/kits.screen')),
@@ -484,6 +509,7 @@ export const clientRoutes = [
   },
   {
     name: 'Material Requests',
+    key: 'material_request',
     icon: ['fas', 'notes-medical'],
     path: '/material-request/',
     Component: lazy(() => import('screens/client/MaterialRequest.screen')),
@@ -491,6 +517,7 @@ export const clientRoutes = [
   },
   {
     name: 'Volume Plan',
+    key: 'volume_plan',
     icon: ['far', 'calendar-alt'],
     path: '/demands/',
     Component: lazy(() => import('screens/client/DemandModule.screen')),
@@ -503,6 +530,7 @@ export const clientRoutes = [
   },
   {
     name: 'Outward Docket',
+    key: 'outward_docket',
     icon: ['fas', 'sign-out-alt'],
     path: '/outward-docket/',
     props: { isEmployee: false },
@@ -510,6 +538,7 @@ export const clientRoutes = [
   },
   {
     name: 'Return Docket',
+    key: 'return_docket',
     icon: ['fas', 'chart-pie'],
     path: '/return-dockets/',
     Component: lazy(() => import('screens/client/returnReports.screen')),
@@ -528,31 +557,37 @@ export const clientRoutes = [
     subMenu: [
       {
         name: 'Volume Plans',
+        key: 'volume_plan_report',
         path: '/reports/demands/',
         Component: lazy(() => import('components/Reports/DemandClientSide.js')),
       },
       {
         name: 'Allotments',
+        key: 'allotments_report',
         path: '/reports/allotments/',
         Component: lazy(() => import('components/Reports/AllotmentClientSide.js')),
       },
       {
         name: 'Returns',
+        key: 'returns_report',
         path: '/reports/returns/',
         Component: lazy(() => import('components/Reports/ReturnClientSide.js')),
       },
       {
         name: 'Outwards',
+        key: 'outwards_report',
         path: '/reports/outwards/',
         Component: lazy(() => import('components/Reports/OutwardClientSide.js')),
       },
       {
         name: 'Floating',
+        key: 'floating_report',
         path: '/reports/floating/',
         Component: lazy(() => import('components/Reports/StockingClientSide.js')),
       },
       {
         name: 'Loss/Excess',
+        key: 'loss_excess_report',
         path: '/reports/loss-excess/',
         Component: lazy(() => import('components/Reports/LossExcessClientSide.js')),
       },

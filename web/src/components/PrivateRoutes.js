@@ -6,7 +6,7 @@ import Redirect from 'components/Redirect';
 import { NotFound404Screen } from 'screens/404.screen';
 import { SuspendedAccount } from 'screens/suspendedAccount.screen';
 
-export const PrivateRoutes = ({ routes, extraRoutes, user, outerRoutes }) => {
+export const PrivateRoutes = ({ routes, extraRoutes, user, outerRoutes, companyProfile }) => {
   return (
     <Router>
       <Redirect path='/' user={user} />
@@ -23,33 +23,45 @@ export const PrivateRoutes = ({ routes, extraRoutes, user, outerRoutes }) => {
               );
             })
             : null}
-          <ScreenWrapper path={`/${user.type}/`} routes={routes}>
+          <ScreenWrapper path={`/${user.type}/`} routes={routes} companyProfile={companyProfile}>
             {routes.map((Route, index) => {
-              return (
-                <Route.Component
-                  path={`${Route.path}`}
-                  key={index.toString()} 
-                  {...Route.props} />
-              );
-            })}
-            {routes.map((Route) => {
-              return Route.subMenu
-                ? Route.subMenu.map((ChildRoute, index) => (
-                  <ChildRoute.Component
-                    path={`${ChildRoute.path}`}
-                    key={index.toString()}
-                    {...ChildRoute.props} />
-                ))
-                : null;
-            })}
-            {extraRoutes
-              ? extraRoutes.map((Route, index) => {
+              if (!Route.key || (companyProfile && companyProfile[Route.key])) {
+
                 return (
                   <Route.Component
                     path={`${Route.path}`}
                     key={index.toString()}
                     {...Route.props} />
                 );
+              }
+            })}
+            {routes.map((Route) => {
+              if (!Route.key || (companyProfile && companyProfile[Route.key])) {
+                return Route.subMenu
+                  ? Route.subMenu.map((ChildRoute, index) => {
+                    if (!ChildRoute.key || (companyProfile && companyProfile[ChildRoute.key])) {
+                      return (
+                        <ChildRoute.Component
+                          path={`${ChildRoute.path}`}
+                          key={index.toString()}
+                          {...ChildRoute.props} />
+                  
+                      )
+                    }
+                  })
+                  : null;
+              }
+            })}
+            {extraRoutes
+              ? extraRoutes.map((Route, index) => {
+                if (!Route.key || (companyProfile && companyProfile[Route.key])) {
+                  return (
+                    <Route.Component
+                      path={`${Route.path}`}
+                      key={index.toString()}
+                      {...Route.props} />
+                  );
+                }
               })
               : null}
             <NotFound404Screen default />

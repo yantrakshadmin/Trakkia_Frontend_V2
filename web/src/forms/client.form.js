@@ -26,16 +26,19 @@ const ClientForm = ({id, onCancel, onDone}) => {
     close: onCancel,
     id,
   });
-
   useEffect(() => {
     if(userData) {
+
       userData.type = userData.type.map(d => d.company_type)
 
       setCompanyType(userData.type)
 
       var selectedModel = []
+      // _.keys(userPoolOperatorChoices).map(e => console.log(e ,'---userData log')) 
+
 
       _.keys(userPoolOperatorChoices).map((modelName) => {
+        // console.log([userPoolOperatorChoices[modelName]],"userData[userPoolOperatorChoices[modelName]]");
 
         if(userData[userPoolOperatorChoices[modelName]]){
           userData[modelName] = true
@@ -48,7 +51,6 @@ const ClientForm = ({id, onCancel, onDone}) => {
       setSelectedModels(selectedModel)
     }
 
-    console.log(userData, 'userData')
 
     formData.setFieldsValue(userData)
   }, [userData])

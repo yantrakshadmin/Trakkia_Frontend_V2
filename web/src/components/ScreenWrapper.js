@@ -1,24 +1,24 @@
-import React, {useState, Suspense} from 'react';
-import {Layout, Menu, Divider, Dropdown, Avatar, Typography, Card, List} from 'antd';
-import {Link} from '@reach/router';
-import {useDispatch} from 'react-redux';
-import {signOutUser} from 'common/actions/signIn';
-import {changeView} from 'common/actions/changeView';
-import {connect} from 'react-redux';
+import React, { useState, Suspense } from 'react';
+import { Layout, Menu, Divider, Dropdown, Avatar, Typography, Card, List } from 'antd';
+import { Link } from '@reach/router';
+import { useDispatch } from 'react-redux';
+import { signOutUser } from 'common/actions/signIn';
+import { changeView } from 'common/actions/changeView';
+import { connect } from 'react-redux';
 
-import {changePage} from 'common/actions/changePage';
+import { changePage } from 'common/actions/changePage';
 import logo from 'common/assets/Yantraksh Logo.png';
 
-import {Loading} from 'components/Loading';
+import { Loading } from 'components/Loading';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import UserImg from "../icons/userImg.jpg"
 
-const {SubMenu} = Menu;
-const {Header, Content, Sider, Footer} = Layout;
-const {Text} = Typography;
+const { SubMenu } = Menu;
+const { Header, Content, Sider, Footer } = Layout;
+const { Text } = Typography;
 const { Meta } = Card;
 
-const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
+const ScreenWrapper = ({ routes, navigate, children, user, changePage, companyProfile }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [collapsedWidth, setCollapsedWidth] = useState(80);
   const dispatch = useDispatch();
@@ -40,9 +40,9 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
   const menu = (
     <Menu>
       <SubMenu key="0" title="ViewType">
-        {user.companyType.map((type) => 
+        {user.companyType.map((type) =>
           <Menu.Item onClick={() => changeUserView(type)} key={type}>
-            <Text style={{color: (user.viewType == type ? '#1890ff' : '')}}>{type}</Text>
+            <Text style={{ color: (user.viewType == type ? '#1890ff' : '') }}>{type}</Text>
           </Menu.Item>
         )}
       </SubMenu>
@@ -66,7 +66,7 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
     <Layout className="">
       <Header
         className="header row align-center justify-between"
-        style={{backgroundColor: '#fff', paddingLeft: 20, paddingRight: 20}}>
+        style={{ backgroundColor: '#fff', paddingLeft: 20, paddingRight: 20 }}>
         <div className="bg-white m-0  row align-center ">
           <img
             style={{
@@ -81,9 +81,9 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
 
         <Dropdown overlay={menu} trigger={['click']}>
           <div className="row align-center">
-            
+
             <List
-              style={{minWidth: '100px',}}
+              style={{ minWidth: '100px', }}
               itemLayout="horizontal"
               dataSource={data}
               renderItem={item => (
@@ -95,14 +95,14 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
                 </List.Item>
               )}
             />
-            
-            <Avatar style={{ textTransform: "uppercase", backgroundColor: "#5986c2"}} size="large" src=""> <span>{splitstr[0][0]}</span> <span> {splitstr[7][0]}</span>
+
+            <Avatar style={{ textTransform: "uppercase", backgroundColor: "#5986c2" }} size="large" src=""> <span>{splitstr[0][0]}</span> <span> {splitstr[7][0]}</span>
             </Avatar>
 
           </div>
         </Dropdown>
       </Header>
-      <Divider style={{margin: 0, padding: 0}} />
+      <Divider style={{ margin: 0, padding: 0 }} />
       <Layout>
         <Sider
           // trigger={null}
@@ -122,48 +122,57 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
             // defaultSelectedKeys={[routes[0].name]}
             defaultSelectedKeys={'Dashboard'}
             // defaultOpenKeys={[routes[0].name]}
-            style={{height: '100%', borderRight: 0}}>
+            style={{ height: '100%', borderRight: 0 }}>
             {routes.map((i) => {
-              if (i.subMenu) {
+              if (!i.key || (companyProfile && companyProfile[i.key])) {
+                if (i.subMenu) {
+                  return (
+                    <SubMenu
+                      key={i.name}
+                      icon={
+                        <FontAwesomeIcon icon={i.icon} style={{ marginRight: isCollapsed ? 50 : 5 }} />
+                      }
+                      title={i.name}>
+                      {i.subMenu.map((subItem) => {
+                        if (!subItem.key || (companyProfile && companyProfile[subItem.key])) {
+
+                          return (
+                            <Menu.Item key={subItem.name}>
+                              <Link
+                                to={`/${user.type}${subItem.path}`}
+                                key={subItem.name}
+                                onClick={() => changePage(1)}>
+                                {subItem.name}
+                              </Link>
+                            </Menu.Item>
+                          )
+                        }
+                      
+                      })}
+                    </SubMenu>
+                  );
+                }
+
                 return (
-                  <SubMenu
+                  <Menu.Item
                     key={i.name}
                     icon={
-                      <FontAwesomeIcon icon={i.icon} style={{marginRight: isCollapsed ? 50 : 5}} />
-                    }
-                    title={i.name}>
-                    {i.subMenu.map((subItem) => (
-                      <Menu.Item key={subItem.name}>
-                        <Link
-                          to={`/${user.type}${subItem.path}`}
-                          key={subItem.name}
-                          onClick={() => changePage(1)}>
-                          {subItem.name}
-                        </Link>
-                      </Menu.Item>
-                    ))}
-                  </SubMenu>
+                      <FontAwesomeIcon icon={i.icon} style={{ marginRight: isCollapsed ? 50 : 5 }} />
+                    }>
+                    <Link to={`/${user.type}${i.path}`} key={i.name} onClick={() => changePage(1)}>
+                      {i.name}
+                    </Link>
+                  </Menu.Item>
                 );
               }
-              return (
-                <Menu.Item
-                  key={i.name}
-                  icon={
-                    <FontAwesomeIcon icon={i.icon} style={{marginRight: isCollapsed ? 50 : 5}} />
-                  }>
-                  <Link to={`/${user.type}${i.path}`} key={i.name} onClick={() => changePage(1)}>
-                    {i.name}
-                  </Link>
-                </Menu.Item>
-              );
             })}
           </Menu>
         </Sider>
-        <Layout style={{padding: '24px'}}>
+        <Layout style={{ padding: '24px' }}>
           <Suspense fallback={<Loading />}>
             <Content
               className="site-layout-background content-style"
-              style={{minHeight: `calc( 100vh - 184px )`}}>
+              style={{ minHeight: `calc( 100vh - 184px )` }}>
               {children}
             </Content>
           </Suspense>
@@ -177,13 +186,13 @@ const ScreenWrapper = ({routes, navigate, children, user, changePage}) => {
           </Footer>
         </Layout>
       </Layout>
-      <Divider style={{margin: 0, padding: 0}} />
+      <Divider style={{ margin: 0, padding: 0 }} />
     </Layout>
   );
 };
 
 const mapStateToProps = (state) => {
-  return {user: state.user.userMeta};
+  return { user: state.user.userMeta };
 };
 
-export default connect(mapStateToProps, {changePage})(ScreenWrapper);
+export default connect(mapStateToProps, { changePage })(ScreenWrapper);

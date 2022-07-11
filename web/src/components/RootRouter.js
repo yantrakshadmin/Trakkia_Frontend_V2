@@ -23,6 +23,7 @@ const RootRouter = ({ user }) => {
 
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true)
+  const [companyProfile, setCompanyProfile] = useState(null);
   
   const [employeesRoutes, setEmployeesRoutes] = useState([{
     name: 'Dashboard',
@@ -31,18 +32,20 @@ const RootRouter = ({ user }) => {
     Component: lazy(() => import('screens/employee/dashboard.screen')),
   }])
 
+  console.log(companyProfile, "companyProfile");
   useEffect(() => {
     
     const fetchMenu = async () => {
 
-      const {data: companyProfile, error} = await loadAPI(`/company-profile/${user.companyId}/`)
+      const { data: companyProfileData, error } = await loadAPI(`/company-profile/${user.companyId}/`)
+      setCompanyProfile(companyProfileData);
 
       if(error) {
         await dispatch(signOutUser())
         await navigate('/')
       }
   
-      setEmployeesRoutes(employeeRoutes.filter(route => route.name === 'Dashboard' || route.name === 'Reports' || route.name === 'DEPS' || companyProfile[userPoolOperatorChoices[route.name]]))
+      setEmployeesRoutes(employeeRoutes.filter(route => route.name === 'Dashboard' || route.name === 'Reports' || route.name === 'DEPS' || (companyProfile && companyProfile[userPoolOperatorChoices[route.name]])  ))
 
       setLoading(false)
 
@@ -60,8 +63,12 @@ const RootRouter = ({ user }) => {
       case 'public':
         return (
           <Router>
+           
+            
             {publicRoutes.map((Route, index) => {
-              return <Route.Component path={Route.path} key={index.toString()} />;
+              if (!Route.key || (companyProfile && companyProfile[Route.key])) {
+                return <Route.Component path={Route.path} key={index.toString()} />;
+              }
             })}
             <NotFound404Screen default />
           </Router>
@@ -70,6 +77,7 @@ const RootRouter = ({ user }) => {
       case 'employee':
         return (
           <PrivateRoutes
+            companyProfile={companyProfile}
             routes={[ ...employeesRoutes, ...(user.isAdmin?superUserRoutes:[])]}
             extraRoutes={[...(user.isAdmin?extraRoutesSuperUser:[]), ...extraRoutesEmployee]}
             outerRoutes={[...(user.isAdmin?outerRoutesSuperUser:[]), ...outerRoutesEmployee]}
@@ -80,8 +88,12 @@ const RootRouter = ({ user }) => {
       default:
         return (
           <Router>
+
             {publicRoutes.map((Route, index) => {
-              return <Route.Component path={Route.path} key={index.toString()} />;
+              if (!Route.key || (companyProfile && companyProfile[Route.key])) {
+
+                return <Route.Component path={Route.path} key={index.toString()} />;
+              }
             })}
             <NotFound404Screen default />
           </Router>
