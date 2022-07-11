@@ -196,6 +196,16 @@ export const userPoolOperatorChoices = {
   'GRN': 'grn',
   'Inventory': 'inventory',
   'Expense': 'expense',
+  'Volume Plan Report': 'volume_plan_report',
+  'Allotments Report': 'allotments_report',
+  'Returns Report': 'returns_report',
+  'Outwards Report': 'outwards_report',
+  'Floating Report': 'floating_report',
+  'Loss/Excess Report': 'loss_excess_report',
+  'Report-beta': 'report_beta',
+  'Missing Audit Report': 'missing_audit_report',
+  'Audit Summary Report': 'audit_summary_report',
+  'Consolidated Report': 'consolidated_report'
 };
 
 export const userConsignorChoices = {
