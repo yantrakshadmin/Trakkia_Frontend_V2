@@ -1,102 +1,105 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import { connect, useSelector } from 'react-redux';
-import { useAPI } from 'common/hooks/api';
-import scannedDataColumn from 'common/columns/ScannedData.column';
-import TableWithTabHoc from 'hocs/TableWithTab.hoc';
-import ExpandTable from "../../components/ScannedExpandTable";
-import { Form, Button, Row, Col } from 'antd';
-import formItem from "../../hocs/formItem.hoc";
-import { FORM_ELEMENT_TYPES } from '../../constants/formFields.constant';
 import moment from 'moment';
-import { loadAPI } from 'common/helpers/api';
-import Download from 'icons/Download';
-import { CSVLink } from 'react-csv';
-import { useTableSearch } from 'hooks/useTableSearch';
-import { retrieveScannedData } from 'common/api/auth';
 import { DEFAULT_BASE_URL } from 'common/constants/enviroment';
+import { useAPI } from 'common/hooks/api';
+import { loadAPI } from 'common/helpers/api';
+
+import { Row, Col, Form, Button, Typography, Select, TreeSelect } from 'antd';
+import { FORM_ELEMENT_TYPES } from '../../constants/formFields.constant';
+import _ from 'lodash';
+import formItem from '../../hocs/formItem.hoc';
+
+const { Title } = Typography;
+const { Option } = Select;
 
 
 
 
-const ScannedData = ({ currentPage }) => {
-    const [all, setAll] = useState(false);
-    const [loading, setLoading] = useState(false);
-
-
-
+const MissingAudit = ({ currentPage }) => {
+    const [toDate, setToDate] = useState(null);
+    const [fromDate, setFromDate] = useState(null);
+    const [warehouse, setwarehouse] = useState([]);
+    const [selectedWarehouse, setSelectedWarehouse] = useState([]);
+    const [selectedReport, setSelectedReport] = useState([])
+    const [selectedValues, setSelectedValues] = useState([]);
     const [form] = Form.useForm();
     const { user } = useSelector(s => s);
     const { userMeta } = user;
-    const { companyId } = userMeta;
+    const { companyId, viewType } = userMeta;
 
-    const { filteredData, reload, paginationData } = useTableSearch({
-        retrieve: retrieveScannedData,
-        usePaginated: true,
-    });
+
+    React.useEffect(() => {
+        handelWarehouse();
+    }, [selectedWarehouse]);
+
+    const handelWarehouse = async () => {
+        const { data: auditUp } = await loadAPI(`/warehouse-up/?company=${companyId}&view=${viewType}`, {});
+        setwarehouse(auditUp);
+    };
+    const handleWarehouseChange = (value) => {
+
+        if (value.includes('allwar')) {
+
+            form.setFieldsValue({ warehouse: (warehouse || []).map((e) => e.id) })
+            setSelectedWarehouse(form.getFieldValue('warehouse'))
+        }
+        setSelectedWarehouse(form.getFieldValue('warehouse'))
+    };
+ 
+    const onChange = async () => {
+        const tempFrom = moment(form.getFieldValue('dateFrom')).startOf('date').format('YYYY-MM-DD HH:MM');
+        const tempTo = moment(form.getFieldValue('dateTo')).endOf('date').format('YYYY-MM-DD HH:MM');
+        setToDate(tempTo);
+        setFromDate(tempFrom);
+    };
 
     const onDownloadBtn = () => {
         const data = form.getFieldsValue()
-        const today = new Date().toISOString();
-        const tempTo = moment(data.to || today).endOf('date').format('YYYY-MM-DD HH:MM');
-        const tempFrom = moment(data.from || today).startOf('date').format('YYYY-MM-DD HH:MM');
-
+        // const today = new Date().toISOString();
+        // const tempTo = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
+        // const tempFrom = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
         console.log(data, "dataaaaaaaaaaaa");
-        return (`${DEFAULT_BASE_URL}rfid-dumpdownload/?company_id=${companyId}&to=${tempTo}&from=${tempFrom}`)
+        return (`${DEFAULT_BASE_URL}rfid-missingAudit/?company_id=${companyId}&warehouse=${[data.warehouse]}&from=${fromDate}&to=${toDate}`)
     }
 
-    const columns = [
-        {
-            title: 'Sr. No.',
-            key: 'srno',
-            render: (text, record, index) => (currentPage - 1) * 10 + index + 1,
-        },
-        ...scannedDataColumn,
-        {
-            title: 'Download',
-            key: 'download',
-            render: (text, record) => {
-                return (
-                    <div className='row justify-center'>
-                        <a href={'nn'} target='_blank' rel='noreferrer'>
-                            <Download />
-                        </a>
-                    </div>
-                );
-            },
-        },
-    ];
 
-    const tabs = [
-        {
-            // name: 'Audit Summary',
-            // key: 'Scanned data',
-            // data: filteredData || [],
-            // columns,
-            loading,
-        },
-    ];
 
-    const DownloadCSVButton = () => {
-        return (
-            <Button
-                onClick={() => {
-                    window.open(onDownloadBtn())
-                    // onDownloadBtn()
-                }
-                }
-            >
-                Download
-            </Button>
-        );
-    }
+
 
     return (
         <>
-            {/* <Form form={form} layout="inline" hideRequiredMark autoComplete="off">
-                <Row>
-                    <Col span={11}>
+            <Title level={3}>Consolidated Reports</Title>
+            <Form
+                onFieldsChange={onChange}
+                form={form}
+                layout="vertical"
+                hideRequiredMark
+                autoComplete="off">
+                <Row gutter={12}>
+                    <Col span={12}>
+                        <Form.Item name="warehouse" label="Warehouse">
+                            <Select
+                                mode='multiple'
+                                placeholder="Select Warehouse"
+                                allowClear
+                                maxTagCount={2}
+                                onChange={handleWarehouseChange}
+                            >
+                                <Option key="allwar" value="allwar">---SELECT ALL---</Option>
+
+                                {(warehouse || []).map((v, i) => (
+                                    <Option key={v.id} value={v.id}>{v.name}</Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
+                    </Col>
+                </Row>
+
+                <Row gutter={10}>
+                    <Col span={4}>
                         {formItem({
-                            key: 'from',
+                            key: 'dateFrom',
                             rules: [{ required: true, message: 'Please select From date!' }],
                             kwargs: {
                                 placeholder: 'Select',
@@ -107,9 +110,9 @@ const ScannedData = ({ currentPage }) => {
                             customLabel: 'From',
                         })}
                     </Col>
-                    <Col span={10}>
+                    <Col span={4}>
                         {formItem({
-                            key: 'to',
+                            key: 'dateTo',
                             rules: [{ required: true, message: 'Please select To date!' }],
                             kwargs: {
                                 placeholder: 'Select',
@@ -121,28 +124,26 @@ const ScannedData = ({ currentPage }) => {
                         })}
                     </Col>
                 </Row>
+                <Row>
+                    <Button
+                        onClick={() => {
+                            window.open(onDownloadBtn())
+                        }
 
-            </Form> */}
+                        }
+                    >
+                        Download
+                    </Button>
+                </Row>
 
+            </Form>
             <br />
-            <TableWithTabHoc
-                expandHandleKey={'serials'}
-                rowKey={(record) => record.id}
-                tabs={tabs}
-                refresh={reload}
-                size="middle"
-                title=""
-                hideRightButton
-                // ExtraButtonNextToTitle={DownloadCSVButton}
-                ExpandBody={ExpandTable}
-                totalRows={paginationData?.count}
-            />
         </>
     );
-}
+};
 
 const mapStateToProps = (state) => {
     return { currentPage: state.page.currentPage };
 };
 
-export default connect(mapStateToProps)(ScannedData);
+export default connect(mapStateToProps)(MissingAudit);
