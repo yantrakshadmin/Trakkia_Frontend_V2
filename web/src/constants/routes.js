@@ -453,7 +453,7 @@ export const employeeRoutes = [
       },
       {
         name: 'Report-beta',
-        key : 'report_beta',
+        key: 'report_beta',
         path: '/reports/report-beta/',
         Component: lazy(() => import('components/Reports/Report-beta.js')),
       },
@@ -465,7 +465,7 @@ export const employeeRoutes = [
       },
       {
         name: 'Audit Summary',
-        key: 'audit_summary',
+        key: 'audit_summary_report',
         path: '/main-inventory/audit-summary/',
         Component: lazy(() => import('screens/employee/ScannedData.screen')),
       },
