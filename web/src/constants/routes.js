@@ -475,6 +475,12 @@ export const employeeRoutes = [
         path: '/reports/consolidated-reports/',
         Component: lazy(() => import('components/Reports/AuditSummary.js')),
       },
+      {
+        name: 'Assets Life',
+        // key: 'assets_life',
+        path: '/reports/assets-life/',
+        Component: lazy(() => import('components/Reports/AssetsLife.js')),
+      },
     ],
   },
 ];

@@ -28,31 +28,34 @@ const MissingAudit = ({ currentPage }) => {
     const { userMeta } = user;
     const { companyId, viewType } = userMeta;
 
+    const { data: rfidAsset } =  loadAPI(`/rfid-assetLife/?company_id=${companyId}`, {});
 
-    React.useEffect(() => {
-        handelWarehouse();
-    }, [selectedWarehouse]);
 
-    const handelWarehouse = async () => {
-        const { data: auditUp } = await loadAPI(`/warehouse-up/?company=${companyId}&view=${viewType}`, {});
-        setwarehouse(auditUp);
-    };
-    const handleWarehouseChange = (value) => {
 
-        if (value.includes('allwar')) {
+    // React.useEffect(() => {
+    //     handelWarehouse();
+    // }, [selectedWarehouse]);
 
-            form.setFieldsValue({ warehouse: (warehouse || []).map((e) => e.id) })
-            setSelectedWarehouse(form.getFieldValue('warehouse'))
-        }
-        setSelectedWarehouse(form.getFieldValue('warehouse'))
-    };
- 
-    const onChange = async () => {
-        const tempFrom = moment(form.getFieldValue('dateFrom')).startOf('date').format('YYYY-MM-DD HH:MM');
-        const tempTo = moment(form.getFieldValue('dateTo')).endOf('date').format('YYYY-MM-DD HH:MM');
-        setToDate(tempTo);
-        setFromDate(tempFrom);
-    };
+    // const handelWarehouse = async () => {
+    //     const { data: auditUp } = await loadAPI(`/warehouse-up/?company=${companyId}&view=${viewType}`, {});
+    //     setwarehouse(auditUp);
+    // };
+    // const handleWarehouseChange = (value) => {
+
+    //     if (value.includes('allwar')) {
+
+    //         form.setFieldsValue({ warehouse: (warehouse || []).map((e) => e.id) })
+    //         setSelectedWarehouse(form.getFieldValue('warehouse'))
+    //     }
+    //     setSelectedWarehouse(form.getFieldValue('warehouse'))
+    // };
+
+    // const onChange = async () => {
+    //     const tempFrom = moment(form.getFieldValue('dateFrom')).startOf('date').format('YYYY-MM-DD HH:MM');
+    //     const tempTo = moment(form.getFieldValue('dateTo')).endOf('date').format('YYYY-MM-DD HH:MM');
+    //     setToDate(tempTo);
+    //     setFromDate(tempFrom);
+    // };
 
     const onDownloadBtn = () => {
         const data = form.getFieldsValue()
@@ -69,14 +72,14 @@ const MissingAudit = ({ currentPage }) => {
 
     return (
         <>
-            <Title level={3}>Missing Audit</Title>
+            <Title level={3}>Assets Life</Title>
             <Form
-                onFieldsChange={onChange}
+                // onFieldsChange={onChange}
                 form={form}
                 layout="vertical"
                 hideRequiredMark
                 autoComplete="off">
-                <Row gutter={12}>
+                {/* <Row gutter={12}>
                     <Col span={12}>
                         <Form.Item name="warehouse" label="Warehouse">
                             <Select
@@ -94,9 +97,9 @@ const MissingAudit = ({ currentPage }) => {
                             </Select>
                         </Form.Item>
                     </Col>
-                </Row>
+                </Row> */}
 
-                <Row gutter={10}>
+                {/* <Row gutter={10}>
                     <Col span={4}>
                         {formItem({
                             key: 'dateFrom',
@@ -123,7 +126,7 @@ const MissingAudit = ({ currentPage }) => {
                             customLabel: 'To',
                         })}
                     </Col>
-                </Row>
+                </Row> */}
                 <Row>
                     <Button
                         onClick={() => {

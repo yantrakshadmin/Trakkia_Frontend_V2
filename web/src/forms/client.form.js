@@ -53,6 +53,7 @@ const ClientForm = ({id, onCancel, onDone}) => {
 
 
     formData.setFieldsValue(userData)
+    // preProcess();
   }, [userData])
 
   const handleFieldsChange = (data) => {
@@ -114,6 +115,8 @@ const ClientForm = ({id, onCancel, onDone}) => {
 
     }
   };
+ 
+  
 
   const preProcess = (data) => {
 
@@ -136,6 +139,7 @@ const ClientForm = ({id, onCancel, onDone}) => {
     submit(data);
 
   };
+
 
   return (
     <Spin spinning={loading}>

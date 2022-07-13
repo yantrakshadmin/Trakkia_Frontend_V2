@@ -205,7 +205,8 @@ export const userPoolOperatorChoices = {
   'Report-beta': 'report_beta',
   'Missing Audit Report': 'missing_audit_report',
   'Audit Summary Report': 'audit_summary_report',
-  'Consolidated Report': 'consolidated_report'
+  'Consolidated Report': 'consolidated_report',
+  'Assets Life Report': 'assets_life'
 };
 
 export const userConsignorChoices = {

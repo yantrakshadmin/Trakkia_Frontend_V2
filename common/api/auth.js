@@ -1578,6 +1578,13 @@ export const uploadEndOfLife = (src) =>
     secure: true,
   });
 
+  export const uploadMasterWarehouse = (id, src) =>
+    loadAPI(`/upload-pillarTags/?warehouse=${id}`, {
+      method: 'POST',
+      data: src,
+      secure: true,
+    });
+
 export const uploadUserTags = (id, src ) =>
   loadAPI(`/upload-tags/?emp=${id}`, {
     method: 'POST',

@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import warehouseColumns from 'common/columns/Warehouse.column';
-import {Popconfirm, Button, Input} from 'antd';
+import {Popconfirm, Button, Input,Modal} from 'antd';
 import {deleteWarehouse, retrieveWarehouses} from 'common/api/auth';
 import {connect} from 'react-redux';
 import {useTableSearch} from 'hooks/useTableSearch';
@@ -11,6 +11,8 @@ import Delete from '../../icons/Delete';
 import Edit from '../../icons/Edit';
 import Document from '../../icons/Document';
 import NoPermissionAlert from 'components/NoPermissionAlert';
+import Upload from 'icons/Upload';
+import { MasterWarehouseUploadForm } from 'forms/MasterWarehouseUpload.form';
 
 const {Search} = Input;
 
@@ -18,6 +20,10 @@ const WarehouseEmployeeScreen = ({currentPage}) => {
   const [searchVal, setSearchVal] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [csvData, setCsvData] = useState(null);
+  const [uploadModal, setUploadModal] = useState(Boolean);
+  const [warId, setWarId] = useState(null)
+
+
 
   const {filteredData, loading, reload, hasPermission} = useTableSearch({
     searchVal,
@@ -44,6 +50,38 @@ const WarehouseEmployeeScreen = ({currentPage}) => {
       render: (text, record, index) => (currentPage - 1) * 10 + index + 1,
     },
     ...warehouseColumns,
+
+
+    {
+      title: 'Pillar Tags',
+      key: 'pillar_tags',
+      fixed: 'right',
+      width: '7vw',
+      render: (text, record) => (
+        <div className="row align-center justify-evenly">
+          {/* <a href={record.document} target="_blank" rel="noopener noreferrer"> */}
+          <Button
+              style={{
+                backgroundColor: 'transparent',
+                border: 'none',
+                boxShadow: 'none',
+                padding: '1px',
+              }}
+              // disabled={!record.document}
+            onClick={(e) => {
+              setWarId(record.id)
+              e.stopPropagation()
+            setUploadModal(true)
+
+            }}>
+              <Upload/>
+            </Button>
+          {/* </a> */}
+        </div>
+      ),
+    },
+
+  
     {
       title: 'Action',
       key: 'operation',
@@ -125,8 +163,20 @@ const WarehouseEmployeeScreen = ({currentPage}) => {
         </div>
       </div>
       <br />
+
+      <Modal
+        maskClosable={false}
+        visible={uploadModal}
+        destroyOnClose
+        style={{ minWidth: `80vw` }}
+        title={'Upload Discarded Tags'}
+        onCancel={() => { setUploadModal(false) }}
+        footer={null}>
+        <MasterWarehouseUploadForm onCancel={() => { setUploadModal(false) }} onDone={() => { setUploadModal(false) }} warId={warId} />
+      </Modal>
+
       <TableWithTabHOC
-        rowKey={(record) => record.id}
+        rowKey={(record) => record.id} 
         refresh={reload}
         tabs={tabs}
         size="middle"

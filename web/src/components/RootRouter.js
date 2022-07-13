@@ -24,13 +24,14 @@ const RootRouter = ({ user }) => {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true)
   const [companyProfile, setCompanyProfile] = useState(null);
+  const [companyKey, setCompanyKey] = useState(Math.random())
   
-  const [employeesRoutes, setEmployeesRoutes] = useState([{
-    name: 'Dashboard',
-    icon: ['fas', 'home'],
-    path: '/dashboard/',
-    Component: lazy(() => import('screens/employee/dashboard.screen')),
-  }])
+  // const [employeesRoutes, setEmployeesRoutes] = useState([{
+  //   name: 'Dashboard',
+  //   icon: ['fas', 'home'],
+  //   path: '/dashboard/',
+  //   Component: lazy(() => import('screens/employee/dashboard.screen')),
+  // }])
 
   console.log(companyProfile, "companyProfile");
   useEffect(() => {
@@ -39,20 +40,22 @@ const RootRouter = ({ user }) => {
 
       const { data: companyProfileData, error } = await loadAPI(`/company-profile/${user.companyId}/`)
       setCompanyProfile(companyProfileData);
+      setCompanyKey(Math.random());
 
       if(error) {
         await dispatch(signOutUser())
         await navigate('/')
       }
   
-      setEmployeesRoutes(employeeRoutes.filter(route => route.name === 'Dashboard' || route.name === 'Reports' || route.name === 'DEPS' || (companyProfile && companyProfile[userPoolOperatorChoices[route.name]])  ))
+      // setEmployeesRoutes(employeeRoutes.filter(route => route.name === 'Dashboard' || route.name === 'Reports' || route.name === 'DEPS'   ))
 
       setLoading(false)
 
     }
 
     if(user.companyId) fetchMenu()
-    else setLoading(false)
+    else
+      setLoading(false)
 
   }, [user])  
 
@@ -62,31 +65,37 @@ const RootRouter = ({ user }) => {
     switch (user.type) {
       case 'public':
         return (
-          <Router>
-           
-            
+          <div key={String(companyKey)}>
+          <Router>    
             {publicRoutes.map((Route, index) => {
               if (!Route.key || (companyProfile && companyProfile[Route.key])) {
                 return <Route.Component path={Route.path} key={index.toString()} />;
               }
             })}
             <NotFound404Screen default />
-          </Router>
+            </Router>
+          </div>
         );
 
       case 'employee':
         return (
+          <div key={String(companyKey)}>
+
           <PrivateRoutes
             companyProfile={companyProfile}
-            routes={[ ...employeesRoutes, ...(user.isAdmin?superUserRoutes:[])]}
+            routes={[ ...employeeRoutes, ...(user.isAdmin?superUserRoutes:[])]}
             extraRoutes={[...(user.isAdmin?extraRoutesSuperUser:[]), ...extraRoutesEmployee]}
             outerRoutes={[...(user.isAdmin?outerRoutesSuperUser:[]), ...outerRoutesEmployee]}
             user={user}
-          />
+            />
+            </div>
         );
+    
 
       default:
         return (
+          <div key={String(companyKey)}>
+
           <Router>
 
             {publicRoutes.map((Route, index) => {
@@ -96,7 +105,8 @@ const RootRouter = ({ user }) => {
               }
             })}
             <NotFound404Screen default />
-          </Router>
+            </Router>
+            </div>
         );
     }
   }
