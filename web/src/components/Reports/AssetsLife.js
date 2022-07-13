@@ -28,7 +28,7 @@ const MissingAudit = ({ currentPage }) => {
     const { userMeta } = user;
     const { companyId, viewType } = userMeta;
 
-    const { data: rfidAsset } =  loadAPI(`/rfid-assetLife/?company_id=${companyId}`, {});
+    // const { data: rfidAsset } =  loadAPI(`/rfid-assetLife/?company_id=${companyId}`, {});
 
 
 
@@ -58,12 +58,12 @@ const MissingAudit = ({ currentPage }) => {
     // };
 
     const onDownloadBtn = () => {
-        const data = form.getFieldsValue()
+        // const data = form.getFieldsValue()
         // const today = new Date().toISOString();
         // const tempTo = moment(data.to).endOf('date').format('YYYY-MM-DD HH:MM');
         // const tempFrom = moment(data.from).startOf('date').format('YYYY-MM-DD HH:MM');
-        console.log(data, "dataaaaaaaaaaaa");
-        return (`${DEFAULT_BASE_URL}rfid-missingAudit/?company_id=${companyId}&warehouse=${[data.warehouse]}&from=${fromDate}&to=${toDate}`)
+        // console.log(data, "dataaaaaaaaaaaa");
+        return (`${DEFAULT_BASE_URL}rfid-assetLife/?company_id=${companyId}`)
     }
 
 
