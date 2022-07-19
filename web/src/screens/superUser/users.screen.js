@@ -8,6 +8,7 @@ import Delete from 'icons/Delete';
 import { deleteHOC } from 'hocs/deleteHoc';
 import Edit from 'icons/Edit';
 import Upload from 'icons/Upload';
+import { Link } from '@reach/router';
 
 import TableWithTabHOC from 'hocs/TableWithTab.hoc';
 import { AddUserForm } from 'forms/SuperUser/addUser.form';
@@ -31,7 +32,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
 
   const { data: tagList } =  useAPI('/emp-tagslist/')
    
-        // console.log(tagList[0]?.file, "fileeeeeeeee") 
+  console.log(user, "fileeeeeeeeeGgg") 
 
   
   const { filteredData, loading, reload, hasPermission } = useTableSearch({
@@ -55,29 +56,48 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
   const columns = [
     ...userColumns,
     {
-      title: 'Assign Tags',
-      key: 'assign-tags',
+      title: 'Manage Access',
+      key: 'manage-access',
       width: '8vw',
       render: (text, record) => (
         <div className='row align-center justify-evenly'>
           <Button
+            type= "primary"
             style={{
-              backgroundColor: 'transparent',
-              border: 'none',
-              boxShadow: 'none',
               padding: '1px',
             }}
-            onClick={(e) => {
-              setUploadModal(true)
-              setEmployeeId(record.user);
-            }}>
-            <Upload />
+          >
+            <Link to={`/${user.type}/edit-profile/`}>Manage Access</Link>
           </Button>
 
         </div>
       ),
 
     },
+    // {
+    //   title: 'Assign Tags',
+    //   key: 'assign-tags',
+    //   width: '8vw',
+    //   render: (text, record) => (
+    //     <div className='row align-center justify-evenly'>
+    //       <Button
+    //         style={{
+    //           backgroundColor: 'transparent',
+    //           border: 'none',
+    //           boxShadow: 'none',
+    //           padding: '1px',
+    //         }}
+    //         onClick={(e) => {
+    //           setUploadModal(true)
+    //           setEmployeeId(record.user);
+    //         }}>
+    //         <Upload />
+    //       </Button>
+
+    //     </div>
+    //   ),
+
+    // },
     {
       title: 'Action',
       key: 'operation',
@@ -121,12 +141,12 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
             </Button>
            
           </Popconfirm>
-          <a
+          {/* <a
             href={getFileUrl(tagList, record.user)}
             target='blank'
           >
             <File/>
-        </a>
+        </a> */}
           {/* {(record.user === tagList[0]?.emp) ? <a
             href={tagList[0]?.file}
             target='blank'>

@@ -26,6 +26,7 @@ const ScreenWrapper = ({ routes, navigate, children, user, changePage, companyPr
   const [collapsedWidth, setCollapsedWidth] = useState(80);
 
   const { isAdmin } = user;
+  console.log(user.type," wrapperrGGg");
 
 
 

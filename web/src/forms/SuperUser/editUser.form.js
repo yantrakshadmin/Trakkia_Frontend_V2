@@ -66,7 +66,7 @@ export const EditUserForm = ({id, onCancel, onDone}) => {
 
   return (
     <Spin spinning={loading}>
-      <Divider orientation="left">User Details gg</Divider>
+      <Divider orientation="left">User Details</Divider>
       <Form
         onFinish={preProcess}
         form={form}
