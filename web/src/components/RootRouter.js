@@ -33,7 +33,6 @@ const RootRouter = ({ user }) => {
   //   Component: lazy(() => import('screens/employee/dashboard.screen')),
   // }])
 
-  console.log(companyProfile, "companyProfile");
   useEffect(() => {
     
     const fetchMenu = async () => {

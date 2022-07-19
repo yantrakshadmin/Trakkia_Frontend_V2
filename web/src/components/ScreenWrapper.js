@@ -18,14 +18,23 @@ const { Header, Content, Sider, Footer } = Layout;
 const { Text } = Typography;
 const { Meta } = Card;
 
-const ScreenWrapper = ({ routes, navigate, children, user, changePage, companyProfile }) => {
+
+
+
+const ScreenWrapper = ({ routes, navigate, children, user, changePage, companyProfile,  }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [collapsedWidth, setCollapsedWidth] = useState(80);
+
+  const { isAdmin } = user;
+
+
+
   const dispatch = useDispatch();
   const onSignOut = () => {
     dispatch(signOutUser());
     navigate('../');
   };
+
 
   const changeUserView = async (type) => {
 
@@ -46,9 +55,10 @@ const ScreenWrapper = ({ routes, navigate, children, user, changePage, companyPr
           </Menu.Item>
         )}
       </SubMenu>
-      <Menu.Item key="1">
-        <Link to={`/${user.type}/edit-profile/`}>Edit Profile</Link>
-      </Menu.Item>
+      {isAdmin &&
+        <Menu.Item key="1">
+          <Link to={`/${user.type}/edit-profile/`}>Edit Profile</Link>
+        </Menu.Item>}
       <Menu.Divider />
       <Menu.Item key="2" onClick={() => onSignOut()}>
         <Text type="danger">Log Out</Text>
