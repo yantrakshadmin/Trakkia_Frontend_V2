@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import userColumns from 'common/columns/Users.column';
 import { Popconfirm, Button, Input, Modal } from 'antd';
 import { connect } from 'react-redux';
@@ -9,6 +9,7 @@ import { deleteHOC } from 'hocs/deleteHoc';
 import Edit from 'icons/Edit';
 import Upload from 'icons/Upload';
 import { Link } from '@reach/router';
+import { useNavigate } from '@reach/router';
 
 import TableWithTabHOC from 'hocs/TableWithTab.hoc';
 import { AddUserForm } from 'forms/SuperUser/addUser.form';
@@ -29,12 +30,11 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
   const [editingId, setEditingId] = useState(null);
   const [uploadModal, setUploadModal] = useState(Boolean);
   const [employeeId, setEmployeeId] = useState(null);
+  const navigate = useNavigate();
 
-  const { data: tagList } =  useAPI('/emp-tagslist/')
-   
-  console.log(user, "fileeeeeeeeeGgg") 
 
-  
+
+
   const { filteredData, loading, reload, hasPermission } = useTableSearch({
     searchVal,
     retrieve: retrieveEmployeeList,
@@ -44,10 +44,10 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
 
 
   const getFileUrl = (arr, userId,) => {
- 
-    const filterArry =( arr|| []).filter(f => f.emp == userId )
+
+    const filterArry = (arr || []).filter(f => f.emp == userId)
     return filterArry[0]?.file;
-   
+
   }
 
 
@@ -62,12 +62,24 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
       render: (text, record) => (
         <div className='row align-center justify-evenly'>
           <Button
-            type= "primary"
+            type="primary"
             style={{
               padding: '1px',
             }}
+            onClick={
+              (e) => {
+                navigate(`/${user.type}/manage-profile/`, {
+                  state: { rowId: (record.user) },
+                });
+                e.stopPropagation();
+              }}
           >
-            <Link to={`/${user.type}/edit-profile/`}>Manage Access</Link>
+            {/* <Link to={`/${user.type}/manage-profile/`}>Manage Access</Link> */}
+            {/* <Link to={{
+              pathname: `/${user.type}/manage-profile/`,
+              // state:{rowId: editingId}
+            }}></Link> */}
+            ggg
           </Button>
 
         </div>
@@ -139,7 +151,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
               onClick={(e) => e.stopPropagation()}>
               <Delete />
             </Button>
-           
+
           </Popconfirm>
           {/* <a
             href={getFileUrl(tagList, record.user)}
@@ -158,7 +170,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
 
             </a>
            } */}
-         
+
           {/* <Button
             style={{
               backgroundColor: 'transparent',
@@ -173,7 +185,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
             >
             <File />
             </Button> */}
-          
+
         </div>
       ),
     },
@@ -199,7 +211,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
         </div>
       </div>
       <br />
-     
+
       <Modal
         maskClosable={false}
         visible={uploadModal}
@@ -209,9 +221,9 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
         onCancel={() => { setUploadModal(false) }}
         footer={null}>
         <UsersUploadForm employeeId={employeeId} onCancel={() => { setUploadModal(false) }} onDone={() => { setUploadModal(false) }} />
-      </Modal> 
-     
-     
+      </Modal>
+
+
       <TableWithTabHOC
         rowKey={(record) => record.id}
         refresh={reload}
@@ -223,7 +235,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
         modalBody={editingId ? EditUserForm : AddUserForm}
         modalWidth={60}
         scroll={{ x: 1200 }}
-        formParams={{ companyId: user.companyId, }}
+        formParams={{ companyId: user.companyId, rowId: 29 }}
       />
     </NoPermissionAlert>
   );

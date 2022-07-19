@@ -68,6 +68,21 @@ export const clientFormFields = [
     type: FORM_ELEMENT_TYPES.INPUT,
     customLabel: 'GST IN',
   },
+  {
+    key: 'warehouse',
+    rules: [{ required: true, message: 'Please select WareHouse!' }],
+    kwargs: {
+      placeholder: 'Select',
+      mode: 'multiple',
+      showSearch: true,
+      filterOption: (input, option) =>
+        option.search.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+    },
+    type: FORM_ELEMENT_TYPES.SELECT,
+    others: null,
+    customLabel: 'Warehouses',
+    colSpan: 12,
+  },
 ];
 
 // export const mailingListFormFields = [
@@ -196,6 +211,13 @@ export const userPoolOperatorChoices = {
   'GRN': 'grn',
   'Inventory': 'inventory',
   'Expense': 'expense',
+  'Audit Access': 'audit_access',
+  'Products': 'masters_products',
+  'Kits': 'masters_kits',
+  'Flows': 'masters_flows',
+  'Clients': 'masters_clients',
+  'Warehouses': 'masters_warehouses',
+  'Vendors': 'masters_vendors',
   'Volume Plan Report': 'volume_plan_report',
   'Allotments Report': 'allotments_report',
   'Returns Report': 'returns_report',

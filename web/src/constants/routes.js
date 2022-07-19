@@ -36,6 +36,10 @@ export const extraRoutesClient = [
     Component: lazy(() => import('screens/client/EditProfile.screen')),
   },
   {
+    path: '/manage-profile/',
+    Component: lazy(() => import('forms/manageUser.form')),
+  },
+  {
     path: '*',
     Component: lazy(() => import('screens/404.screen')),
   },
@@ -92,6 +96,10 @@ export const extraRoutesEmployee = [
   {
     path: '/edit-profile/',
     Component: lazy(() => import('screens/employee/EditProfile.screen')),
+  },
+  {
+    path: '/manage-profile/',
+    Component: lazy(() => import('forms/manageUser.form')),
   },
   {
     path: '/return-dockets/return/',
@@ -179,21 +187,25 @@ export const employeeRoutes = [
     subMenu: [
       {
         name: 'Products',
+        key: 'masters_products',
         path: '/master/products/',
         Component: lazy(() => import('screens/employee/Product.employee.screen')),
       },
       {
         name: 'Kits',
+        key: 'masters_kits',
         path: '/master/kits/',
         Component: lazy(() => import('screens/employee/Kit.employee.screen')),
       },
       {
         name: 'Flows',
+        key: 'masters_flows',
         path: '/master/flows/',
         Component: lazy(() => import('screens/employee/Flow.screen')),
       },
       {
         name: 'Clients',
+        key: 'masters_clients',
         path: '/clients/',
         Component: lazy(() => import('screens/superUser/clients.screen')),
       },
@@ -209,11 +221,13 @@ export const employeeRoutes = [
       // },
       {
         name: 'Warehouses',
+        key: 'masters_warehouses',
         path: '/master/warehouses/',
         Component: lazy(() => import('screens/employee/Warehouse.employee.screen')),
       },
       {
         name: 'Vendors',
+        key: 'masters_vendors',
         path: '/master/vendors/',
         Component: lazy(() => import('screens/employee/Vendors.screen')),
       },

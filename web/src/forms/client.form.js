@@ -159,7 +159,7 @@ const ClientForm = ({ id, onCancel, onDone }) => {
               </div>
             </Col>
           ))}
-          {clientFormFields.slice(6, 7).map((item, idx) => (
+          {/* {clientFormFields.slice(6, 7).map((item, idx) => (
             <Col span={8}>
               <div key={idx} className="p-2">
                 {formItem({
@@ -170,7 +170,7 @@ const ClientForm = ({ id, onCancel, onDone }) => {
                 })}
               </div>
             </Col>
-          ))}
+          ))} */}
         </Row>
 
         <br />
@@ -181,7 +181,7 @@ const ClientForm = ({ id, onCancel, onDone }) => {
               ? ( 
                 <div>
                   <Row> {
-                    _.keys(userPoolOperatorChoices).slice(0, 12).map((modelName, modelIdx) => (
+                    _.keys(userPoolOperatorChoices).slice(0, 18).map((modelName, modelIdx) => (
                     <Col span={8} key={modelIdx}>
                       <Card>
                         <Row gutter={10}>
@@ -217,7 +217,7 @@ const ClientForm = ({ id, onCancel, onDone }) => {
                   
                   <Row>
                     {
-                      _.keys(userPoolOperatorChoices).slice(12, 23).map((modelName, modelIdx) => (
+                      _.keys(userPoolOperatorChoices).slice(18, 29).map((modelName, modelIdx) => (
                     <Col span={8} key={modelIdx}>
                       <Card>
                         <Row gutter={10}>

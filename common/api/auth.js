@@ -385,7 +385,7 @@ export const retrieveClientProfile = (id) =>
     secure: true,
   });
 
-export const editEmployeeProfile = (id, req) =>
+export const  editEmployeeProfile = (id, req) =>
   loadAPI(`/emp-profile/${id}/`, {
     method: 'PATCH',
     secure: true,
@@ -394,6 +394,12 @@ export const editEmployeeProfile = (id, req) =>
 
 export const editCompanyProfile = (id, req) =>
   loadAPI(`/company-profile/${id}/`, {
+    method: 'PATCH',
+    secure: true,
+    data: req,
+  });
+export const manageCompanyProfile = (id, req) =>
+  loadAPI(`/emp-profile/${id}/`, {
     method: 'PATCH',
     secure: true,
     data: req,
