@@ -83,7 +83,14 @@ export const retrieveScannedData = ({ page, pageSize }) =>
   loadAPI(`/rfid-dump/?page=${page}&pageSize=${pageSize}`, {
     method: 'GET',
     secure: true,
-  }); 
+  });
+
+export const retrieveScannedDataWithoutPagination = () =>
+  loadAPI(`/rfid-dump-wp/`, {
+    method: 'GET',
+    secure: true,
+  });
+
 
 export const editProduct = (id, req) => {
   return loadAPI(`/edit-product/${id}/`, {
