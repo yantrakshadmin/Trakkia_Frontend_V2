@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Col, Row, Button, Divider, Spin, Card } from 'antd';
-import { clientFormFields, userConsigneeChoices, userConsignorChoices, userPoolOperatorChoices } from 'common/formFields/employeeProfile.formFields';
+import { clientFormFields, userConsigneeChoices, userConsignorChoices, userPoolOperatorChoices } from "common/formFields/employeeProfile.formFields";
 import { useHandleForm } from 'hooks/form';
 import { editCompanyProfile, manageCompanyProfile } from 'common/api/auth';
 import formItem from '../hocs/formItem.hoc';
@@ -13,7 +13,7 @@ import { type } from 'jquery';
 // import { Routes, Route, useParams } from 'react-router-dom';
 import { useLocation } from "@reach/router"
 
-const ClientForm = ({ id, onCancel, onDone,  }) => {
+const ClientForm = ({ id, onCancel, onDone, }) => {
     // const rowId = useParams()
     const useloData = useLocation()
     // const { state.rowId } = uselocationData;
@@ -26,18 +26,20 @@ const ClientForm = ({ id, onCancel, onDone,  }) => {
 
     const { submit, loading } = useHandleForm({
         create: null,
-        edit: manageCompanyProfile,
+        edit:  manageCompanyProfile,
         success: 'Employee created/edited successfully.',
         failure: 'Error in creating/editing Employee.',
         done: onDone,
         close: onCancel,
-        id,
+        id: useloData.state?.rowId,
+        
+        
     });
     // console.log(,"editingId");
     useEffect(() => {
         if (userData) {
 
-            userData.type = userData.type.map(d => d.company_type)
+            userData.type = userData.type.map(d => d.emp_type)
 
             setCompanyType(userData.type)
 
@@ -160,7 +162,14 @@ const ClientForm = ({ id, onCancel, onDone,  }) => {
                 autoComplete="off"
                 onFieldsChange={handleFieldsChange}>
                 <Row style={{ justifyContent: 'left' }}>
-                    {clientFormFields.slice(0, 6).map((item, idx) => (
+                    {clientFormFields.slice(0, 3).map((item, idx) => (
+                        <Col span={8}>
+                            <div key={idx} className="p-2">
+                                {formItem(item)}
+                            </div>
+                        </Col>
+                    ))}
+                    {clientFormFields.slice(4, 5).map((item, idx) => (
                         <Col span={8}>
                             <div key={idx} className="p-2">
                                 {formItem(item)}
@@ -168,17 +177,17 @@ const ClientForm = ({ id, onCancel, onDone,  }) => {
                         </Col>
                     ))}
                     {clientFormFields.slice(6, 7).map((item, idx) => (
-            <Col span={8}>
-              <div key={idx} className="p-2">
-                {formItem({
-                  ...item,
-                  others: {
-                    selectOptions: companyType.map((type => ({ value: type, label: type })))
-                  },
-                })}
-              </div>
-            </Col>
-          ))}
+                        <Col span={8}>
+                            <div key={idx} className="p-2">
+                                {formItem({
+                                    ...item,
+                                    others: {
+                                        selectOptions: companyType.map((type => ({ value: type, label: type })))
+                                    },
+                                })}
+                            </div>
+                        </Col>
+                    ))}
                 </Row>
 
                 <br />
@@ -189,7 +198,7 @@ const ClientForm = ({ id, onCancel, onDone,  }) => {
                             ? (
                                 <div>
                                     <Row> {
-                                        _.keys(userPoolOperatorChoices).slice(0, 12).map((modelName, modelIdx) => (
+                                        _.keys(userPoolOperatorChoices).slice(0, 18).map((modelName, modelIdx) => (
                                             <Col span={8} key={modelIdx}>
                                                 <Card>
                                                     <Row gutter={10}>
@@ -225,7 +234,7 @@ const ClientForm = ({ id, onCancel, onDone,  }) => {
 
                                     <Row>
                                         {
-                                            _.keys(userPoolOperatorChoices).slice(12, 23).map((modelName, modelIdx) => (
+                                            _.keys(userPoolOperatorChoices).slice(18, 29).map((modelName, modelIdx) => (
                                                 <Col span={8} key={modelIdx}>
                                                     <Card>
                                                         <Row gutter={10}>

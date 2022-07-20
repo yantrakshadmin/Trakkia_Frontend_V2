@@ -64,7 +64,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
           <Button
             type="primary"
             style={{
-              padding: '1px',
+              paddingX: '1px',
             }}
             onClick={
               (e) => {
@@ -74,12 +74,7 @@ const WarehouseEmployeeScreen = ({ currentPage, user }) => {
                 e.stopPropagation();
               }}
           >
-            {/* <Link to={`/${user.type}/manage-profile/`}>Manage Access</Link> */}
-            {/* <Link to={{
-              pathname: `/${user.type}/manage-profile/`,
-              // state:{rowId: editingId}
-            }}></Link> */}
-            ggg
+            Manage Access
           </Button>
 
         </div>
