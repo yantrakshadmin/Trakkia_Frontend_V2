@@ -47,8 +47,13 @@ export const extraRoutesClient = [
     path: '/dashboard/',
     Component: lazy(() => import('screens/client/dashboard.screen')),
   },
+ 
 ];
 export const outerRoutesEmployee = [
+  {
+    path: '/audit-access/',
+    Component: lazy(() => import('screens/auditAccess'))
+  },
   {
     path: '/docket/:id',
     Component: lazy(() => import('components/Docket/Docket')),

@@ -224,7 +224,7 @@ export const userPoolOperatorChoices = {
   'Outwards Report': 'outwards_report',
   'Floating Report': 'floating_report',
   'Loss/Excess Report': 'loss_excess_report',
-  'Report-beta': 'report_beta',
+  // 'Report-beta': 'report_beta',
   'Missing Audit Report': 'missing_audit_report',
   'Audit Summary Report': 'audit_summary_report',
   'Consolidated Report': 'consolidated_report',

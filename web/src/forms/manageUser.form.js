@@ -12,28 +12,38 @@ import { type } from 'jquery';
 // import { useParams } from '@reach/router';
 // import { Routes, Route, useParams } from 'react-router-dom';
 import { useLocation } from "@reach/router"
+import { navigate } from '@reach/router';
+import { getUserMeta } from 'common/helpers/auth';
+import { useDispatch } from 'react-redux';
 
-const ClientForm = ({ id, onCancel, onDone, }) => {
+const ClientForm = () => {
     // const rowId = useParams()
+    const dispatch = useDispatch()
     const useloData = useLocation()
-    // const { state.rowId } = uselocationData;
+  const rowId = useloData.state?.rowId
 
     const [formData] = Form.useForm();
     // const retrieveURL = `emp-profile`
-    const { data: userData } = useAPI(`/emp-profile/${useloData.state?.rowId}`)
+    const { data: userData } = useAPI(`/emp-profile/${rowId}`)
     const [selectedModels, setSelectedModels] = useState([]);
     const [companyType, setCompanyType] = useState([]);
+    const [warehouses, setWarehouses] = useState([])
+
+
+    const onDone = async () => {
+
+        await getUserMeta(dispatch);
+        navigate('/');
+    };
 
     const { submit, loading } = useHandleForm({
         create: null,
-        edit:  manageCompanyProfile,
+        edit: () => manageCompanyProfile(rowId),
         success: 'Employee created/edited successfully.',
         failure: 'Error in creating/editing Employee.',
         done: onDone,
-        close: onCancel,
-        id: useloData.state?.rowId,
-        
-        
+        close: null,
+        id: rowId,
     });
     // console.log(,"editingId");
     useEffect(() => {
@@ -43,15 +53,20 @@ const ClientForm = ({ id, onCancel, onDone, }) => {
 
             setCompanyType(userData.type)
 
+            userData.warehouses = userData.warehouse.map(e => e.name);
+            setWarehouses(userData.warehouses);
+
             var selectedModel = []
             // _.keys(userPoolOperatorChoices).map(e => console.log(e ,'---userData log')) 
 
 
             _.keys(userPoolOperatorChoices).map((modelName) => {
-                // console.log([userPoolOperatorChoices[modelName]],"userData[userPoolOperatorChoices[modelName]]");
 
                 if (userData[userPoolOperatorChoices[modelName]]) {
+                    console.log(modelName, "userData[userPoolOperatorChoices[modelName]]");
+
                     userData[modelName] = true
+                    
                     selectedModel.push(modelName)
                 }
 
@@ -130,7 +145,8 @@ const ClientForm = ({ id, onCancel, onDone, }) => {
 
     const preProcess = (data) => {
 
-        data.type = data.type.map(type => ({ company_type: type }))
+        data.type = data.type.map(type => ({ emp_type: type }))
+        console.log(data.type, "data tyoeppep");
 
         _.keys(userPoolOperatorChoices).map((modelName) => {
 
@@ -182,7 +198,7 @@ const ClientForm = ({ id, onCancel, onDone, }) => {
                                 {formItem({
                                     ...item,
                                     others: {
-                                        selectOptions: companyType.map((type => ({ value: type, label: type })))
+                                        selectOptions: warehouses.map((type => ({ value: type, label: type })))
                                     },
                                 })}
                             </div>

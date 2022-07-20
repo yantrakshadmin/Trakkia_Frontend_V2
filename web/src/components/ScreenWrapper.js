@@ -19,17 +19,11 @@ const { Text } = Typography;
 const { Meta } = Card;
 
 
-
-
-const ScreenWrapper = ({ routes, navigate, children, user, changePage, companyProfile,  }) => {
+const ScreenWrapper = ({ routes, navigate, children, user, changePage, companyProfile, }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [collapsedWidth, setCollapsedWidth] = useState(80);
 
   const { isAdmin } = user;
-  console.log(user.type," wrapperrGGg");
-
-
-
   const dispatch = useDispatch();
   const onSignOut = () => {
     dispatch(signOutUser());
@@ -158,7 +152,7 @@ const ScreenWrapper = ({ routes, navigate, children, user, changePage, companyPr
                             </Menu.Item>
                           )
                         }
-                      
+
                       })}
                     </SubMenu>
                   );

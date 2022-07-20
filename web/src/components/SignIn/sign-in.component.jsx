@@ -12,6 +12,7 @@ import './sign-in.styles.scss';
 const SignIn = ({user}) => {
   const dispatch = useDispatch();
   const [signIn, setSignIn] = useState(false);
+  console.log(user, "sign in user");
 
   const [form] = Form.useForm();
 
